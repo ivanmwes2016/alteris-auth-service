@@ -1,0 +1,52 @@
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["app", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes (unused imports, undefined names)
+    "I",   # isort (import order)
+    "B",   # flake8-bugbear (common bugs)
+    "C4",  # flake8-comprehensions (simpler comprehensions)
+    "UP",  # pyupgrade (modern Python syntax)
+    "N",   # pep8-naming
+    "ANN", # flake8-annotations (type hints)
+    "S",   # flake8-bandit (security)
+    "RUF", # Ruff-specific rules
+]
+ignore = [
+    "ANN101", # missing type for `self`
+    "ANN102", # missing type for `cls`
+    "S101",   # use of assert (fine in tests)
+    "B008",   # do not perform function calls in default args (FastAPI Depends pattern)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["ANN", "S"]  # relax annotations + security in tests
+"alembic/**" = ["ANN"]     # migrations don't need full annotations
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["stripe.*", "supabase.*", "mangum.*", "alembic.*"]
+ignore_missing_imports = true
+
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
