@@ -7,8 +7,6 @@ import os
 load_dotenv()
 
 
-
-
 @lru_cache()
 def get_settings() -> Settings:
     return Settings(
