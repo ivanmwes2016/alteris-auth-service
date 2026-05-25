@@ -1,0 +1,87 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+pip-log.txt
+pip-delete-this-directory.txt
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# FastAPI / local dev
+# =========================
+*.db
+*.sqlite3
+
+# =========================
+# IDEs
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# AWS / Lambda
+# =========================
+.aws-sam/
+samconfig.toml
+
+# AWS credentials (NEVER commit)
+.aws/
+credentials
+credentials.json
+
+# =========================
+# Docker
+# =========================
+docker-compose.override.yml
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+
+# =========================
+# Testing / coverage
+# =========================
+htmlcov/
+.coverage
+coverage.xml
+
+# =========================
+# Node (if frontend exists later)
+# =========================
+node_modules/
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Supabase local (if used)
+# =========================
+.supabase/

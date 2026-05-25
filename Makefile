@@ -5,7 +5,7 @@ install:
 	pre-commit install
 
 dev:
-	uvicorn app.main:app --reload --port 8000
+	uvicorn app.main:app --reload --port 8001
 
 # ── Linting ───────────────────────────────────────────────────────────────────
 lint:
