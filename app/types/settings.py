@@ -8,7 +8,7 @@ class Settings(BaseModel):
     FRONTEND_URL:str
 
     # Database (Supabase Postgres)
-    # DATABASE_URL: str
+    DATABASE_URL: str
 
     # Supabase Auth
     SUPABASE_URL: str
@@ -17,8 +17,8 @@ class Settings(BaseModel):
     # SUPABASE_JWT_SECRET: str
 
     # Stripe
-    # STRIPE_SECRET_KEY: str
-    # STRIPE_WEBHOOK_SECRET: str
+    STRIPE_SECRET_KEY: str
+    STRIPE_WEBHOOK_SECRET: str
 
     # Redis (optional cache)
     REDIS_URL: str | None = None

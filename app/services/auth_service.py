@@ -6,13 +6,21 @@ We handle:         our own JWT layer + profile persistence via SQLAlchemy.
 """
 import uuid
 
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, Depends
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from supabase import Client
 
 from app.core.security import create_access_token, create_refresh_token
 from app.repositories.profile_repo import ProfileRepository
-from app.schemas.auth import TokenResponse
+from ..db.models.auth import TokenResponse
+from app.core.config import get_settings
+from jose import jwt, JWTError
+
+
+security = HTTPBearer()
+
+config = get_settings()
 
 
 class AuthService:
