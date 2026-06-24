@@ -1,12 +1,15 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response
 from sqlalchemy.ext.asyncio import AsyncSession
+from supabase import Client
 
 from app.core.db import get_db
 from app.db.models.tenant import Tenant
 from app.db.models.tenant_member import TenantMember
+from app.core.supabase import supabase, get_supabase
 
 from fastapi import APIRouter, Depends, Header, HTTPException
-from app.helpers.jwt import verify_jwt
+from app.db.models.users import User
+from app.helpers.jwt import get_user_from_token
 
 from app.helpers.user_context import get_user_context
 router = APIRouter()
@@ -59,7 +62,7 @@ async def signup(payload: dict, db: AsyncSession = Depends(get_db)):
     }
 
 @router.get("/me")
-def me(authorization: str = Header(None), db=Depends(get_db)):
+async def me(authorization: str = Header(None), db: AsyncSession=Depends(get_db), supabase:Client = Depends(get_supabase)):
     if not authorization:
         raise HTTPException(status_code=401, detail="Missing token")
 
@@ -68,14 +71,13 @@ def me(authorization: str = Header(None), db=Depends(get_db)):
 
     token = authorization.split(" ")[1]
 
-    # 1. verify JWT from Supabase
-    payload = verify_jwt(token)
 
-    user_id = payload.get("sub")
-    email = payload.get("email")
+    user = get_user_from_token(supabase, token)
 
-    # 2. build full SaaS context
-    user_context = get_user_context(db, user_id)
+    user_id = user.id
+    email = user.email
+
+    user_context = await get_user_context(db, user_id)
 
     return {
         "user": {
@@ -86,3 +88,53 @@ def me(authorization: str = Header(None), db=Depends(get_db)):
         "role": user_context.get("role"),
         "subscription_active": user_context.get("subscription_active"),
     }
+
+
+@router.post("/session")
+async def create_session(
+    response: Response,
+    authorization: str = Header(None),
+    supabase: Client = Depends(get_supabase),
+):
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing token")
+
+    token = authorization.split(" ")[1]
+
+    user = get_user_from_token(supabase, token)
+
+    response.set_cookie(
+        key="session",
+        value=token,
+        httponly=True,
+        secure=True,
+        samesite="lax",
+        max_age=60 * 60 * 24 * 7,
+    )
+
+    return {"ok": True, "user_id": user.id}
+
+
+
+async def get_current_user(
+    authorization: str = Header(None),
+    db: AsyncSession = Depends(get_db),
+    supabase: Client = Depends(get_supabase),
+):
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing token")
+
+    token = authorization.split(" ")[1]
+    supabase_user = get_user_from_token(supabase, token)
+
+    user = await db.get(User, supabase_user.id)
+
+    if not user:
+        user = User(
+            id=supabase_user.id,
+            email=supabase_user.email,
+        )
+        db.add(user)
+        await db.flush()
+
+    return user

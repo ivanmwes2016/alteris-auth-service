@@ -1,8 +1,15 @@
+from pydantic import BaseModel
 import stripe
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Header, Request
+from sqlalchemy.ext.asyncio import AsyncSession
+from supabase import Client
 
 from app.core.config import get_settings
+from app.core.db import get_db
+from app.core.supabase import get_supabase
+from app.helpers.jwt import get_user_from_token
+from app.helpers.user_context import get_user_context
 config = get_settings()
 
 router = APIRouter()
@@ -15,52 +22,42 @@ prices ={
     3: 250
 }
 
+class CheckoutPayload(BaseModel):
+    price_id: str
+    price: int
+    tenant_id: str
+
 
 @router.post("/checkout")
 async def create_checkout(
-    payload: dict,
-    request: Request,
+    payload: CheckoutPayload,
+    authorization: str | None = Header(None),
+    db: AsyncSession = Depends(get_db),
+    supabase: Client = Depends(get_supabase),
 ):
-    tenant_id = request.state.tenant_id
+    token = authorization.split(" ")[1]
+    user = get_user_from_token(supabase, token)
+
+    
+
+    user_context = await get_user_context(db, user.id)
+    tenant_id = user_context["tenant"]["id"]
 
     session = stripe.checkout.Session.create(
-        payment_method_types=["card"],
         mode="subscription",
-        line_items=[
-            {
-                "price": payload["price_id"],
-                "quantity": 1,
-            }
-        ],
-        success_url="https://app.com/success",
-        cancel_url="https://app.com/cancel",
+        line_items=[{"price": payload.price_id, "quantity": 1}],
+        success_url="http://localhost:3000/settings/billing?success=true",
+        cancel_url="http://localhost:3000/settings/billing?cancelled=true",
         metadata={
-            "tenant_id": tenant_id,
+            "tenant_id": str(tenant_id),
+            "plan": payload.plan,
+        },
+        subscription_data={
+            "metadata": {
+                "tenant_id": str(tenant_id),
+                "plan": payload.plan,
+            }
         },
     )
 
-    return {
-        "checkout_url": session.url,
-    }
-
-
-@router.post("/webhook")
-async def stripe_webhook(request: Request):
-    payload = await request.body()
-
-    signature = request.headers.get("stripe-signature")
-
-    event = stripe.Webhook.construct_event(
-        payload,
-        signature,
-        config.STRIPE_WEBHOOK_SECRET,
-    )
-
-    if event["type"] == "checkout.session.completed":
-        session = event["data"]["object"]
-
-        tenant_id = session["metadata"]["tenant_id"]
-
-        # Update tenant plan in database
-
-    return {"received": True}
+    return {"checkout_url": session.url}

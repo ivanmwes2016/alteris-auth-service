@@ -16,6 +16,7 @@ def get_settings() -> Settings:
         SUPABASE_ANON_KEY=os.getenv("SUPABASE_ANON_KEY"),
         SUPABASE_SERVICE_ROLE_KEY=os.getenv("SUPABASE_SERVICE_ROLE_KEY"),
         SUPABASE_JWT_SECRET=os.getenv("SUPABASE_JWT_SECRET"),
+        SUPABASE_SECRET_KEY=os.getenv("SUPABASE_SECRET_KEY"),
 
         STRIPE_SECRET_KEY=os.getenv("STRIPE_SECRET_KEY"),
         STRIPE_WEBHOOK_SECRET=os.getenv("STRIPE_WEBHOOK_SECRET"),

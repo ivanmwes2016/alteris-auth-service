@@ -64,3 +64,10 @@ deploy-prod: check sam-build migrate
 # ── Stripe CLI (local webhook testing) ───────────────────────────────────────
 stripe-listen:
 	stripe listen --forward-to localhost:8000/api/v1/billing/webhook
+
+migrate:
+	alembic current
+	alembic heads
+	alembic upgrade head
+	alembic revision --autogenerate -m "update tenant"
+	alembic upgrade head
