@@ -20,6 +20,7 @@ class Tenant(Base):
     slug: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=False)
     workspace_id: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=False)
     plan: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=True, default="free")
+    logo_path: Mapped[str | None] = mapped_column(String, nullable=True)
 
 
 

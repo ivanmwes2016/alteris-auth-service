@@ -76,13 +76,16 @@ async def me(authorization: str = Header(None), db: AsyncSession=Depends(get_db)
 
     user_id = user.id
     email = user.email
+    name = user.user_metadata.get("name") if user else None
+    
 
-    user_context = await get_user_context(db, user_id)
+    user_context = await get_user_context(db, user_id, supabase)
 
     return {
         "user": {
             "id": user_id,
             "email": email,
+            "name": name
         },
         "tenant": user_context.get("tenant"),
         "role": user_context.get("role"),

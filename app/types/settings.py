@@ -16,6 +16,7 @@ class Settings(BaseModel):
     # SUPABASE_SERVICE_ROLE_KEY: str
     SUPABASE_JWT_SECRET: str
     SUPABASE_SECRET_KEY:str
+    SUPABASE_LOGO_BUCKET_NAME:str
 
     # Stripe
     STRIPE_SECRET_KEY: str
