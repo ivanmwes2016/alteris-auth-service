@@ -1,8 +1,9 @@
 from uuid import UUID
-from sqlalchemy import select
-from slugify import slugify
 
-from fastapi import APIRouter, Depends, UploadFile, File, HTTPException
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from pydantic import BaseModel
+from slugify import slugify
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from supabase import Client
 
@@ -11,8 +12,6 @@ from app.core.db import get_db
 from app.core.supabase import get_supabase
 from app.db.models.role import Role
 from app.db.models.tenant import Tenant
-from pydantic import BaseModel
-
 from app.db.models.tenant_member import TenantMember
 from app.db.models.users import User
 
@@ -41,7 +40,7 @@ async def update_workspace( payload: UpdateWorkspaceRequest, db: AsyncSession = 
 
     if existing_tenant.scalar_one_or_none():
         raise HTTPException(status_code=409, detail="Workspace already exists")
-    
+
 
 
     db.add(tenant)

@@ -1,11 +1,11 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
 
-from app.core.config import get_settings, Settings
+from app.core.config import Settings, get_settings
 
 bearer_scheme = HTTPBearer()
 settings = get_settings()
@@ -18,8 +18,8 @@ def create_access_token(
     extra_claims: dict[str, Any] | None = None,
     settings: Settings | None = None,
 ) -> str:
-   
-    expire = datetime.now(timezone.utc) + timedelta(
+
+    expire = datetime.now(UTC) + timedelta(
         minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
     )
     payload = {"sub": subject, "exp": expire, "type": "access"}
@@ -30,7 +30,7 @@ def create_access_token(
 
 def create_refresh_token(subject: str, settings: Settings | None = None) -> str:
     settings = settings or get_settings()
-    expire = datetime.now(timezone.utc) + timedelta(
+    expire = datetime.now(UTC) + timedelta(
         days=settings.REFRESH_TOKEN_EXPIRE_DAYS
     )
     return jwt.encode(

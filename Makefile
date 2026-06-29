@@ -69,5 +69,5 @@ migrate:
 	alembic current
 	alembic heads
 	alembic upgrade head
-	alembic revision --autogenerate -m "update tenant"
+	alembic revision --autogenerate -m "${msg}"
 	alembic upgrade head

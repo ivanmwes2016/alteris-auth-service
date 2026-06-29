@@ -4,19 +4,19 @@ Auth service — wraps Supabase Auth (GoTrue) + ProfileRepository.
 Supabase handles:  password hashing, email confirmation, OAuth.
 We handle:         our own JWT layer + profile persistence via SQLAlchemy.
 """
+
 import uuid
 
-from fastapi import HTTPException, status, Depends
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi import HTTPException, status
+from fastapi.security import HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from supabase import Client
 
+from app.core.config import get_settings
 from app.core.security import create_access_token, create_refresh_token
 from app.repositories.profile_repo import ProfileRepository
-from ..db.models.auth import TokenResponse
-from app.core.config import get_settings
-from jose import jwt, JWTError
 
+from ..db.models.auth import TokenResponse
 
 security = HTTPBearer()
 
@@ -24,7 +24,7 @@ config = get_settings()
 
 
 class AuthService:
-    def __init__(self, supabase: Client, db: AsyncSession):
+    def __init__(self, supabase: Client, db: AsyncSession) -> None:
         self.supabase = supabase
         self.repo = ProfileRepository(db)
 
@@ -33,10 +33,14 @@ class AuthService:
     async def register(self, email: str, password: str, full_name: str) -> TokenResponse:
         try:
             res = self.supabase.auth.sign_up(
-                {"email": email, "password": password, "options": {"data": {"full_name": full_name}}}
+                {
+                    "email": email,
+                    "password": password,
+                    "options": {"data": {"full_name": full_name}},
+                }
             )
         except Exception as exc:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc))
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
 
         if res.user is None:
             raise HTTPException(
@@ -58,10 +62,12 @@ class AuthService:
         try:
             res = self.supabase.auth.sign_in_with_password({"email": email, "password": password})
         except Exception as exc:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(exc))
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(exc)) from exc
 
         if res.user is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
+            )
 
         return self._build_tokens(res.user.id, res.user.email or email)
 
@@ -76,7 +82,7 @@ class AuthService:
         try:
             self.supabase.auth.reset_password_email(email)
         except Exception as exc:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc))
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
 
     # ── Helpers ───────────────────────────────────────────────────────────────
 

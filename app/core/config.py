@@ -1,13 +1,15 @@
 
-from functools import lru_cache
-from ..types.settings import Settings
-from dotenv import load_dotenv
 import os
+from functools import lru_cache
+
+from dotenv import load_dotenv
+
+from ..types.settings import Settings
 
 load_dotenv()
 
 
-@lru_cache()
+@lru_cache
 def get_settings() -> Settings:
     return Settings(
         DATABASE_URL=os.getenv("DATABASE_URL"),

@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class Settings(BaseModel):
     # App
     APP_NAME: str = "Alteris Multiple Tenant SAAS"

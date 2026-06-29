@@ -1,7 +1,6 @@
-from pydantic import BaseModel
 import stripe
-
-from fastapi import APIRouter, Depends, Header, Request
+from fastapi import APIRouter, Depends, Header
+from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from supabase import Client
 
@@ -10,6 +9,7 @@ from app.core.db import get_db
 from app.core.supabase import get_supabase
 from app.helpers.jwt import get_user_from_token
 from app.helpers.user_context import get_user_context
+
 config = get_settings()
 
 router = APIRouter()
@@ -38,7 +38,7 @@ async def create_checkout(
     token = authorization.split(" ")[1]
     user = get_user_from_token(supabase, token)
 
-    
+
 
     user_context = await get_user_context(db, user.id)
     tenant_id = user_context["tenant"]["id"]

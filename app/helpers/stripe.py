@@ -1,7 +1,9 @@
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models.tenant import Tenant
+
+
 async def handle_checkout_completed(session, db: AsyncSession):
     tenant_id = session.get("metadata", {}).get("tenant_id")
 

@@ -1,15 +1,16 @@
 # app/api/routes/stripe_webhooks.py
 
 import stripe
-
 from fastapi import APIRouter, Depends, Header, HTTPException, Request
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
 from app.core.db import get_db
-from app.db.models.tenant import Tenant
-from app.helpers.stripe import handle_checkout_completed, handle_subscription_deleted, handle_subscription_updated
+from app.helpers.stripe import (
+    handle_checkout_completed,
+    handle_subscription_deleted,
+    handle_subscription_updated,
+)
 
 settings = get_settings()
 

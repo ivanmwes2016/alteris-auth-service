@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
@@ -6,9 +8,8 @@ from supabase import Client
 
 from app.core.config import get_settings
 from app.db.models.role import Role
-from app.db.models.tenant_member import TenantMember
 from app.db.models.tenant import Tenant
-import logging
+from app.db.models.tenant_member import TenantMember
 
 log = logging.getLogger(__name__)
 config = get_settings()
@@ -38,11 +39,11 @@ async def get_user_context(db: AsyncSession, user_id: str, supabase:Client):
 
         if tenant.logo_path:
             signed = supabase.storage.from_(config.SUPABASE_LOGO_BUCKET_NAME).create_signed_url(
-                tenant.logo_path, 
+                tenant.logo_path,
                 60*60,# 1 hour
                 )
             logo_url = signed["signedURL"]
-   
+
         return {
             "tenant": {
                 "id": str(tenant.id),

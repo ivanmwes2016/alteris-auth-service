@@ -1,13 +1,15 @@
 from fastapi import APIRouter, HTTPException
-from jose import jwt, JWTError
-from app.core.config import get_settings
-from fastapi import HTTPException
+from jose import JWTError, jwt
 from supabase import Client
+
+from app.core.config import get_settings
 
 config = get_settings()
 
 
 router = APIRouter()
+
+
 def verify_jwt(token: str):
     try:
         payload = jwt.decode(
@@ -17,9 +19,10 @@ def verify_jwt(token: str):
             audience="authenticated",
         )
         return payload
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Invalid token")
-    
+    except JWTError as e:
+        raise HTTPException(status_code=401, detail="Invalid token") from e
+
+
 def get_user_from_token(supabase: Client, token: str):
     res = supabase.auth.get_user(token)
 

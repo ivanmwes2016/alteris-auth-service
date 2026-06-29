@@ -1,17 +1,15 @@
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, Header, HTTPException, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 from supabase import Client
 
 from app.core.db import get_db
+from app.core.supabase import get_supabase
 from app.db.models.tenant import Tenant
 from app.db.models.tenant_member import TenantMember
-from app.core.supabase import supabase, get_supabase
-
-from fastapi import APIRouter, Depends, Header, HTTPException
 from app.db.models.users import User
 from app.helpers.jwt import get_user_from_token
-
 from app.helpers.user_context import get_user_context
+
 router = APIRouter()
 
 
@@ -77,7 +75,7 @@ async def me(authorization: str = Header(None), db: AsyncSession=Depends(get_db)
     user_id = user.id
     email = user.email
     name = user.user_metadata.get("name") if user else None
-    
+
 
     user_context = await get_user_context(db, user_id, supabase)
 

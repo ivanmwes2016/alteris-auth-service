@@ -1,13 +1,12 @@
 import os
 from logging.config import fileConfig
 
-from dotenv import load_dotenv
 from alembic import context
-
+from dotenv import load_dotenv
 from sqlalchemy import create_engine, pool
 
+import app.db.models  # noqa: F401
 from app.core.db import Base
-from app.db.models import tenant, tenant_member  # ensure models imported
 
 load_dotenv()
 
