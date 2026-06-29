@@ -34,12 +34,12 @@ class EnquiryGetResponse(BaseModel):
     name: str
     email: str | None
     phone: str
-    classApplied: str
+    classApplied: str  # noqa: N815
     stage: str
     date: datetime
     created_at: datetime
     parent: str
-    previousSchool: str | None
+    previousSchool: str | None  # noqa: N815
     photo: str | None = None
     notes: str | None = ""
     officer: str | None = ""
@@ -116,3 +116,48 @@ async def list_enquiries(
     ]
 
     return result
+
+
+@router.patch("/enquiries/{enquiry_id}")
+async def patch_inquiry(
+    enquiry_id: UUID,
+    payload: EnquiryPayload,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> dict[str, str]:
+    member_result = await db.execute(
+        select(TenantMember).where(TenantMember.user_id == current_user.id)
+    )
+    member = member_result.scalar_one_or_none()
+
+    if not member:
+        raise HTTPException(status_code=403, detail="User does not belong to a school")
+
+    result = await db.execute(
+        select(Enquiry).where(Enquiry.id == enquiry_id, Enquiry.tenant_id == member.tenant_id)
+    )
+
+    enquiry = result.scalar_one_or_none()
+
+    if not enquiry:
+        raise HTTPException(status_code=404, detail="Enquiry not found")
+
+    updates = payload.model_dump(exclude_unset=True)
+
+    for field, value in updates.items():
+        setattr(enquiry, field, value)
+
+    try:
+        await db.commit()
+        await db.refresh(enquiry)
+
+        return {
+            "message": "Enquiry updated successfully",
+        }
+
+    except SQLAlchemyError as exc:
+        await db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail="Database error while updating enquiry.",
+        ) from exc
