@@ -19,13 +19,26 @@ class Tenant(Base):
     name: Mapped[str] = mapped_column(String, nullable=False)
     slug: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=False)
     workspace_id: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=False)
-    plan: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=True, default="free")
+    plan: Mapped[str] = mapped_column(
+        String, unique=True, index=True, nullable=True, default="free"
+    )
     logo_path: Mapped[str | None] = mapped_column(String, nullable=True)
 
-
-
     created_at = mapped_column(DateTime(timezone=True), server_default=func.now())
-    updated_at = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    updated_at = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
 
-    members = relationship("TenantMember", back_populates="tenant", cascade="all, delete-orphan",passive_deletes=True)
+    members = relationship(
+        "TenantMember", back_populates="tenant", cascade="all, delete-orphan", passive_deletes=True
+    )
     invites = relationship("Invite", back_populates="tenant")
+
+    enquiries = relationship("Enquiry", back_populates="tenant")
+
+    profile = relationship(
+        "SchoolProfile",
+        back_populates="tenant",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )
