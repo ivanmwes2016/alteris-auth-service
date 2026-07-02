@@ -34,11 +34,23 @@ class Tenant(Base):
     )
     invites = relationship("Invite", back_populates="tenant")
 
-    enquiries = relationship("Enquiry", back_populates="tenant")
+    enquiries = relationship(
+        "Enquiry",
+        back_populates="tenant",
+        cascade="all, delete-orphan",
+    )
 
     profile = relationship(
-        "SchoolProfile",
+        "TenantProfile",
         back_populates="tenant",
         uselist=False,
         cascade="all, delete-orphan",
+    )
+
+    fees = relationship(
+        "TutionFees",
+        back_populates="tenant",
+        uselist=False,
+        cascade="all, delete-orphan",
+        passive_deletes=True,
     )

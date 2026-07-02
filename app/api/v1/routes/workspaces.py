@@ -22,33 +22,31 @@ BUCKET_NAME = "client-logos"
 
 class UpdateWorkspaceRequest(BaseModel):
     name: str
-    workspaceId:str
+    workspaceId: str
 
 
 @router.patch("/onboarding")
-async def update_workspace( payload: UpdateWorkspaceRequest, db: AsyncSession = Depends(get_db), current_user :User = Depends(get_current_user)):
+async def update_workspace(
+    payload: UpdateWorkspaceRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     slug = slugify(payload.name)
-    tenant = Tenant(
-        name=payload.name,
-        slug=slug,
-        workspace_id=payload.workspaceId
-    )
+    tenant = Tenant(name=payload.name, slug=slug, workspace_id=payload.workspaceId)
 
-    existing_tenant = await db.execute(
-        select(Tenant).where(Tenant.slug == slug)
-    )
+    existing_tenant = await db.execute(select(Tenant).where(Tenant.slug == slug))
 
     if existing_tenant.scalar_one_or_none():
         raise HTTPException(status_code=409, detail="Workspace already exists")
-
-
 
     db.add(tenant)
     await db.flush()
 
     admin_role = await get_role_by_name(db, "admin")
 
-    member = TenantMember( tenant_id=tenant.id, user_id=current_user.id, role_id=admin_role.id, status="active")
+    member = TenantMember(
+        tenant_id=tenant.id, user_id=current_user.id, role_id=admin_role.id, status="active"
+    )
     if not member:
         raise HTTPException(status_code=409, detail="No team member for that creteria")
 
@@ -61,9 +59,6 @@ async def update_workspace( payload: UpdateWorkspaceRequest, db: AsyncSession = 
         "name": tenant.name,
         "role": "admin",
     }
-
-
-
 
 
 @router.post("/{workspace_id}/logo")
@@ -91,17 +86,18 @@ async def upload_workspace_logo(
 
     extension = logo.filename.split(".")[-1]
     logo_path = f"{workspace_id}/logo.{extension}"
-
-    supabase.storage.from_(BUCKET_NAME).upload(
+    expires_in = 60 * 60 * 24 * 30  # 30 days
+    await supabase.storage.from_(BUCKET_NAME).upload(
         path=logo_path,
         file=file_bytes,
+        expires_in=expires_in,
         file_options={
             "content-type": logo.content_type,
             "upsert": "true",
         },
     )
 
-    result = await db.execute( select(Tenant).where(Tenant.workspace_id == workspace_id))
+    result = await db.execute(select(Tenant).where(Tenant.workspace_id == workspace_id))
     tenant = result.scalar_one_or_none()
 
     if not tenant:
@@ -118,7 +114,6 @@ async def upload_workspace_logo(
     }
 
 
-
 async def get_role_by_name(db: AsyncSession, name: str):
     result = await db.execute(select(Role).where(Role.name == name))
     role = result.scalar_one_or_none()
@@ -127,6 +122,7 @@ async def get_role_by_name(db: AsyncSession, name: str):
         raise HTTPException(status_code=500, detail=f"Role '{name}' does not exist")
 
     return role
+
 
 async def get_tenant_member(db: AsyncSession, tenant_id: UUID, user_id: UUID):
     result = await db.execute(

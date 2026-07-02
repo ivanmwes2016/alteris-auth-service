@@ -37,10 +37,3 @@ class TutionFees(Base):
     )
 
     tenant = relationship("Tenant", back_populates="fees")
-
-    fees = relationship(
-        "TutionFees",
-        back_populates="tenant",
-        uselist=False,
-        cascade="all, delete-orphan",
-    )
