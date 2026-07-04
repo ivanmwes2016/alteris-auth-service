@@ -39,6 +39,7 @@ class TenantProfile(Base):
     curriculum: Mapped[list] = mapped_column(JSON, nullable=True, default=list)
     subjects: Mapped[list] = mapped_column(JSON, nullable=True, default=list)
     levels: Mapped[list] = mapped_column(JSON, nullable=True, default=list)
+    fees: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
 
     type: Mapped[str] = mapped_column(String, nullable=True)
     gender: Mapped[str] = mapped_column(String, nullable=True)
@@ -47,8 +48,3 @@ class TenantProfile(Base):
 
     location: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
     contact: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
-
-    address: Mapped[str] = mapped_column(String, nullable=True)
-    phone: Mapped[str] = mapped_column(String, nullable=True)
-    email: Mapped[str] = mapped_column(String, nullable=True)
-    website: Mapped[str] = mapped_column(String, nullable=True)

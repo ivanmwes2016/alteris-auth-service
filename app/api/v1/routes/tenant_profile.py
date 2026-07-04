@@ -48,10 +48,15 @@ class Contact(BaseModel):
     website: str | None = None
 
 
+class FeeDetails(BaseModel):
+    description: str | None
+    amount: str | None
+    period: str | None
+
+
 class Fees(BaseModel):
     currency: str | None = None
-    range: str | None = None
-    structure: str | None = None
+    details: list[FeeDetails]
 
 
 class ProfilePatch(BaseModel):
@@ -171,16 +176,33 @@ async def get_school_profile(
         tagline=profile.tagline,
         curriculum=profile.curriculum or [],
         type=profile.type,
-        location=Location(address=profile.address),
-        contact=Contact(phone=profile.phone, email=profile.email, website=profile.website),
+        location=Location(
+            address=profile.location.get("address") if profile.location else None,
+            city=profile.location.get("city") if profile.location else None,
+            state=profile.location.get("state") if profile.location else None,
+            country=profile.location.get("country") if profile.location else None,
+        ),
+        contact=Contact(
+            phone=profile.contact.get("phone") if profile.contact else None,
+            email=profile.contact.get("email") if profile.contact else None,
+            website=profile.contact.get("website") if profile.contact else None,
+        ),
         levels=profile.levels or [],
         courses=profile.courses or [],
         achievements=profile.achievements or [],
         facilities=profile.facilities or [],
         fees=Fees(
-            currency=fees.currency if fees else "",
-            range=f"{fees.min_fee}-{fees.max_fee}" if fees else "",
-            structure=fees.billing_period if fees else "",
+            currency=profile.fees.get("currency") if profile.fees else None,
+            details=[
+                FeeDetails(
+                    description=item.get("description") or None,
+                    amount=item.get("amount"),
+                    period=item.get("period"),
+                )
+                for item in profile.fees.get("details", [])
+            ]
+            if profile.fees
+            else [],
         ),
         subjects=profile.subjects or [],
         profile_completion=0,
@@ -200,8 +222,6 @@ async def patch_school_profile(
     member_result = await db.execute(
         select(TenantMember).where(TenantMember.user_id == current_user.id)
     )
-
-    print(payload)
 
     member = member_result.scalar_one_or_none()
 
