@@ -13,7 +13,6 @@ from app.helpers.user_context import get_user_context
 router = APIRouter()
 
 
-
 @router.post("/signup")
 async def signup(payload: dict, db: AsyncSession = Depends(get_db)):
     """
@@ -59,8 +58,13 @@ async def signup(payload: dict, db: AsyncSession = Depends(get_db)):
         "tenant_id": str(tenant.id),
     }
 
+
 @router.get("/me")
-async def me(authorization: str = Header(None), db: AsyncSession=Depends(get_db), supabase:Client = Depends(get_supabase)):
+async def me(
+    authorization: str = Header(None),
+    db: AsyncSession = Depends(get_db),
+    supabase: Client = Depends(get_supabase),
+):
     if not authorization:
         raise HTTPException(status_code=401, detail="Missing token")
 
@@ -69,22 +73,16 @@ async def me(authorization: str = Header(None), db: AsyncSession=Depends(get_db)
 
     token = authorization.split(" ")[1]
 
-
     user = get_user_from_token(supabase, token)
 
     user_id = user.id
     email = user.email
     name = user.user_metadata.get("name") if user else None
 
-
     user_context = await get_user_context(db, user_id, supabase)
 
     return {
-        "user": {
-            "id": user_id,
-            "email": email,
-            "name": name
-        },
+        "user": {"id": user_id, "email": email, "name": name},
         "tenant": user_context.get("tenant"),
         "role": user_context.get("role"),
         "subscription_active": user_context.get("subscription_active"),
@@ -116,12 +114,11 @@ async def create_session(
     return {"ok": True, "user_id": user.id}
 
 
-
 async def get_current_user(
     authorization: str = Header(None),
     db: AsyncSession = Depends(get_db),
     supabase: Client = Depends(get_supabase),
-):
+) -> User:
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing token")
 
