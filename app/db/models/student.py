@@ -34,6 +34,7 @@ class Student(Base):
     class_applied: Mapped[str] = mapped_column(String, nullable=True)
     faculty: Mapped[str] = mapped_column(String, nullable=True)
     course: Mapped[str] = mapped_column(String, nullable=True)
+    study_format: Mapped[str] = mapped_column(String, nullable=True)
 
     created_at: Mapped[DateTime] = mapped_column(DateTime, server_default=func.now())
     updated_at = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())

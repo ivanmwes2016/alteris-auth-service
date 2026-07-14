@@ -74,6 +74,7 @@ class StudentResponse(BaseModel):
 
     created_at: datetime
     updated_at: datetime | None = None
+    study_format: str | None = None
 
     medicalNotes: list[MedicalNoteResponse] = []  # noqa: N815
     parents: list[StudentParentLinkResponse] = []
@@ -119,6 +120,7 @@ class StudentCreate(BaseModel):
     email: str | None = None
     phone: str | None = None
     address: str | None = None
+    study_format: str | None = None
 
 
 @router.post("", status_code=status.HTTP_201_CREATED)
@@ -242,6 +244,7 @@ async def get_students(
             "medicalNotes": student.medical_notes,
             "attendanceRecords": student.attendance_records,
             "dob": student.date_of_birth,
+            "admissionNo": student.school_id,
         }
         for student in students
     ]
@@ -295,3 +298,55 @@ async def get_student_by_id(
         "attendanceRecords": student.attendance_records,
         "dob": student.date_of_birth,
     }
+
+
+@router.patch("/{student_id}", status_code=status.HTTP_201_CREATED)
+async def update_student(
+    student_id: UUID,
+    payload: StudentCreate,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
+) -> dict[str, str]:
+    try:
+        member_result = await db.execute(
+            select(TenantMember).where(TenantMember.user_id == current_user.id)
+        )
+        member = member_result.scalar_one_or_none()
+
+        if not member:
+            raise HTTPException(status_code=403, detail="User does not belong to a school")
+
+        student_result = await db.execute(
+            select(Student).where(
+                Student.id == student_id,
+                Student.tenant_id == member.tenant_id,
+            )
+        )
+
+        student = student_result.scalar_one_or_none()
+
+        if not student:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Student not found",
+            )
+
+        update_data = payload.model_dump(exclude_unset=True, exclude={"tenant_id", "id"})
+
+        # Update student fields
+        for field, value in update_data.items():
+            setattr(student, field, value)
+
+        await db.commit()
+        await db.refresh(student)
+
+        return {
+            "message": "Student updated successfully",
+        }
+
+    except Exception as exc:
+        await db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        ) from exc
