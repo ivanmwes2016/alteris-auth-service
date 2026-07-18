@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 from app.api.v1.routes import stripe_webhooks
 
-from .routes import auth, billing, enquiries, health, students, tenant_profile, workspaces
+from .routes import auth, billing, enquiries, health, parents, students, tenant_profile, workspaces
 
 api_router = APIRouter()
 api_router.include_router(health.router, tags=["health"])
@@ -14,6 +14,7 @@ api_router.include_router(enquiries.router, tags=["enquiries"])
 api_router.include_router(tenant_profile.router, prefix="/profile", tags=["profile"])
 api_router.include_router(tenant_profile.router, prefix="/profile/fees", tags=["profile"])
 api_router.include_router(students.router, prefix="/students", tags=["students"])
+api_router.include_router(parents.router, prefix="/parents", tags=["parents"])
 
 
 # api_router.include_router(tenants.router, prefix="/tenants", tags=["tenants"])

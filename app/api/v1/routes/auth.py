@@ -1,4 +1,8 @@
-from fastapi import APIRouter, Depends, Header, HTTPException, Response
+from uuid import UUID
+
+from fastapi import APIRouter, Depends, Header, HTTPException, Response, status
+from pydantic import BaseModel
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from supabase import Client
 
@@ -13,8 +17,34 @@ from app.helpers.user_context import get_user_context
 router = APIRouter()
 
 
-@router.post("/signup")
-async def signup(payload: dict, db: AsyncSession = Depends(get_db)):
+class CurrentUserResponse(BaseModel):
+    id: UUID
+    email: str
+    name: str | None = None
+
+
+class CurrentTenantResponse(BaseModel):
+    id: UUID
+    name: str
+    workspace_id: str | None = None
+    logo_path: str | None = None
+    plan: str
+
+
+class MeResponse(BaseModel):
+    user: CurrentUserResponse
+    tenant: CurrentTenantResponse | None = None
+    role: str | None = None
+    subscription_active: bool
+
+
+class SessionResponse(BaseModel):
+    ok: bool
+    user_id: UUID
+
+
+@router.post("/signup", status_code=status.HTTP_201_CREATED)
+async def signup(payload: dict, db: AsyncSession = Depends(get_db)) -> dict[str, str]:
     """
     Expected payload:
     {
@@ -59,47 +89,63 @@ async def signup(payload: dict, db: AsyncSession = Depends(get_db)):
     }
 
 
-@router.get("/me")
+@router.get("/me", response_model=MeResponse)
 async def me(
-    authorization: str = Header(None),
+    authorization: str | None = Header(default=None),
     db: AsyncSession = Depends(get_db),
     supabase: Client = Depends(get_supabase),
-):
+) -> MeResponse:
     if not authorization:
-        raise HTTPException(status_code=401, detail="Missing token")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Missing token",
+        )
 
     if not authorization.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Invalid auth header")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid auth header",
+        )
 
-    token = authorization.split(" ")[1]
+    token = authorization.removeprefix("Bearer ").strip()
 
     user = get_user_from_token(supabase, token)
 
     user_id = user.id
     email = user.email
-    name = user.user_metadata.get("name") if user else None
+    name = user.user_metadata.get("name")
 
-    user_context = await get_user_context(db, user_id, supabase)
+    user_context = await get_user_context(
+        db,
+        user_id,
+        supabase,
+    )
 
-    return {
-        "user": {"id": user_id, "email": email, "name": name},
-        "tenant": user_context.get("tenant"),
-        "role": user_context.get("role"),
-        "subscription_active": user_context.get("subscription_active"),
-    }
+    return MeResponse(
+        user=CurrentUserResponse(
+            id=user_id,
+            email=email,
+            name=name,
+        ),
+        tenant=user_context.get("tenant"),
+        role=user_context.get("role"),
+        subscription_active=bool(user_context.get("subscription_active")),
+    )
 
 
-@router.post("/session")
+@router.post("/session", response_model=SessionResponse)
 async def create_session(
     response: Response,
-    authorization: str = Header(None),
+    authorization: str | None = Header(default=None),
     supabase: Client = Depends(get_supabase),
-):
+) -> SessionResponse:
     if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Missing token")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Missing token",
+        )
 
-    token = authorization.split(" ")[1]
-
+    token = authorization.removeprefix("Bearer ").strip()
     user = get_user_from_token(supabase, token)
 
     response.set_cookie(
@@ -111,7 +157,10 @@ async def create_session(
         max_age=60 * 60 * 24 * 7,
     )
 
-    return {"ok": True, "user_id": user.id}
+    return SessionResponse(
+        ok=True,
+        user_id=user.id,
+    )
 
 
 async def get_current_user(
@@ -136,3 +185,25 @@ async def get_current_user(
         await db.flush()
 
     return user
+
+
+async def get_current_tenant_id(
+    db: AsyncSession,
+    current_user: User,
+) -> UUID:
+    result = await db.execute(
+        select(TenantMember.tenant_id).where(
+            TenantMember.user_id == current_user.id,
+            TenantMember.status == "active",
+        )
+    )
+
+    tenant_id = result.scalar_one_or_none()
+
+    if tenant_id is None:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="User does not belong to an active tenant",
+        )
+
+    return tenant_id

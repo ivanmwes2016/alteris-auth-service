@@ -29,8 +29,7 @@ class Parent(Base):
         index=True,
     )
 
-    first_name: Mapped[str] = mapped_column(String(100), nullable=False)
-    last_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
     photo: Mapped[str | None] = mapped_column(String, nullable=True)
 
     email: Mapped[str | None] = mapped_column(String(255), nullable=True)
@@ -38,6 +37,7 @@ class Parent(Base):
 
     address: Mapped[str | None] = mapped_column(String(255), nullable=True)
     occupation: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    proof_of_id: Mapped[str | None] = mapped_column(String, nullable=True)
 
     students: Mapped[list["StudentParent"]] = relationship(  # noqa: UP037
         "StudentParent",
