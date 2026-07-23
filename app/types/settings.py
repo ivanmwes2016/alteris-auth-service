@@ -6,7 +6,7 @@ class Settings(BaseModel):
     APP_NAME: str = "Alteris Multiple Tenant SAAS"
     ENV: str = "development"
     DEBUG: bool = False
-    FRONTEND_URL:str
+    FRONTEND_URL: str
 
     # Database (Supabase Postgres)
     DATABASE_URL: str
@@ -16,8 +16,8 @@ class Settings(BaseModel):
     SUPABASE_ANON_KEY: str
     # SUPABASE_SERVICE_ROLE_KEY: str
     SUPABASE_JWT_SECRET: str
-    SUPABASE_SECRET_KEY:str
-    SUPABASE_LOGO_BUCKET_NAME:str
+    SUPABASE_SECRET_KEY: str
+    SUPABASE_LOGO_BUCKET_NAME: str
 
     # Stripe
     STRIPE_SECRET_KEY: str
