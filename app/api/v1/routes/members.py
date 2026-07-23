@@ -13,15 +13,11 @@ router = APIRouter()
 
 @router.post("/invite")
 async def invite_member(
-    payload: dict,
-    request: Request,
-    db: AsyncSession = Depends(get_db)
-):
+    payload: dict, request: Request, db: AsyncSession = Depends(get_db)
+) -> dict[str, str]:
     tenant_id = request.state.tenant_id
 
-    tenant_result = await db.execute(
-        select(Tenant).where(Tenant.id == tenant_id)
-    )
+    tenant_result = await db.execute(select(Tenant).where(Tenant.id == tenant_id))
 
     tenant = tenant_result.scalar_one()
 
@@ -34,10 +30,7 @@ async def invite_member(
     current_members = count_result.scalar()
 
     if current_members >= tenant.seat_limit:
-        raise HTTPException(
-            status_code=403,
-            detail="Seat limit reached"
-        )
+        raise HTTPException(status_code=403, detail="Seat limit reached")
 
     invite_token = secrets.token_urlsafe(32)
 

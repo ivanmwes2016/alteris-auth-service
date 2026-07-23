@@ -1,7 +1,12 @@
 from .attendance import StudentAttendance
 from .enquiries import Enquiry
 from .invite import Invite
-from .medical_note import StudentMedicalNote
+from .medical_note import (
+    StudentAllergy,
+    StudentMedicalCondition,
+    StudentMedicalProfile,
+    StudentMedication,
+)
 from .parent import Parent
 from .profile import Profile
 from .role import Role
@@ -20,8 +25,11 @@ __all__ = [
     "Profile",
     "Role",
     "Student",
+    "StudentAllergy",
     "StudentAttendance",
-    "StudentMedicalNote",
+    "StudentMedicalCondition",
+    "StudentMedicalProfile",
+    "StudentMedication",
     "StudentParent",
     "Tenant",
     "TenantMember",

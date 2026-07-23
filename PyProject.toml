@@ -1,4 +1,4 @@
-[tool.ruff]
+
 target-version = "py312"
 line-length = 100
 src = ["app", "tests"]
@@ -18,8 +18,6 @@ select = [
     "RUF", # Ruff-specific rules
 ]
 ignore = [
-    "ANN101", # missing type for `self`
-    "ANN102", # missing type for `cls`
     "S101",   # use of assert (fine in tests)
     "B008",   # do not perform function calls in default args (FastAPI Depends pattern)
 ]
@@ -27,6 +25,11 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["ANN", "S"]  # relax annotations + security in tests
 "alembic/**" = ["ANN"]     # migrations don't need full annotations
+
+[tool.ruff]
+exclude = [
+    "alembic",
+]
 
 [tool.ruff.lint.isort]
 known-first-party = ["app"]

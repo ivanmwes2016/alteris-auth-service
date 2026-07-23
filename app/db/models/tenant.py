@@ -18,7 +18,9 @@ class Tenant(Base):
 
     name: Mapped[str] = mapped_column(String, nullable=False)
     slug: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=False)
-    workspace_id: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=False)
+    workspace_id: Mapped[str] = mapped_column(
+        String, unique=True, index=True, nullable=False
+    )
     plan: Mapped[str] = mapped_column(
         String, unique=True, index=True, nullable=True, default="free"
     )
@@ -30,7 +32,10 @@ class Tenant(Base):
     )
 
     members = relationship(
-        "TenantMember", back_populates="tenant", cascade="all, delete-orphan", passive_deletes=True
+        "TenantMember",
+        back_populates="tenant",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
     )
     invites = relationship("Invite", back_populates="tenant")
 

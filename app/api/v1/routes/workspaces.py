@@ -22,7 +22,7 @@ BUCKET_NAME = "client-logos"
 
 class UpdateWorkspaceRequest(BaseModel):
     name: str
-    workspaceId: str
+    workspace_id: str
 
 
 @router.patch("/onboarding")
@@ -30,9 +30,9 @@ async def update_workspace(
     payload: UpdateWorkspaceRequest,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
-):
+) -> dict[str, str]:
     slug = slugify(payload.name)
-    tenant = Tenant(name=payload.name, slug=slug, workspace_id=payload.workspaceId)
+    tenant = Tenant(name=payload.name, slug=slug, workspace_id=payload.workspace_id)
 
     existing_tenant = await db.execute(select(Tenant).where(Tenant.slug == slug))
 
@@ -45,7 +45,10 @@ async def update_workspace(
     admin_role = await get_role_by_name(db, "admin")
 
     member = TenantMember(
-        tenant_id=tenant.id, user_id=current_user.id, role_id=admin_role.id, status="active"
+        tenant_id=tenant.id,
+        user_id=current_user.id,
+        role_id=admin_role.id,
+        status="active",
     )
     if not member:
         raise HTTPException(status_code=409, detail="No team member for that creteria")
@@ -67,7 +70,7 @@ async def upload_workspace_logo(
     logo: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
     supabase: Client = Depends(get_supabase),
-):
+) -> dict[str, str]:
     allowed_types = ["image/png", "image/jpeg", "image/webp"]
 
     if logo.content_type not in allowed_types:
@@ -114,7 +117,7 @@ async def upload_workspace_logo(
     }
 
 
-async def get_role_by_name(db: AsyncSession, name: str):
+async def get_role_by_name(db: AsyncSession, name: str) -> Role:
     result = await db.execute(select(Role).where(Role.name == name))
     role = result.scalar_one_or_none()
 
@@ -124,7 +127,9 @@ async def get_role_by_name(db: AsyncSession, name: str):
     return role
 
 
-async def get_tenant_member(db: AsyncSession, tenant_id: UUID, user_id: UUID):
+async def get_tenant_member(
+    db: AsyncSession, tenant_id: UUID, user_id: UUID
+) -> TenantMember | None:
     result = await db.execute(
         select(TenantMember).where(
             TenantMember.tenant_id == tenant_id,

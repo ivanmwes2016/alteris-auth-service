@@ -31,15 +31,23 @@ test:
 	pytest tests/ -v
 
 # ── Database / Alembic ────────────────────────────────────────────────────────
+.PHONY: migrate
 migrate:
 	alembic upgrade head
 
 migrate-down:
 	alembic downgrade -1
 
+.PHONY: migration
 migration:
+	@echo "Applying existing migrations..."
+	$(MAKE) migrate
+
+	@echo "Creating new migration: $(name)"
 	alembic revision --autogenerate -m "$(name)"
-	@echo "✅  New migration created — review before committing"
+
+	@echo "Applying new migration..."
+	$(MAKE) migrate
 
 migrate-history:
 	alembic history --verbose

@@ -11,7 +11,6 @@ from sqlalchemy.orm import selectinload
 
 from app.api.v1.routes.auth import get_current_tenant_id, get_current_user
 from app.core.db import get_db
-from app.db.models.medical_note import StudentMedicalNote
 from app.db.models.parent import Parent
 from app.db.models.student import Student
 from app.db.models.student_parent import StudentParent
@@ -19,18 +18,6 @@ from app.db.models.tenant_member import TenantMember
 from app.db.models.users import User
 
 router = APIRouter()
-
-
-class MedicalNoteResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    id: UUID
-    blood_group: str | None = None
-    doctor_name: str | None = None
-    doctor_phone: str | None = None
-    allergies: list[str] = []
-    medications: list[str] = []
-    notes: str | None = None
 
 
 class StudentParentLinkResponse(BaseModel):
@@ -98,7 +85,6 @@ class StudentResponse(BaseModel):
     updated_at: datetime | None = None
     study_format: str | None = None
 
-    medicalNotes: list[MedicalNoteResponse] = []  # noqa: N815
     parents: list[StudentParentResponse] = Field(default_factory=list)
     attendanceRecords: list[AttendanceResponse] = []  # noqa: N815
 
@@ -136,15 +122,6 @@ class ParentResponse(BaseModel):
     students: list[StudentParentLinkResponse] = Field(default_factory=list)
 
 
-class MedicalCreate(BaseModel):
-    blood_group: str | None = None
-    doctor_name: str | None = None
-    doctor_phone: str | None = None
-    allergies: list[str] = []
-    medications: list[str] = []
-    notes: str | None = None
-
-
 class StudentCreate(BaseModel):
     tenant_id: str
     name: str | None
@@ -157,7 +134,6 @@ class StudentCreate(BaseModel):
     faculty: str | None = None
     course: str | None = None
     parents: list[ParentCreate] = []
-    medical: MedicalCreate | None = None
     attendance: list[AttendanceResponse] = []
     email: str | None = None
     phone: str | None = None
@@ -178,7 +154,7 @@ async def create_student(
         member = member_result.scalar_one_or_none()
 
         if not member:
-            raise HTTPException(status_code=403, detail="User does not belong to a school")
+            raise HTTPException(status_code=403, detail="User not found")
 
         student = Student(
             tenant_id=payload.tenant_id,
@@ -226,20 +202,6 @@ async def create_student(
                 )
             )
 
-        if payload.medical:
-            medical = StudentMedicalNote(
-                tenant_id=payload.tenant_id,
-                student_id=student.id,
-                blood_group=payload.medical.blood_group,
-                doctor_name=payload.medical.doctor_name,
-                doctor_phone=payload.medical.doctor_phone,
-                allergies=payload.medical.allergies,
-                medications=payload.medical.medications,
-                notes=payload.medical.notes,
-            )
-
-            db.add(medical)
-
         await db.commit()
         await db.refresh(student)
 
@@ -272,7 +234,6 @@ async def get_students(
         select(Student)
         .where(Student.tenant_id == member.tenant_id)
         .options(
-            selectinload(Student.medical_notes),
             selectinload(Student.parents).selectinload(StudentParent.parent),
             selectinload(Student.attendance_records),
         )
@@ -283,7 +244,6 @@ async def get_students(
     return [
         {
             **student.__dict__,
-            "medicalNotes": student.medical_notes,
             "attendanceRecords": student.attendance_records,
             "dob": student.date_of_birth,
             "admissionNo": student.school_id,
@@ -320,7 +280,6 @@ async def get_student_by_id(
             Student.tenant_id == member.tenant_id,
         )
         .options(
-            selectinload(Student.medical_notes),
             selectinload(Student.parents).selectinload(StudentParent.parent),
             selectinload(Student.attendance_records),
         )
@@ -336,7 +295,6 @@ async def get_student_by_id(
 
     return {
         **student.__dict__,
-        "medicalNotes": student.medical_notes,
         "attendanceRecords": student.attendance_records,
         "dob": student.date_of_birth,
     }
@@ -356,7 +314,9 @@ async def update_student(
         member = member_result.scalar_one_or_none()
 
         if not member:
-            raise HTTPException(status_code=403, detail="User does not belong to a school")
+            raise HTTPException(
+                status_code=403, detail="User does not belong to a school"
+            )
 
         student_result = await db.execute(
             select(Student).where(
@@ -373,7 +333,9 @@ async def update_student(
                 detail="Student not found",
             )
 
-        update_data = payload.model_dump(exclude_unset=True, exclude={"tenant_id", "id"})
+        update_data = payload.model_dump(
+            exclude_unset=True, exclude={"tenant_id", "id"}
+        )
 
         # Update student fields
         for field, value in update_data.items():
@@ -482,7 +444,9 @@ async def update_student_parents(
                 if link is None:
                     raise HTTPException(
                         status_code=status.HTTP_404_NOT_FOUND,
-                        detail=(f"Parent {parent_data.parent_id} is not linked to this student"),
+                        detail=(
+                            f"Parent id {parent_data.parent_id} not linked to this student"  # noqa: E501
+                        ),
                     )
 
                 submitted_parent_ids.add(parent_data.parent_id)

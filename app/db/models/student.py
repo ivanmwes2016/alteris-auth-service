@@ -9,7 +9,7 @@ from app.core.db import Base
 
 if TYPE_CHECKING:
     from app.db.models.attendance import StudentAttendance
-    from app.db.models.medical_note import StudentMedicalNote
+    from app.db.models.medical_note import StudentMedicalProfile
 
     from .student_parent import StudentParent
 
@@ -17,7 +17,9 @@ if TYPE_CHECKING:
 class Student(Base):
     __tablename__ = "students"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     tenant_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False
     )
@@ -39,9 +41,11 @@ class Student(Base):
     created_at: Mapped[DateTime] = mapped_column(DateTime, server_default=func.now())
     updated_at = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
 
-    medical_notes: Mapped[list["StudentMedicalNote"]] = relationship(
+    medical_profile: Mapped[list["StudentMedicalProfile"]] = relationship(
+        "StudentMedicalProfile",
         back_populates="student",
         cascade="all, delete-orphan",
+        uselist=False,
     )
 
     school = relationship(

@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 from fastapi import HTTPException
 from sqlalchemy import select
@@ -15,7 +16,9 @@ log = logging.getLogger(__name__)
 config = get_settings()
 
 
-async def get_user_context(db: AsyncSession, user_id: str, supabase:Client):
+async def get_user_context(
+    db: AsyncSession, user_id: str, supabase: Client
+) -> dict[str, Any]:
     try:
         result = await db.execute(
             select(TenantMember, Tenant, Role)
@@ -33,15 +36,17 @@ async def get_user_context(db: AsyncSession, user_id: str, supabase:Client):
                 "subscription_active": False,
             }
 
-        membership, tenant, role = row
+        _, tenant, role = row
 
-        logo_url= ""
+        logo_url = ""
 
         if tenant.logo_path:
-            signed = supabase.storage.from_(config.SUPABASE_LOGO_BUCKET_NAME).create_signed_url(
+            signed = supabase.storage.from_(
+                config.SUPABASE_LOGO_BUCKET_NAME
+            ).create_signed_url(
                 tenant.logo_path,
-                60*60,# 1 hour
-                )
+                60 * 60,  # 1 hour
+            )
             logo_url = signed["signedURL"]
 
         return {
@@ -53,7 +58,7 @@ async def get_user_context(db: AsyncSession, user_id: str, supabase:Client):
                 "plan": tenant.plan,
             },
             "role": role.name,
-             "subscription_active": True, #To Do ==> get from stripe subscription
+            "subscription_active": True,  # To Do ==> get from stripe subscription
         }
 
     except SQLAlchemyError as exc:

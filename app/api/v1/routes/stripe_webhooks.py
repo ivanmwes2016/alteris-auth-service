@@ -25,7 +25,7 @@ async def stripe_webhook(
     request: Request,
     stripe_signature: str | None = Header(None, alias="Stripe-Signature"),
     db: AsyncSession = Depends(get_db),
-):
+) -> dict[str, str]:
     payload = await request.body()
 
     try:
@@ -34,10 +34,10 @@ async def stripe_webhook(
             sig_header=stripe_signature,
             secret=settings.STRIPE_WEBHOOK_SECRET,
         )
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid payload")
-    except stripe.SignatureVerificationError:
-        raise HTTPException(status_code=400, detail="Invalid signature")
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=f"Invalid payload: {e}") from e
+    except stripe.SignatureVerificationError as exc:
+        raise HTTPException(status_code=400, detail="Invalid signature") from exc
 
     event_type = event["type"]
     data = event["data"]["object"]

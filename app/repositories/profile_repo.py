@@ -7,7 +7,9 @@ from ..db.models.profile import Profile
 
 
 class ProfileRepository:
-    def __init__(self, db: AsyncSession):
+    """Repository for profile operations."""
+
+    def __init__(self, db: AsyncSession) -> None:
         self.db = db
 
     async def get_by_user_id(self, user_id: UUID) -> Profile | None:

@@ -16,11 +16,8 @@ router = APIRouter()
 
 stripe.api_key = config.STRIPE_SECRET_KEY
 
-prices ={
-    1: 0,
-    2: 20,
-    3: 250
-}
+prices = {1: 0, 2: 20, 3: 250}
+
 
 class CheckoutPayload(BaseModel):
     price_id: str
@@ -34,11 +31,9 @@ async def create_checkout(
     authorization: str | None = Header(None),
     db: AsyncSession = Depends(get_db),
     supabase: Client = Depends(get_supabase),
-):
+) -> dict[str, str]:
     token = authorization.split(" ")[1]
     user = get_user_from_token(supabase, token)
-
-
 
     user_context = await get_user_context(db, user.id)
     tenant_id = user_context["tenant"]["id"]
