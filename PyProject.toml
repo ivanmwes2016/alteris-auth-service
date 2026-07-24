@@ -1,6 +1,14 @@
-
+[tool.ruff]
 target-version = "py312"
 line-length = 100
+
+extend-exclude = [
+    "alembic/versions",
+]
+
+exclude = [
+    "alembic",
+]
 src = ["app", "tests"]
 
 [tool.ruff.lint]
@@ -26,10 +34,7 @@ ignore = [
 "tests/**" = ["ANN", "S"]  # relax annotations + security in tests
 "alembic/**" = ["ANN"]     # migrations don't need full annotations
 
-[tool.ruff]
-exclude = [
-    "alembic",
-]
+
 
 [tool.ruff.lint.isort]
 known-first-party = ["app"]
