@@ -25,12 +25,18 @@ class UpdateWorkspaceRequest(BaseModel):
     workspace_id: str
 
 
+class WorkSpaceResponse(BaseModel):
+    tenant_id: UUID
+    name: str
+    role: str
+
+
 @router.patch("/onboarding")
 async def update_workspace(
     payload: UpdateWorkspaceRequest,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> dict[str, str]:
+) -> WorkSpaceResponse:
     slug = slugify(payload.name)
     tenant = Tenant(name=payload.name, slug=slug, workspace_id=payload.workspace_id)
 
@@ -57,11 +63,11 @@ async def update_workspace(
     await db.commit()
     await db.refresh(tenant)
 
-    return {
-        "tenant_id": tenant.id,
-        "name": tenant.name,
-        "role": "admin",
-    }
+    return WorkSpaceResponse(
+        tenant_id=tenant.id,
+        name=tenant.name,
+        role="admin",
+    )
 
 
 @router.post("/{workspace_id}/logo")
@@ -87,9 +93,13 @@ async def upload_workspace_logo(
             detail="Logo must be less than 10MB",
         )
 
-    extension = logo.filename.split(".")[-1]
-    logo_path = f"{workspace_id}/logo.{extension}"
+    logo_path = ""
     expires_in = 60 * 60 * 24 * 30  # 30 days
+
+    if logo is not None and logo.filename is not None:
+        extension = logo.filename.split(".")[-1]
+        logo_path = f"{workspace_id}/logo.{extension}"
+
     await supabase.storage.from_(BUCKET_NAME).upload(
         path=logo_path,
         file=file_bytes,

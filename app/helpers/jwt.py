@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException
+from gotrue import User as SupabaseUser
 from jose import JWTError, jwt
 from supabase import Client
 
 from app.core.config import get_settings
-from app.db.models.users import User
 
 config = get_settings()
 
@@ -24,10 +24,11 @@ def verify_jwt(token: str) -> dict[str, str]:
         raise HTTPException(status_code=401, detail="Invalid token") from e
 
 
-def get_user_from_token(supabase: Client, token: str) -> User:
+def get_user_from_token(supabase: Client, token: str) -> SupabaseUser:
     res = supabase.auth.get_user(token)
+    user = res.user
 
-    if not res.user:
+    if user is None:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-    return res.user
+    return user
