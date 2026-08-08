@@ -2,48 +2,63 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches:
+      - main
+      - develop
+
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   check:
     name: Lint, type-check & test
     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
+    env:
+      APP_ENV: development
+      SECRET_KEY: test-secret-key-for-ci
 
-      - uses: actions/setup-python@v5
+      SUPABASE_URL: https://placeholder.supabase.co
+      SUPABASE_ANON_KEY: placeholder
+      SUPABASE_SERVICE_ROLE_KEY: placeholder
+      SUPABASE_JWT_SECRET: placeholder
+
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/test
+
+      STRIPE_SECRET_KEY: sk_test_placeholder
+      STRIPE_PUBLISHABLE_KEY: pk_test_placeholder
+      STRIPE_WEBHOOK_SECRET: whsec_placeholder
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
         with:
-          python-version: "3.12"
-          cache: pip
+          enable-cache: true
+
+      - name: Install Python
+        run: uv python install 3.12
 
       - name: Install dependencies
         run: uv sync --frozen
 
-      - name: Show Ruff version
-        run: ruff --version
+      - name: Show versions
+        run: |
+          uv --version
+          uv run python --version
+          uv run ruff --version
 
       - name: Format check
-        run: uv run ruff format app --check
+        run: uv run ruff format app tests --check
 
       - name: Lint
         run: uv run ruff check .
 
-        # - name: Type check
-        #   run: mypy app/
+      - name: Type check
+        run: uv run mypy app/
 
-        # - name: Test
-        #   run: pytest tests/ -v
-        env:
-          APP_ENV: development
-          SECRET_KEY: test-secret-key-for-ci
-          SUPABASE_URL: https://placeholder.supabase.co
-          SUPABASE_ANON_KEY: placeholder
-          SUPABASE_SERVICE_ROLE_KEY: placeholder
-          SUPABASE_JWT_SECRET: placeholder
-          DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/test
-          STRIPE_SECRET_KEY: sk_test_placeholder
-          STRIPE_PUBLISHABLE_KEY: pk_test_placeholder
-          STRIPE_WEBHOOK_SECRET: whsec_placeholder
+      - name: Test
+        run: uv run pytest tests/ -v
