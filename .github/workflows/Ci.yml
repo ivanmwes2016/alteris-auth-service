@@ -15,9 +15,17 @@ jobs:
     name: Lint, type-check & test
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: alteris-auth-service
+    env:
+      APP_ENV: development
+      SECRET_KEY: test-secret-key-for-ci
+      SUPABASE_URL: https://placeholder.supabase.co
+      SUPABASE_ANON_KEY: placeholder
+      SUPABASE_SERVICE_ROLE_KEY: placeholder
+      SUPABASE_JWT_SECRET: placeholder
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/test
+      STRIPE_SECRET_KEY: sk_test_placeholder
+      STRIPE_PUBLISHABLE_KEY: pk_test_placeholder
+      STRIPE_WEBHOOK_SECRET: whsec_placeholder
 
     steps:
       - name: Checkout
@@ -32,12 +40,19 @@ jobs:
         run: |
           pwd
           ls -la
+          find . -maxdepth 2 -name "pyproject.toml" -print
 
       - name: Install Python
         run: uv python install 3.12
 
       - name: Install dependencies
         run: uv sync --frozen
+
+      - name: Show versions
+        run: |
+          uv --version
+          uv run python --version
+          uv run ruff --version
 
       - name: Format check
         run: uv run ruff format app tests --check
