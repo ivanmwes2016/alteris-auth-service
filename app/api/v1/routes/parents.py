@@ -38,8 +38,7 @@ class ParentResponse(BaseModel):
 
     id: UUID
     tenant_id: UUID
-    first_name: str
-    last_name: str
+    name: str
     photo: str | None = None
     email: str | None = None
     phone: str | None = None
@@ -49,8 +48,7 @@ class ParentResponse(BaseModel):
 
 
 class ParentPatch(BaseModel):
-    first_name: str | None = None
-    last_name: str | None = None
+    name: str | None = None
     photo: str | None = None
     email: str | None = None
     phone: str | None = None
@@ -80,7 +78,7 @@ async def get_parents(
         select(Parent)
         .where(Parent.tenant_id == tenant_id)
         .options(selectinload(Parent.students).selectinload(StudentParent.student))
-        .order_by(Parent.first_name, Parent.last_name)
+        .order_by(Parent.name)
     )
 
     return list(result.scalars().unique().all())
@@ -217,7 +215,10 @@ async def update_parent_student_relationship(
 
         refreshed_result = await db.execute(
             select(StudentParent)
-            .where(StudentParent.id == relationship.id)
+            .where(
+                StudentParent.parent_id == relationship.parent_id,
+                StudentParent.student_id == relationship.student_id,
+            )
             .options(selectinload(StudentParent.student))
         )
 

@@ -1,5 +1,5 @@
 import stripe
-from fastapi import APIRouter, Depends, Header
+from fastapi import APIRouter, Depends, Header, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from supabase import Client
@@ -23,6 +23,7 @@ class CheckoutPayload(BaseModel):
     price_id: str
     price: int
     tenant_id: str
+    plan: str
 
 
 @router.post("/checkout")
@@ -32,10 +33,16 @@ async def create_checkout(
     db: AsyncSession = Depends(get_db),
     supabase: Client = Depends(get_supabase),
 ) -> dict[str, str]:
-    token = authorization.split(" ")[1]
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Missing token",
+        )
+
+    token = authorization.removeprefix("Bearer ").strip()
     user = get_user_from_token(supabase, token)
 
-    user_context = await get_user_context(db, user.id)
+    user_context = await get_user_context(db, user.id, supabase)
     tenant_id = user_context["tenant"]["id"]
 
     session = stripe.checkout.Session.create(
@@ -54,5 +61,11 @@ async def create_checkout(
             }
         },
     )
+
+    if session.url is None:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="Stripe did not return a checkout URL",
+        )
 
     return {"checkout_url": session.url}

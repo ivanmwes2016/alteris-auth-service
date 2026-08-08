@@ -7,6 +7,7 @@ from .routes import (
     billing,
     enquiries,
     health,
+    medical,
     parents,
     students,
     tenant_profile,
@@ -21,11 +22,10 @@ api_router.include_router(stripe_webhooks.router, prefix="/stripe", tags=["strip
 api_router.include_router(billing.router, prefix="/billing", tags=["billing"])
 api_router.include_router(enquiries.router, tags=["enquiries"])
 api_router.include_router(tenant_profile.router, prefix="/profile", tags=["profile"])
-api_router.include_router(
-    tenant_profile.router, prefix="/profile/fees", tags=["profile"]
-)
+api_router.include_router(tenant_profile.router, prefix="/profile/fees", tags=["profile"])
 api_router.include_router(students.router, prefix="/students", tags=["students"])
 api_router.include_router(parents.router, prefix="/parents", tags=["parents"])
+api_router.include_router(medical.router, prefix="/students/{student_id}/medical", tags=["medical"])
 
 
 # api_router.include_router(tenants.router, prefix="/tenants", tags=["tenants"])

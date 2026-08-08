@@ -28,7 +28,10 @@ class Settings(BaseModel):
 
     # Security
     JWT_ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
     # Lambda tuning (optional)
     LAMBDA_TIMEOUT: int = 30
     LAMBDA_MEMORY_MB: int = 512
+    TOKEN_TYPE: str | None

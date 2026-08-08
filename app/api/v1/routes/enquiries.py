@@ -101,23 +101,21 @@ async def list_enquiries(
     if not member:
         raise HTTPException(status_code=403, detail="User does not belong to a school")
 
-    result = await db.execute(
-        select(Enquiry).where(Enquiry.tenant_id == member.tenant_id)
-    )
+    result = await db.execute(select(Enquiry).where(Enquiry.tenant_id == member.tenant_id))
 
     enquiries = result.scalars().all()
 
-    result = [
-        {
-            **item.__dict__,
-            "classApplied": item.class_applied,
-            "previousSchool": item.previous_school,
-            "date": item.created_at,
-        }
+    return [
+        EnquiryGetResponse.model_validate(
+            {
+                **item.__dict__,
+                "classApplied": item.class_applied,
+                "previousSchool": item.previous_school,
+                "date": item.created_at,
+            }
+        )
         for item in enquiries
     ]
-
-    return result
 
 
 @router.patch("/enquiries/{enquiry_id}")
@@ -136,9 +134,7 @@ async def patch_inquiry(
         raise HTTPException(status_code=403, detail="User does not belong to a school")
 
     result = await db.execute(
-        select(Enquiry).where(
-            Enquiry.id == enquiry_id, Enquiry.tenant_id == member.tenant_id
-        )
+        select(Enquiry).where(Enquiry.id == enquiry_id, Enquiry.tenant_id == member.tenant_id)
     )
 
     enquiry = result.scalar_one_or_none()

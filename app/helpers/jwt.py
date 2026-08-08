@@ -26,9 +26,7 @@ def verify_jwt(token: str) -> dict[str, str]:
 
 def get_user_from_token(supabase: Client, token: str) -> SupabaseUser:
     res = supabase.auth.get_user(token)
-    user = res.user
-
-    if user is None:
+    if res is None or res.user is None:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-    return user
+    return res.user

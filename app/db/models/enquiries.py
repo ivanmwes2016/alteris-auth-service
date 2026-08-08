@@ -11,9 +11,7 @@ class Enquiry(Base):
     __tablename__ = "enquiries"
 
     id = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    tenant_id = mapped_column(
-        UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False
-    )
+    tenant_id = mapped_column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False)
 
     name = mapped_column(String, nullable=False)
     class_applied = mapped_column(String, nullable=False)

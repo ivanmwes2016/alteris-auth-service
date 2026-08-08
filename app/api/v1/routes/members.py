@@ -1,4 +1,5 @@
 import secrets
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy import func, select
@@ -13,7 +14,7 @@ router = APIRouter()
 
 @router.post("/invite")
 async def invite_member(
-    payload: dict, request: Request, db: AsyncSession = Depends(get_db)
+    payload: dict[str, Any], request: Request, db: AsyncSession = Depends(get_db)
 ) -> dict[str, str]:
     tenant_id = request.state.tenant_id
 
@@ -22,12 +23,10 @@ async def invite_member(
     tenant = tenant_result.scalar_one()
 
     count_result = await db.execute(
-        select(func.count())
-        .select_from(TenantMember)
-        .where(TenantMember.tenant_id == tenant_id)
+        select(func.count()).select_from(TenantMember).where(TenantMember.tenant_id == tenant_id)
     )
 
-    current_members = count_result.scalar()
+    current_members = count_result.scalar_one()
 
     if current_members >= tenant.seat_limit:
         raise HTTPException(status_code=403, detail="Seat limit reached")

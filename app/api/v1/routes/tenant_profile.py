@@ -56,7 +56,7 @@ class FeeDetails(BaseModel):
 
 class Fees(BaseModel):
     currency: str | None = None
-    details: list[FeeDetails]
+    details: list[FeeDetails] = Field(default_factory=list)
 
 
 class ProfilePatch(BaseModel):
@@ -99,6 +99,7 @@ class TenantProfileResponse(BaseModel):
     contact: Contact = Field(default_factory=Contact)
 
     levels: list[str] = Field(default_factory=list)
+    courses: list[str] = Field(default_factory=list)
     curriculum: list[str] = Field(default_factory=list)
 
     type: str | None = None
@@ -137,9 +138,7 @@ async def get_school_profile(
             detail="User does not belong to a school",
         )
 
-    tenant_result = await db.execute(
-        select(Tenant).where(Tenant.id == member.tenant_id)
-    )
+    tenant_result = await db.execute(select(Tenant).where(Tenant.id == member.tenant_id))
 
     tenant = tenant_result.scalar_one()
 
@@ -240,7 +239,7 @@ async def patch_school_profile(
         profile = TenantProfile(tenant_id=member.tenant_id)
         db.add(profile)
 
-    updates = payload.model_dump(exclude_unset=True)
+    updates = payload.model_dump(exclude_unset=True, mode="json")
 
     for field, value in updates.items():
         setattr(profile, field, value)
@@ -248,7 +247,7 @@ async def patch_school_profile(
     try:
         await db.commit()
         await db.refresh(profile)
-        return profile
+        return ProfilePatch.model_validate(profile, from_attributes=True)
 
     except SQLAlchemyError as exc:
         await db.rollback()
@@ -273,9 +272,7 @@ async def patch_school_fees(
     if not member:
         raise HTTPException(status_code=403, detail="User does not belong to a school")
 
-    result = await db.execute(
-        select(TutionFees).where(TutionFees.tenant_id == member.tenant_id)
-    )
+    result = await db.execute(select(TutionFees).where(TutionFees.tenant_id == member.tenant_id))
 
     fees = result.scalar_one_or_none()
 
@@ -291,4 +288,4 @@ async def patch_school_fees(
     await db.commit()
     await db.refresh(fees)
 
-    return fees
+    return TutionFeesPatch.model_validate(fees, from_attributes=True)

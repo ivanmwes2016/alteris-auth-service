@@ -138,16 +138,14 @@ def downgrade() -> None:
         sa.Column("note", sa.TEXT(), autoincrement=False, nullable=False),
         sa.Column(
             "health_conditions",
-            postgresql.JSON(astext_type=sa.Text()),
+            sa.JSON(),
             autoincrement=False,
             nullable=True,
         ),
-        sa.Column(
-            "allergies", postgresql.JSON(astext_type=sa.Text()), autoincrement=False, nullable=True
-        ),
+        sa.Column("allergies", sa.JSON(), autoincrement=False, nullable=True),
         sa.Column(
             "medications",
-            postgresql.JSON(astext_type=sa.Text()),
+            sa.JSON(),
             autoincrement=False,
             nullable=True,
         ),
