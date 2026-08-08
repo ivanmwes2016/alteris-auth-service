@@ -314,9 +314,7 @@ async def update_student(
         member = member_result.scalar_one_or_none()
 
         if not member:
-            raise HTTPException(
-                status_code=403, detail="User does not belong to a school"
-            )
+            raise HTTPException(status_code=403, detail="User does not belong to a school")
 
         student_result = await db.execute(
             select(Student).where(
@@ -333,9 +331,7 @@ async def update_student(
                 detail="Student not found",
             )
 
-        update_data = payload.model_dump(
-            exclude_unset=True, exclude={"tenant_id", "id"}
-        )
+        update_data = payload.model_dump(exclude_unset=True, exclude={"tenant_id", "id"})
 
         # Update student fields
         for field, value in update_data.items():
@@ -444,9 +440,7 @@ async def update_student_parents(
                 if link is None:
                     raise HTTPException(
                         status_code=status.HTTP_404_NOT_FOUND,
-                        detail=(
-                            f"Parent id {parent_data.parent_id} not linked to this student"  # noqa: E501
-                        ),
+                        detail=(f"Parent id {parent_data.parent_id} not linked to this student"),
                     )
 
                 submitted_parent_ids.add(parent_data.parent_id)

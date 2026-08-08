@@ -101,9 +101,7 @@ async def list_enquiries(
     if not member:
         raise HTTPException(status_code=403, detail="User does not belong to a school")
 
-    result = await db.execute(
-        select(Enquiry).where(Enquiry.tenant_id == member.tenant_id)
-    )
+    result = await db.execute(select(Enquiry).where(Enquiry.tenant_id == member.tenant_id))
 
     enquiries = result.scalars().all()
 
@@ -136,9 +134,7 @@ async def patch_inquiry(
         raise HTTPException(status_code=403, detail="User does not belong to a school")
 
     result = await db.execute(
-        select(Enquiry).where(
-            Enquiry.id == enquiry_id, Enquiry.tenant_id == member.tenant_id
-        )
+        select(Enquiry).where(Enquiry.id == enquiry_id, Enquiry.tenant_id == member.tenant_id)
     )
 
     enquiry = result.scalar_one_or_none()

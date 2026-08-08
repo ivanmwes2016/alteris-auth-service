@@ -22,9 +22,7 @@ async def invite_member(
     tenant = tenant_result.scalar_one()
 
     count_result = await db.execute(
-        select(func.count())
-        .select_from(TenantMember)
-        .where(TenantMember.tenant_id == tenant_id)
+        select(func.count()).select_from(TenantMember).where(TenantMember.tenant_id == tenant_id)
     )
 
     current_members = count_result.scalar()

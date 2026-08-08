@@ -13,9 +13,7 @@ class StudentMedicalProfile(Base):
     __tablename__ = "student_medical_profiles"
     __table_args__ = (Index("ix_medical_profiles_tenant_id", "tenant_id"),)
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     student_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("students.id", ondelete="CASCADE"),
@@ -43,9 +41,7 @@ class StudentMedicalProfile(Base):
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
-    student: Mapped["Student"] = relationship(
-        "Student", back_populates="medical_profile"
-    )
+    student: Mapped["Student"] = relationship("Student", back_populates="medical_profile")
     tenant: Mapped["Tenant"] = relationship("Tenant")
 
     allergies: Mapped[list["StudentAllergy"]] = relationship(
@@ -63,9 +59,7 @@ class StudentAllergy(Base):
     __tablename__ = "student_allergies"
     __table_args__ = (Index("ix_allergies_tenant_id", "tenant_id"),)
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     profile_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("student_medical_profiles.id", ondelete="CASCADE"),
@@ -89,9 +83,7 @@ class StudentMedication(Base):
     __tablename__ = "student_medications"
     __table_args__ = (Index("ix_medications_tenant_id", "tenant_id"),)
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     profile_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("student_medical_profiles.id", ondelete="CASCADE"),
@@ -118,9 +110,7 @@ class StudentMedicalCondition(Base):
     __tablename__ = "student_medical_conditions"
     __table_args__ = (Index("ix_conditions_tenant_id", "tenant_id"),)
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     profile_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("student_medical_profiles.id", ondelete="CASCADE"),

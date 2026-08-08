@@ -137,9 +137,7 @@ async def get_school_profile(
             detail="User does not belong to a school",
         )
 
-    tenant_result = await db.execute(
-        select(Tenant).where(Tenant.id == member.tenant_id)
-    )
+    tenant_result = await db.execute(select(Tenant).where(Tenant.id == member.tenant_id))
 
     tenant = tenant_result.scalar_one()
 
@@ -273,9 +271,7 @@ async def patch_school_fees(
     if not member:
         raise HTTPException(status_code=403, detail="User does not belong to a school")
 
-    result = await db.execute(
-        select(TutionFees).where(TutionFees.tenant_id == member.tenant_id)
-    )
+    result = await db.execute(select(TutionFees).where(TutionFees.tenant_id == member.tenant_id))
 
     fees = result.scalar_one_or_none()
 

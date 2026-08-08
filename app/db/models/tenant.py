@@ -18,9 +18,7 @@ class Tenant(Base):
 
     name: Mapped[str] = mapped_column(String, nullable=False)
     slug: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=False)
-    workspace_id: Mapped[str] = mapped_column(
-        String, unique=True, index=True, nullable=False
-    )
+    workspace_id: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=False)
     plan: Mapped[str] = mapped_column(
         String, unique=True, index=True, nullable=True, default="free"
     )

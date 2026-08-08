@@ -41,9 +41,7 @@ def create_refresh_token(subject: str, settings: Settings | None = None) -> str:
 
 def _decode_token(token: str, expected_type: str, settings: Settings) -> dict:
     try:
-        payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
-        )
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
     except JWTError as exc:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -68,9 +66,7 @@ def get_current_user_id(
     payload = _decode_token(credentials.credentials, "access", settings)
     user_id: str | None = payload.get("sub")
     if not user_id:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid subject"
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid subject")
     return user_id
 
 

@@ -83,9 +83,7 @@ async def sync_profile(
     tenant_id: uuid.UUID,
     data: MedicalProfileBulkUpdate,
 ) -> StudentMedicalProfile:
-    profile = await get_or_create_profile(
-        db, student_id=student_id, tenant_id=tenant_id
-    )
+    profile = await get_or_create_profile(db, student_id=student_id, tenant_id=tenant_id)
 
     scalar_fields = data.model_dump(
         exclude_unset=True, exclude={"allergies", "medications", "conditions"}

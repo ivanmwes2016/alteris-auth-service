@@ -16,9 +16,7 @@ log = logging.getLogger(__name__)
 config = get_settings()
 
 
-async def get_user_context(
-    db: AsyncSession, user_id: str, supabase: Client
-) -> dict[str, Any]:
+async def get_user_context(db: AsyncSession, user_id: str, supabase: Client) -> dict[str, Any]:
     try:
         result = await db.execute(
             select(TenantMember, Tenant, Role)
@@ -41,9 +39,7 @@ async def get_user_context(
         logo_url = ""
 
         if tenant.logo_path:
-            signed = supabase.storage.from_(
-                config.SUPABASE_LOGO_BUCKET_NAME
-            ).create_signed_url(
+            signed = supabase.storage.from_(config.SUPABASE_LOGO_BUCKET_NAME).create_signed_url(
                 tenant.logo_path,
                 60 * 60,  # 1 hour
             )

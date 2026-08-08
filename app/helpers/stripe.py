@@ -7,9 +7,7 @@ from stripe.checkout import Session
 from app.db.models.tenant import Tenant
 
 
-async def handle_checkout_completed(
-    session: Session, db: AsyncSession
-) -> Tenant | None:
+async def handle_checkout_completed(session: Session, db: AsyncSession) -> Tenant | None:
     tenant_id = session.get("metadata", {}).get("tenant_id")
 
     if not tenant_id:
@@ -29,9 +27,7 @@ async def handle_checkout_completed(
     return tenant
 
 
-async def handle_subscription_updated(
-    subscription: Mapping[str, object], db: AsyncSession
-) -> None:
+async def handle_subscription_updated(subscription: Mapping[str, object], db: AsyncSession) -> None:
     stripe_subscription_id = subscription.get("id")
     status = subscription.get("status")
 
@@ -50,9 +46,7 @@ async def handle_subscription_updated(
         tenant.plan = "free"
 
 
-async def handle_subscription_deleted(
-    subscription: Mapping[str, object], db: AsyncSession
-) -> None:
+async def handle_subscription_deleted(subscription: Mapping[str, object], db: AsyncSession) -> None:
     stripe_subscription_id = subscription.get("id")
 
     result = await db.execute(
