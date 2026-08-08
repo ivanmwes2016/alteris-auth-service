@@ -1,63 +1,70 @@
-.PHONY: install dev lint format typecheck check test migrate deploy-dev deploy-prod
+.PHONY: install dev lint lint-fix format format-check typecheck check test \
+        migrate migrate-down migration migrate-history package sam-build \
+        deploy-dev deploy-prod stripe-listen
 
 install:
-	pip install -r requirements.txt
-	pre-commit install
+	uv sync
+	uv run pre-commit install
 
-dev:
-	uvicorn app.main:app --reload --port 8001
+run:
+	uv run uvicorn app.main:app --reload --port 8001
 
 # ── Linting ───────────────────────────────────────────────────────────────────
 lint:
-	ruff check .
+	uv run ruff check .
 
 lint-fix:
-	ruff check . --fix
+	uv run ruff check . --fix
 
 format:
-	ruff format .
+	uv run ruff format .
 
 format-check:
-	ruff format . --check
+	uv run ruff format . --check
 
 typecheck:
-	mypy app/
+	uv run mypy app/
 
 # Run all checks (used in CI)
 check: format-check lint typecheck
 
 # ── Testing ───────────────────────────────────────────────────────────────────
 test:
-	pytest tests/ -v
+	uv run pytest tests/ -v
 
 # ── Database / Alembic ────────────────────────────────────────────────────────
-.PHONY: migrate
 migrate:
-	alembic upgrade head
+	uv run alembic upgrade head
 
 migrate-down:
-	alembic downgrade -1
+	uv run alembic downgrade -1
 
-.PHONY: migration
 migration:
 	@echo "Applying existing migrations..."
 	$(MAKE) migrate
 
 	@echo "Creating new migration: $(name)"
-	alembic revision --autogenerate -m "$(name)"
+	uv run alembic revision --autogenerate -m "$(name)"
 
 	@echo "Applying new migration..."
 	$(MAKE) migrate
 
 migrate-history:
-	alembic history --verbose
+	uv run alembic history --verbose
 
 # ── Lambda packaging ──────────────────────────────────────────────────────────
 package:
-	pip install -r requirements.txt -t package/
+	rm -rf package lambda.zip
+	mkdir -p package
+	uv export --frozen --no-dev --no-emit-project --format requirements-txt > package/requirements.txt
+	uv pip install \
+		--python-platform x86_64-manylinux2014 \
+		--target package/ \
+		-r package/requirements.txt
+	rm package/requirements.txt
 	cp -r app package/
 	cd package && zip -r ../lambda.zip . && cd ..
-	@echo "✅  lambda.zip ready"
+	@echo "✅ lambda.zip ready"
 
 # ── SAM deploy ────────────────────────────────────────────────────────────────
 sam-build:
