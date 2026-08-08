@@ -90,4 +90,5 @@ class AuthService:
         return TokenResponse(
             access_token=create_access_token(subject=user_id, extra_claims={"email": email}),
             refresh_token=create_refresh_token(subject=user_id),
+            token_type=config.TOKEN_TYPE,
         )

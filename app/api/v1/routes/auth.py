@@ -1,3 +1,4 @@
+from typing import Any
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Response, status
@@ -44,7 +45,7 @@ class SessionResponse(BaseModel):
 
 
 @router.post("/signup", status_code=status.HTTP_201_CREATED)
-async def signup(payload: dict, db: AsyncSession = Depends(get_db)) -> dict[str, str]:
+async def signup(payload: dict[str, Any], db: AsyncSession = Depends(get_db)) -> dict[str, str]:
     """
     Expected payload:
     {

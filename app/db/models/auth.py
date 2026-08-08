@@ -1,4 +1,10 @@
+from enum import StrEnum
+
 from pydantic import BaseModel
+
+
+class TokenType(StrEnum):
+    BEARER = "bearer"
 
 
 class RegisterRequest(BaseModel):
@@ -24,4 +30,4 @@ class ForgotPasswordRequest(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     refresh_token: str
-    token_type: str
+    token_type: TokenType = TokenType.BEARER

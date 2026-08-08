@@ -7,7 +7,7 @@ without it, or one tenant could edit another's rows by id-guessing.
 """
 
 import uuid
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from typing import TypeVar
 
 from pydantic import BaseModel
@@ -22,7 +22,12 @@ from app.db.models.medical_note import (
 )
 from app.db.schemas.medical_profile import MedicalProfileBulkUpdate
 
-ModelT = TypeVar("ModelT")
+ModelT = TypeVar(
+    "ModelT",
+    StudentAllergy,
+    StudentMedication,
+    StudentMedicalCondition,
+)
 
 
 async def get_or_create_profile(
@@ -40,11 +45,11 @@ async def get_or_create_profile(
     return profile
 
 
-def _sync_children(
+async def _sync_children(
     db: AsyncSession,
     *,
     existing: Iterable[ModelT],
-    incoming: list[BaseModel],
+    incoming: Sequence[BaseModel],
     model_cls: type[ModelT],
     profile_id: uuid.UUID,
     tenant_id: uuid.UUID,
@@ -73,7 +78,7 @@ def _sync_children(
 
     for existing_id, row in existing_by_id.items():
         if existing_id not in seen_ids:
-            db.delete(row)
+            await db.delete(row)
 
 
 async def sync_profile(
@@ -92,7 +97,7 @@ async def sync_profile(
         setattr(profile, field, value)
 
     if data.allergies is not None:
-        _sync_children(
+        await _sync_children(
             db,
             existing=list(profile.allergies),
             incoming=data.allergies,
@@ -102,7 +107,7 @@ async def sync_profile(
         )
 
     if data.medications is not None:
-        _sync_children(
+        await _sync_children(
             db,
             existing=list(profile.medications),
             incoming=data.medications,
@@ -112,7 +117,7 @@ async def sync_profile(
         )
 
     if data.conditions is not None:
-        _sync_children(
+        await _sync_children(
             db,
             existing=list(profile.conditions),
             incoming=data.conditions,

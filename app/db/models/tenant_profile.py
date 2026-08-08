@@ -33,12 +33,12 @@ class TenantProfile(Base):
     tagline: Mapped[str] = mapped_column(Text, nullable=True)
     cover_image: Mapped[str] = mapped_column(String, nullable=True)
 
-    courses: Mapped[list] = mapped_column(JSON, nullable=True, default=list)
-    achievements: Mapped[list] = mapped_column(JSON, nullable=True, default=list)
-    facilities: Mapped[list] = mapped_column(JSON, nullable=True, default=list)
-    curriculum: Mapped[list] = mapped_column(JSON, nullable=True, default=list)
-    subjects: Mapped[list] = mapped_column(JSON, nullable=True, default=list)
-    levels: Mapped[list] = mapped_column(JSON, nullable=True, default=list)
+    courses: Mapped[list[str]] = mapped_column(JSON, nullable=True, default=list)
+    achievements: Mapped[list[str]] = mapped_column(JSON, nullable=True, default=list)
+    facilities: Mapped[list[str]] = mapped_column(JSON, nullable=True, default=list)
+    curriculum: Mapped[list[str]] = mapped_column(JSON, nullable=True, default=list)
+    subjects: Mapped[list[str]] = mapped_column(JSON, nullable=True, default=list)
+    levels: Mapped[list[str]] = mapped_column(JSON, nullable=True, default=list)
     fees: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
 
     type: Mapped[str] = mapped_column(String, nullable=True)

@@ -1,7 +1,7 @@
 # app/api/routes/stripe_webhooks.py
 
 import stripe
-from fastapi import APIRouter, Depends, Header, HTTPException, Request
+from fastapi import APIRouter, Depends, Header, HTTPException, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
@@ -25,11 +25,17 @@ async def stripe_webhook(
     request: Request,
     stripe_signature: str | None = Header(None, alias="Stripe-Signature"),
     db: AsyncSession = Depends(get_db),
-) -> dict[str, str]:
+) -> dict[str, bool]:
     payload = await request.body()
 
+    if stripe_signature is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Missing Stripe signature",
+        )
+
     try:
-        event = stripe.Webhook.construct_event(
+        event = stripe.Webhook.construct_event(  # type: ignore[no-untyped-call]
             payload=payload,
             sig_header=stripe_signature,
             secret=settings.STRIPE_WEBHOOK_SECRET,

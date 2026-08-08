@@ -105,17 +105,17 @@ async def list_enquiries(
 
     enquiries = result.scalars().all()
 
-    result = [
-        {
-            **item.__dict__,
-            "classApplied": item.class_applied,
-            "previousSchool": item.previous_school,
-            "date": item.created_at,
-        }
+    return [
+        EnquiryGetResponse.model_validate(
+            {
+                **item.__dict__,
+                "classApplied": item.class_applied,
+                "previousSchool": item.previous_school,
+                "date": item.created_at,
+            }
+        )
         for item in enquiries
     ]
-
-    return result
 
 
 @router.patch("/enquiries/{enquiry_id}")

@@ -22,4 +22,5 @@ def get_settings() -> Settings:
         STRIPE_WEBHOOK_SECRET=os.getenv("STRIPE_WEBHOOK_SECRET"),
         REDIS_URL=os.getenv("UPSTASH_REDIS_REST_URL"),
         FRONTEND_URL=os.getenv("FRONTEND_URL"),
+        TOKEN_TYPE=os.getenv("TOKEN_TYPE"),
     )

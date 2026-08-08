@@ -20,14 +20,20 @@ from app.db.models.users import User
 router = APIRouter()
 
 
-class StudentParentLinkResponse(BaseModel):
+class StudentSummary(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: UUID
-    parent_id: UUID
+    name: str
+
+
+class StudentParentLinkResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     relationship_type: str
     is_primary_contact: bool
     can_pick_up: bool
+    student: StudentSummary
 
 
 class AttendanceResponse(BaseModel):
@@ -112,8 +118,7 @@ class ParentResponse(BaseModel):
 
     id: UUID
     tenant_id: UUID
-    first_name: str
-    last_name: str
+    name: str
     photo: str | None = None
     email: str | None = None
     phone: str | None = None
@@ -178,8 +183,7 @@ async def create_student(
         parents_objs = [
             Parent(
                 tenant_id=payload.tenant_id,
-                first_name=p.first_name,
-                last_name=p.last_name,
+                name=p.name,
                 email=p.email,
                 phone=p.phone,
                 occupation=p.occupation,
@@ -242,12 +246,13 @@ async def get_students(
     students = result.scalars().all()
 
     return [
-        {
-            **student.__dict__,
-            "attendanceRecords": student.attendance_records,
-            "dob": student.date_of_birth,
-            "admissionNo": student.school_id,
-        }
+        StudentResponse.model_validate(
+            {
+                **student.__dict__,
+                "attendanceRecords": student.attendance_records,
+                "dob": student.date_of_birth,
+            }
+        )
         for student in students
     ]
 
@@ -293,11 +298,13 @@ async def get_student_by_id(
             detail="Student not found",
         )
 
-    return {
-        **student.__dict__,
-        "attendanceRecords": student.attendance_records,
-        "dob": student.date_of_birth,
-    }
+    return StudentResponse.model_validate(
+        {
+            **student.__dict__,
+            "attendanceRecords": student.attendance_records,
+            "dob": student.date_of_birth,
+        }
+    )
 
 
 @router.patch("/{student_id}", status_code=status.HTTP_201_CREATED)
@@ -361,7 +368,7 @@ async def get_parents_by_student_id(
     student_id: UUID,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> list[Parent]:
+) -> list[ParentResponse]:
     tenant_id = await get_current_tenant_id(db, current_user)
 
     result = await db.execute(
@@ -372,7 +379,7 @@ async def get_parents_by_student_id(
             Parent.tenant_id == tenant_id,
         )
         .options(selectinload(Parent.students).selectinload(StudentParent.student))
-        .order_by(Parent.first_name, Parent.last_name)
+        .order_by(Parent.name)
     )
 
     parents = list(result.scalars().unique().all())
@@ -383,20 +390,7 @@ async def get_parents_by_student_id(
             detail="No parents found for this student",
         )
 
-    return [
-        {
-            **parent.__dict__,
-            "students": [
-                {
-                    **student.__dict__,
-                    "id": student.id,
-                    "name": f"{student.name} {student.last_name}",
-                }
-                for student in parent.students
-            ],
-        }
-        for parent in parents
-    ]
+    return [ParentResponse.model_validate(parent) for parent in parents]
 
 
 @router.patch(

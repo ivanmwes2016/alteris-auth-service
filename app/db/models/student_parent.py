@@ -1,3 +1,5 @@
+import uuid
+
 from sqlalchemy import ForeignKey, String, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -10,13 +12,13 @@ from app.db.models.student import Student
 class StudentParent(Base):
     __tablename__ = "student_parents"
 
-    student_id: Mapped[UUID] = mapped_column(
+    student_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("students.id", ondelete="CASCADE"),
         primary_key=True,
     )
 
-    parent_id: Mapped[UUID] = mapped_column(
+    parent_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("parents.id", ondelete="CASCADE"),
         primary_key=True,
