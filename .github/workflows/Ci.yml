@@ -55,7 +55,7 @@ jobs:
           uv run ruff --version
 
       - name: Format check
-        run: uv run ruff format app tests --check
+        run: uv run ruff format . --check
 
       - name: Lint
         run: uv run ruff check .
