@@ -62,6 +62,7 @@ select = [
     "S",   # flake8-bandit (security)
     "RUF", # Ruff-specific rules
 ]
+
 ignore = [
     "S101",   # use of assert (fine in tests)
     "B008",   # do not perform function calls in default args (FastAPI Depends pattern)
