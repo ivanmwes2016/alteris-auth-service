@@ -3,7 +3,8 @@
         deploy-dev deploy-prod stripe-listen
 
 install:
-	uv sync
+	uv python install 3.12
+	uv sync --frozen
 	uv run pre-commit install
 
 run:
