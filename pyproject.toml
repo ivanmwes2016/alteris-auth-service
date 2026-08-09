@@ -7,6 +7,7 @@ dependencies = [
     "alembic==1.13.3",
     "asyncpg==0.30.0",
     "boto3==1.35.0",
+    "bcrypt==4.0.1",
     "fastapi==0.115.0",
     "httpx==0.27.2",
     "mangum==0.17.0",
@@ -42,10 +43,6 @@ line-length = 100
 extend-exclude = [
     "alembic/versions",
 ]
-
-exclude = [
-    "alembic",
-]
 src = ["app", "tests"]
 
 [tool.ruff.lint]
@@ -70,9 +67,6 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["ANN", "S"]  # relax annotations + security in tests
-"alembic/**" = ["ANN"]     # migrations don't need full annotations
-
-
 
 [tool.ruff.lint.isort]
 known-first-party = ["app"]
@@ -80,7 +74,6 @@ known-first-party = ["app"]
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
-
 
 [tool.mypy]
 python_version = "3.12"
@@ -92,7 +85,7 @@ plugins = ["pydantic.mypy"]
 module = ["stripe.*", "supabase.*", "mangum.*", "alembic.*"]
 ignore_missing_imports = true
 
-
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
 testpaths = ["tests"]

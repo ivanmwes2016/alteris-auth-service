@@ -6,7 +6,7 @@ class Settings(BaseModel):
     APP_NAME: str = "Alteris Multiple Tenant SAAS"
     ENV: str = "development"
     DEBUG: bool = False
-    FRONTEND_URL: str
+    FRONTEND_URL: str = "http://localhost:3000"
 
     # Database (Supabase Postgres)
     DATABASE_URL: str
