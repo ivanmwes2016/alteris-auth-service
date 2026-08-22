@@ -1,15 +1,18 @@
 """
-Auth service — wraps Supabase Auth (GoTrue) + ProfileRepository.
+Authentication orchestration for Supabase Auth and local profiles.
 
-Supabase handles:  password hashing, email confirmation, OAuth.
-We handle:         our own JWT layer + profile persistence via SQLAlchemy.
+Login returns the Supabase session tokens consumed by the existing protected
+routes. Registration and refresh retain the service's legacy local JWT flow.
 """
 
+import logging
 import uuid
 
 from fastapi import HTTPException, status
 from fastapi.security import HTTPBearer
+from gotrue.errors import AuthApiError
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.concurrency import run_in_threadpool
 from supabase import Client
 
 from app.core.config import get_settings
@@ -21,6 +24,7 @@ from ..db.models.auth import TokenResponse
 security = HTTPBearer()
 
 config = get_settings()
+log = logging.getLogger(__name__)
 
 
 class AuthService:
@@ -60,16 +64,35 @@ class AuthService:
 
     async def login(self, email: str, password: str) -> TokenResponse:
         try:
-            res = self.supabase.auth.sign_in_with_password({"email": email, "password": password})
-        except Exception as exc:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(exc)) from exc
-
-        if res.user is None:
+            res = await run_in_threadpool(
+                self.supabase.auth.sign_in_with_password,
+                {"email": email, "password": password},
+            )
+        except AuthApiError as exc:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid email or password",
+                headers={"WWW-Authenticate": "Bearer"},
+            ) from exc
+        except Exception as exc:
+            log.exception("Supabase login failed")
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Authentication service unavailable",
+            ) from exc
+
+        if res.user is None or res.session is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid email or password",
+                headers={"WWW-Authenticate": "Bearer"},
             )
 
-        return self._build_tokens(res.user.id, res.user.email or email)
+        return TokenResponse(
+            access_token=res.session.access_token,
+            refresh_token=res.session.refresh_token,
+            token_type=res.session.token_type,
+        )
 
     # ── Refresh ───────────────────────────────────────────────────────────────
 
