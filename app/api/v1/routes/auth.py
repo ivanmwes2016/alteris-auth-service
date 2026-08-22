@@ -8,14 +8,23 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from supabase import Client
 
 from app.core.db import get_db
-from app.core.supabase import get_supabase
+from app.core.supabase import get_supabase, get_supabase_auth
+from app.db.models.auth import LoginRequest, TokenResponse
 from app.db.models.tenant import Tenant
 from app.db.models.tenant_member import TenantMember
 from app.db.models.users import User
 from app.helpers.jwt import get_user_from_token
 from app.helpers.user_context import get_user_context
+from app.services.auth_service import AuthService
 
 router = APIRouter()
+
+
+def get_auth_service(
+    supabase: Client = Depends(get_supabase_auth),
+    db: AsyncSession = Depends(get_db),
+) -> AuthService:
+    return AuthService(supabase=supabase, db=db)
 
 
 class CurrentUserResponse(BaseModel):
@@ -44,6 +53,21 @@ class SessionResponse(BaseModel):
     user_id: UUID
 
 
+@router.post(
+    "/login",
+    response_model=TokenResponse,
+    responses={
+        status.HTTP_401_UNAUTHORIZED: {"description": "Invalid email or password"},
+        status.HTTP_503_SERVICE_UNAVAILABLE: {"description": "Authentication unavailable"},
+    },
+)
+async def login(
+    payload: LoginRequest,
+    service: AuthService = Depends(get_auth_service),
+) -> TokenResponse:
+    return await service.login(email=payload.email, password=payload.password)
+
+
 @router.post("/signup", status_code=status.HTTP_201_CREATED)
 async def signup(payload: dict[str, Any], db: AsyncSession = Depends(get_db)) -> dict[str, str]:
     """
@@ -51,7 +75,7 @@ async def signup(payload: dict[str, Any], db: AsyncSession = Depends(get_db)) ->
     {
       email,
       password,
-      company_name
+      name
     }
     """
 
@@ -64,7 +88,8 @@ async def signup(payload: dict[str, Any], db: AsyncSession = Depends(get_db)) ->
     # 2. Create tenant
 
     tenant = Tenant(
-        name=payload["company_name"],
+        name=payload["name"],
+        slug=payload["slug"],
         plan="free",
         seat_limit=2,
     )
