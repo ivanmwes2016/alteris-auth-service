@@ -1,4 +1,10 @@
 from .attendance import StudentAttendance
+from .behaviour import (
+    BehaviourIncident,
+    BehaviourNote,
+    BehaviourRecognition,
+    StudentBehaviourProfile,
+)
 from .enquiries import Enquiry
 from .invite import Invite
 from .medical_note import (
@@ -19,6 +25,9 @@ from .tution_fees import TutionFees
 from .users import User
 
 __all__ = [
+    "BehaviourIncident",
+    "BehaviourNote",
+    "BehaviourRecognition",
     "Enquiry",
     "Invite",
     "Parent",
@@ -27,6 +36,7 @@ __all__ = [
     "Student",
     "StudentAllergy",
     "StudentAttendance",
+    "StudentBehaviourProfile",
     "StudentMedicalCondition",
     "StudentMedicalProfile",
     "StudentMedication",
