@@ -10,7 +10,7 @@ from sqlalchemy.orm import selectinload
 
 from app.api.v1.routes.auth import get_current_tenant_id, get_current_user
 from app.core.db import get_db
-from app.db.models.academics import ClassSubject, SchoolClass, Subject, SubjectTeacher
+from app.db.models.academics import Subject, SubjectClass, SubjectTeacher
 from app.db.models.users import User
 
 router = APIRouter()
@@ -30,14 +30,14 @@ class SubjectCreate(BaseModel):
     name: str = Field(..., min_length=1, max_length=200)
     code: str = Field(..., min_length=1, max_length=50)
     teachers: list[str] = Field(default_factory=list)
-    class_ids: list[UUID] = Field(default_factory=list)
+    classes: list[str] = Field(default_factory=list)
 
 
 class SubjectUpdate(BaseModel):
     name: str | None = Field(None, min_length=1, max_length=200)
     code: str | None = Field(None, min_length=1, max_length=50)
     teachers: list[str] | None = None
-    class_ids: list[UUID] | None = None
+    classes: list[str] | None = None
 
 
 def _to_response(subject: Subject) -> SubjectResponse:
@@ -46,7 +46,7 @@ def _to_response(subject: Subject) -> SubjectResponse:
         name=subject.name,
         code=subject.code,
         teachers=[t.name for t in subject.teachers],
-        classes=[link.school_class.name for link in subject.class_links],
+        classes=[c.name for c in subject.classes],
     )
 
 
@@ -65,42 +65,25 @@ async def _set_teachers(
     )
 
 
-async def _set_class_links(
-    db: AsyncSession,
-    *,
-    subject: Subject,
-    class_ids: list[UUID],
-    tenant_id: UUID,
+async def _set_classes(
+    db: AsyncSession, *, subject: Subject, classes: list[str], tenant_id: UUID
 ) -> None:
-    if class_ids:
-        result = await db.execute(
-            select(SchoolClass.id).where(
-                SchoolClass.id.in_(class_ids), SchoolClass.tenant_id == tenant_id
-            )
-        )
-        found_ids = set(result.scalars().all())
-        missing = set(class_ids) - found_ids
-        if missing:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Unknown class_ids: {sorted(str(i) for i in missing)}",
-            )
-
-    # Avoid touching `subject.class_links` directly: on a just-flushed object
-    # it isn't loaded yet, and reading/assigning it here would trigger an
+    # Avoid touching `subject.classes` directly: on a just-flushed object it
+    # isn't loaded yet, and reading/assigning it here would trigger an
     # implicit lazy-load, which AsyncSession does not support.
-    await db.execute(delete(ClassSubject).where(ClassSubject.subject_id == subject.id))
+    await db.execute(delete(SubjectClass).where(SubjectClass.subject_id == subject.id))
 
     db.add_all(
-        ClassSubject(class_id=class_id, subject_id=subject.id, tenant_id=tenant_id)
-        for class_id in class_ids
+        SubjectClass(subject_id=subject.id, name=name, tenant_id=tenant_id)
+        for name in classes
+        if name.strip()
     )
 
 
 def _eager_options() -> tuple[Any, ...]:
     return (
         selectinload(Subject.teachers),
-        selectinload(Subject.class_links).selectinload(ClassSubject.school_class),
+        selectinload(Subject.classes),
     )
 
 
@@ -156,7 +139,7 @@ async def create_subject(
     await db.flush()
 
     await _set_teachers(db, subject=subject, teachers=payload.teachers, tenant_id=tenant_id)
-    await _set_class_links(db, subject=subject, class_ids=payload.class_ids, tenant_id=tenant_id)
+    await _set_classes(db, subject=subject, classes=payload.classes, tenant_id=tenant_id)
 
     try:
         await db.commit()
@@ -194,17 +177,15 @@ async def update_subject(
     if subject is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Subject not found")
 
-    update_data = payload.model_dump(exclude_unset=True, exclude={"teachers", "class_ids"})
+    update_data = payload.model_dump(exclude_unset=True, exclude={"teachers", "classes"})
     for field, value in update_data.items():
         setattr(subject, field, value)
 
     if payload.teachers is not None:
         await _set_teachers(db, subject=subject, teachers=payload.teachers, tenant_id=tenant_id)
 
-    if payload.class_ids is not None:
-        await _set_class_links(
-            db, subject=subject, class_ids=payload.class_ids, tenant_id=tenant_id
-        )
+    if payload.classes is not None:
+        await _set_classes(db, subject=subject, classes=payload.classes, tenant_id=tenant_id)
 
     try:
         await db.commit()

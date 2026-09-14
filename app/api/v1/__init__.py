@@ -12,6 +12,8 @@ from .routes import (
     health,
     medical,
     parents,
+    staff,
+    staff_qualifications,
     students,
     subjects,
     tenant_profile,
@@ -31,6 +33,12 @@ api_router.include_router(students.router, prefix="/students", tags=["students"]
 api_router.include_router(parents.router, prefix="/parents", tags=["parents"])
 api_router.include_router(classes.router, prefix="/classes", tags=["classes"])
 api_router.include_router(subjects.router, prefix="/subjects", tags=["subjects"])
+api_router.include_router(staff.router, prefix="/staff", tags=["staff"])
+api_router.include_router(
+    staff_qualifications.router,
+    prefix="/staff/{staff_id}/qualifications",
+    tags=["staff"],
+)
 api_router.include_router(medical.router, prefix="/students/{student_id}/medical", tags=["medical"])
 api_router.include_router(
     behaviour.router, prefix="/students/{student_id}/behaviour", tags=["behaviour"]

@@ -31,9 +31,6 @@ class SchoolClass(Base):
     )
 
     tenant = relationship("Tenant")
-    subject_links: Mapped[list["ClassSubject"]] = relationship(
-        back_populates="school_class", cascade="all, delete-orphan", lazy="selectin"
-    )
 
 
 class Subject(Base):
@@ -62,7 +59,7 @@ class Subject(Base):
     teachers: Mapped[list["SubjectTeacher"]] = relationship(
         back_populates="subject", cascade="all, delete-orphan", lazy="selectin"
     )
-    class_links: Mapped[list["ClassSubject"]] = relationship(
+    classes: Mapped[list["SubjectClass"]] = relationship(
         back_populates="subject", cascade="all, delete-orphan", lazy="selectin"
     )
 
@@ -86,19 +83,19 @@ class SubjectTeacher(Base):
     subject = relationship("Subject", back_populates="teachers")
 
 
-class ClassSubject(Base):
-    """Association: which subjects are taught in which class."""
+class SubjectClass(Base):
+    """
+    A class display-name string attached to a subject (e.g. "Primary 1 A" —
+    SchoolClass.name + " " + SchoolClass.stream). Freeform text matched
+    against classDisplayName() client-side, no FK to SchoolClass: the
+    frontend's ClassMultiSelect sends/reads plain display-name strings, the
+    same way SubjectTeacher stores freeform teacher names.
+    """
 
-    __tablename__ = "class_subjects"
-    __table_args__ = (
-        Index("ix_class_subjects_tenant_id", "tenant_id"),
-        UniqueConstraint("class_id", "subject_id", name="uq_class_subject"),
-    )
+    __tablename__ = "subject_classes"
+    __table_args__ = (Index("ix_subject_classes_tenant_id", "tenant_id"),)
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    class_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("school_classes.id", ondelete="CASCADE")
-    )
     subject_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("subjects.id", ondelete="CASCADE")
     )
@@ -106,7 +103,6 @@ class ClassSubject(Base):
         UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), index=True
     )
 
-    school_class: Mapped["SchoolClass"] = relationship(
-        "SchoolClass", back_populates="subject_links", lazy="selectin"
-    )
-    subject: Mapped["Subject"] = relationship("Subject", back_populates="class_links")
+    name: Mapped[str] = mapped_column(String, nullable=False)
+
+    subject = relationship("Subject", back_populates="classes")
