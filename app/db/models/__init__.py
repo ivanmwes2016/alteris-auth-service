@@ -1,4 +1,4 @@
-from .attendance import StudentAttendance
+from .attendance import StudentAttendanceProfile, StudentAttendanceRecord
 from .behaviour import (
     BehaviourIncident,
     BehaviourNote,
@@ -35,7 +35,8 @@ __all__ = [
     "Role",
     "Student",
     "StudentAllergy",
-    "StudentAttendance",
+    "StudentAttendanceProfile",
+    "StudentAttendanceRecord",
     "StudentBehaviourProfile",
     "StudentMedicalCondition",
     "StudentMedicalProfile",

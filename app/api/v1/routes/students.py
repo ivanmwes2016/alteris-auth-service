@@ -11,6 +11,7 @@ from sqlalchemy.orm import selectinload
 
 from app.api.v1.routes.auth import get_current_tenant_id, get_current_user
 from app.core.db import get_db
+from app.db.models.attendance import StudentAttendanceProfile
 from app.db.models.parent import Parent
 from app.db.models.student import Student
 from app.db.models.student_parent import StudentParent
@@ -42,7 +43,7 @@ class AttendanceResponse(BaseModel):
     id: UUID
     date: date
     status: str
-    notes: str | None = None
+    note: str | None = None
 
 
 class ParentSummary(BaseModel):
@@ -239,7 +240,7 @@ async def get_students(
         .where(Student.tenant_id == member.tenant_id)
         .options(
             selectinload(Student.parents).selectinload(StudentParent.parent),
-            selectinload(Student.attendance_records),
+            selectinload(Student.attendance_profile).selectinload(StudentAttendanceProfile.records),
         )
     )
 
@@ -249,7 +250,9 @@ async def get_students(
         StudentResponse.model_validate(
             {
                 **student.__dict__,
-                "attendanceRecords": student.attendance_records,
+                "attendanceRecords": student.attendance_profile.records
+                if student.attendance_profile
+                else [],
                 "dob": student.date_of_birth,
             }
         )
@@ -286,7 +289,7 @@ async def get_student_by_id(
         )
         .options(
             selectinload(Student.parents).selectinload(StudentParent.parent),
-            selectinload(Student.attendance_records),
+            selectinload(Student.attendance_profile).selectinload(StudentAttendanceProfile.records),
         )
     )
 
@@ -301,7 +304,9 @@ async def get_student_by_id(
     return StudentResponse.model_validate(
         {
             **student.__dict__,
-            "attendanceRecords": student.attendance_records,
+            "attendanceRecords": student.attendance_profile.records
+            if student.attendance_profile
+            else [],
             "dob": student.date_of_birth,
         }
     )
@@ -434,7 +439,7 @@ async def update_student_parents(
                 if link is None:
                     raise HTTPException(
                         status_code=status.HTTP_404_NOT_FOUND,
-                        detail=(f"Parent id {parent_data.parent_id} not linked to this student"),
+                        detail=f"Parent id {parent_data.parent_id} not linked to this student",
                     )
 
                 submitted_parent_ids.add(parent_data.parent_id)
