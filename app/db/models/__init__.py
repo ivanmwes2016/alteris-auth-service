@@ -1,3 +1,4 @@
+from .academics import ClassSubject, SchoolClass, Subject, SubjectTeacher
 from .attendance import StudentAttendanceProfile, StudentAttendanceRecord
 from .behaviour import (
     BehaviourIncident,
@@ -28,11 +29,13 @@ __all__ = [
     "BehaviourIncident",
     "BehaviourNote",
     "BehaviourRecognition",
+    "ClassSubject",
     "Enquiry",
     "Invite",
     "Parent",
     "Profile",
     "Role",
+    "SchoolClass",
     "Student",
     "StudentAllergy",
     "StudentAttendanceProfile",
@@ -42,6 +45,8 @@ __all__ = [
     "StudentMedicalProfile",
     "StudentMedication",
     "StudentParent",
+    "Subject",
+    "SubjectTeacher",
     "Tenant",
     "TenantMember",
     "TenantProfile",
