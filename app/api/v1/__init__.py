@@ -4,6 +4,7 @@ from app.api.v1.routes import stripe_webhooks
 
 from .routes import (
     auth,
+    behaviour,
     billing,
     enquiries,
     health,
@@ -26,6 +27,9 @@ api_router.include_router(tenant_profile.router, prefix="/profile/fees", tags=["
 api_router.include_router(students.router, prefix="/students", tags=["students"])
 api_router.include_router(parents.router, prefix="/parents", tags=["parents"])
 api_router.include_router(medical.router, prefix="/students/{student_id}/medical", tags=["medical"])
+api_router.include_router(
+    behaviour.router, prefix="/students/{student_id}/behaviour", tags=["behaviour"]
+)
 
 
 # api_router.include_router(tenants.router, prefix="/tenants", tags=["tenants"])

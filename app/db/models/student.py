@@ -9,6 +9,7 @@ from app.core.db import Base
 
 if TYPE_CHECKING:
     from app.db.models.attendance import StudentAttendance
+    from app.db.models.behaviour import StudentBehaviourProfile
     from app.db.models.medical_note import StudentMedicalProfile
 
     from .student_parent import StudentParent
@@ -41,6 +42,13 @@ class Student(Base):
 
     medical_profile: Mapped[list["StudentMedicalProfile"]] = relationship(
         "StudentMedicalProfile",
+        back_populates="student",
+        cascade="all, delete-orphan",
+        uselist=False,
+    )
+
+    behaviour_profile: Mapped[list["StudentBehaviourProfile"]] = relationship(
+        "StudentBehaviourProfile",
         back_populates="student",
         cascade="all, delete-orphan",
         uselist=False,
