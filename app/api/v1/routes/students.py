@@ -240,9 +240,7 @@ async def get_students(
         .where(Student.tenant_id == member.tenant_id)
         .options(
             selectinload(Student.parents).selectinload(StudentParent.parent),
-            selectinload(Student.attendance_profile).selectinload(
-                StudentAttendanceProfile.records
-            ),
+            selectinload(Student.attendance_profile).selectinload(StudentAttendanceProfile.records),
         )
     )
 
@@ -291,9 +289,7 @@ async def get_student_by_id(
         )
         .options(
             selectinload(Student.parents).selectinload(StudentParent.parent),
-            selectinload(Student.attendance_profile).selectinload(
-                StudentAttendanceProfile.records
-            ),
+            selectinload(Student.attendance_profile).selectinload(StudentAttendanceProfile.records),
         )
     )
 
@@ -443,7 +439,7 @@ async def update_student_parents(
                 if link is None:
                     raise HTTPException(
                         status_code=status.HTTP_404_NOT_FOUND,
-                        detail=(f"Parent id {parent_data.parent_id} not linked to this student"),
+                        detail=f"Parent id {parent_data.parent_id} not linked to this student",
                     )
 
                 submitted_parent_ids.add(parent_data.parent_id)
