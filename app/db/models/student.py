@@ -8,7 +8,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.db import Base
 
 if TYPE_CHECKING:
-    from app.db.models.attendance import StudentAttendance
+    from app.db.models.attendance import StudentAttendanceProfile
     from app.db.models.behaviour import StudentBehaviourProfile
     from app.db.models.medical_note import StudentMedicalProfile
 
@@ -63,8 +63,9 @@ class Student(Base):
         cascade="all, delete-orphan",
     )
 
-    attendance_records: Mapped[list["StudentAttendance"]] = relationship(
-        "StudentAttendance",
+    attendance_profile: Mapped["StudentAttendanceProfile"] = relationship(
+        "StudentAttendanceProfile",
         back_populates="student",
         cascade="all, delete-orphan",
+        uselist=False,
     )
