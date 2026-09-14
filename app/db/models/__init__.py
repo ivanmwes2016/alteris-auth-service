@@ -1,4 +1,4 @@
-from .academics import ClassSubject, SchoolClass, Subject, SubjectTeacher
+from .academics import SchoolClass, Subject, SubjectClass, SubjectTeacher
 from .attendance import StudentAttendanceProfile, StudentAttendanceRecord
 from .behaviour import (
     BehaviourIncident,
@@ -17,6 +17,7 @@ from .medical_note import (
 from .parent import Parent
 from .profile import Profile
 from .role import Role
+from .staff import Staff, StaffQualification, StaffQualificationProfile, StaffSubject
 from .student import Student
 from .student_parent import StudentParent
 from .tenant import Tenant
@@ -29,13 +30,16 @@ __all__ = [
     "BehaviourIncident",
     "BehaviourNote",
     "BehaviourRecognition",
-    "ClassSubject",
     "Enquiry",
     "Invite",
     "Parent",
     "Profile",
     "Role",
     "SchoolClass",
+    "Staff",
+    "StaffQualification",
+    "StaffQualificationProfile",
+    "StaffSubject",
     "Student",
     "StudentAllergy",
     "StudentAttendanceProfile",
@@ -46,6 +50,7 @@ __all__ = [
     "StudentMedication",
     "StudentParent",
     "Subject",
+    "SubjectClass",
     "SubjectTeacher",
     "Tenant",
     "TenantMember",
