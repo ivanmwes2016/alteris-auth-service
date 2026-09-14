@@ -108,9 +108,7 @@ async def get_classes(
 
     student_counts = await _student_counts_by_class_name(db, tenant_id=tenant_id)
 
-    return [
-        _to_response(c, student_count=student_counts.get(c.name, 0)) for c in school_classes
-    ]
+    return [_to_response(c, student_count=student_counts.get(c.name, 0)) for c in school_classes]
 
 
 @router.get("/{class_id}", response_model=ClassResponse, status_code=status.HTTP_200_OK)

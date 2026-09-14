@@ -156,9 +156,7 @@ async def create_subject(
     await db.flush()
 
     await _set_teachers(db, subject=subject, teachers=payload.teachers, tenant_id=tenant_id)
-    await _set_class_links(
-        db, subject=subject, class_ids=payload.class_ids, tenant_id=tenant_id
-    )
+    await _set_class_links(db, subject=subject, class_ids=payload.class_ids, tenant_id=tenant_id)
 
     try:
         await db.commit()
