@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from app.api.v1.routes import stripe_webhooks
 
 from .routes import (
+    academic_terms,
     attendance,
     auth,
     behaviour,
@@ -12,6 +13,7 @@ from .routes import (
     health,
     medical,
     parents,
+    performance,
     staff,
     staff_qualifications,
     students,
@@ -39,6 +41,8 @@ api_router.include_router(
     prefix="/staff/{staff_id}/qualifications",
     tags=["staff"],
 )
+api_router.include_router(academic_terms.router, prefix="/terms", tags=["terms"])
+api_router.include_router(performance.router, prefix="/performance", tags=["performance"])
 api_router.include_router(medical.router, prefix="/students/{student_id}/medical", tags=["medical"])
 api_router.include_router(
     behaviour.router, prefix="/students/{student_id}/behaviour", tags=["behaviour"]

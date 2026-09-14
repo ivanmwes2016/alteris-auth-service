@@ -1,3 +1,4 @@
+from .academic_term import AcademicTermSettings
 from .academics import SchoolClass, Subject, SubjectClass, SubjectTeacher
 from .attendance import StudentAttendanceProfile, StudentAttendanceRecord
 from .behaviour import (
@@ -15,6 +16,7 @@ from .medical_note import (
     StudentMedication,
 )
 from .parent import Parent
+from .performance import PerformanceRecord
 from .profile import Profile
 from .role import Role
 from .staff import Staff, StaffQualification, StaffQualificationProfile, StaffSubject
@@ -27,12 +29,14 @@ from .tution_fees import TutionFees
 from .users import User
 
 __all__ = [
+    "AcademicTermSettings",
     "BehaviourIncident",
     "BehaviourNote",
     "BehaviourRecognition",
     "Enquiry",
     "Invite",
     "Parent",
+    "PerformanceRecord",
     "Profile",
     "Role",
     "SchoolClass",
