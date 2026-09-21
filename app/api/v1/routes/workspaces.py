@@ -38,7 +38,12 @@ async def update_workspace(
     current_user: User = Depends(get_current_user),
 ) -> WorkSpaceResponse:
     slug = slugify(payload.name)
-    tenant = Tenant(name=payload.name, slug=slug, workspace_id=payload.workspace_id)
+    tenant = Tenant(
+        name=payload.name,
+        slug=slug,
+        workspace_id=payload.workspace_id,
+        owner_id=current_user.id,
+    )
 
     existing_tenant = await db.execute(select(Tenant).where(Tenant.slug == slug))
 

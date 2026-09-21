@@ -1,7 +1,7 @@
 from typing import Any
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Header, HTTPException, Response, status
+from fastapi import APIRouter, BackgroundTasks, Depends, Header, HTTPException, Response, status
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -14,6 +14,7 @@ from app.db.models.tenant import Tenant
 from app.db.models.tenant_member import TenantMember
 from app.db.models.users import User
 from app.helpers.jwt import get_user_from_token
+from app.helpers.last_active import touch_last_active
 from app.helpers.user_context import get_user_context
 from app.services.auth_service import AuthService
 
@@ -190,6 +191,7 @@ async def create_session(
 
 
 async def get_current_user(
+    background_tasks: BackgroundTasks,
     authorization: str = Header(None),
     db: AsyncSession = Depends(get_db),
     supabase: Client = Depends(get_supabase),
@@ -209,6 +211,8 @@ async def get_current_user(
         )
         db.add(user)
         await db.flush()
+
+    background_tasks.add_task(touch_last_active, user.id)
 
     return user
 
