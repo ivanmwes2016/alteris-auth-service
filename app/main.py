@@ -18,6 +18,7 @@ def create_app() -> FastAPI:
             settings.FRONTEND_URL,
             "http://127.0.0.1:3000",
             "http://localhost:5173",
+            "https://www.skolarly.net",
         ],
         allow_credentials=True,
         allow_methods=["*"],
