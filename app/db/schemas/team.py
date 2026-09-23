@@ -67,6 +67,10 @@ class AcceptInvite(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     token: str = Field(min_length=1, max_length=256)
+    # Only set for brand-new invitees completing the signup page. Someone who already
+    # had an account (routed through the accept-invite page instead) keeps their
+    # existing password and omits this.
+    password: str | None = Field(default=None, min_length=8, max_length=128)
 
 
 class TeamMemberRead(BaseModel):

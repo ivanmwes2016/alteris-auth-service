@@ -21,6 +21,7 @@ from datetime import UTC, datetime, timedelta
 
 from fastapi import HTTPException, status
 from gotrue.errors import AuthApiError
+from gotrue.types import AdminUserAttributes
 from sqlalchemy import func, or_, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -45,6 +46,9 @@ log = logging.getLogger(__name__)
 
 INVITE_TTL = timedelta(days=7)
 OWNER_LABEL = "Owner"
+# GoTrue has no "permanent" option — this is the effectively-forever ban Supabase's
+# own dashboard uses (100 years). Lifted again if the person is ever re-invited.
+PERMANENT_BAN_DURATION = "876000h"
 
 ROLE_DB_NAME: dict[TeamRole, str] = {
     TeamRole.head_teacher: "head_teacher",
@@ -443,7 +447,9 @@ async def change_role(
     raise _not_found()
 
 
-async def remove_member(db: AsyncSession, actor: Actor, target_id: uuid.UUID) -> None:
+async def remove_member(
+    db: AsyncSession, supabase: Client, actor: Actor, target_id: uuid.UUID
+) -> None:
     owner_id = await _get_owner_id(db, actor.tenant_id)
 
     member_row = await _get_member_row(db, actor.tenant_id, target_id)
@@ -451,6 +457,22 @@ async def remove_member(db: AsyncSession, actor: Actor, target_id: uuid.UUID) ->
         member = member_row[0]
         if member.user_id == owner_id:
             raise HTTPException(status.HTTP_403_FORBIDDEN, "The Owner can't be removed")
+
+        # Locks them out of the whole platform, not just this workspace: takes effect
+        # immediately since every request re-checks with Supabase (get_user_from_token
+        # calls auth.get_user, a live lookup, not just local JWT verification).
+        try:
+            await run_in_threadpool(
+                supabase.auth.admin.update_user_by_id,
+                str(member.user_id),
+                {"ban_duration": PERMANENT_BAN_DURATION},
+            )
+        except AuthApiError as exc:
+            log.exception("Failed to ban user while removing them")
+            raise HTTPException(
+                status.HTTP_502_BAD_GATEWAY, "Couldn't remove this person. Try again."
+            ) from exc
+
         await db.delete(member)
         await db.commit()
         return
@@ -495,7 +517,9 @@ async def resend_invite(
     return _invite_read(invite, role)
 
 
-async def accept_invite(db: AsyncSession, user: User, token: str) -> AcceptInviteResponse:
+async def accept_invite(
+    db: AsyncSession, supabase: Client, user: User, token: str, password: str | None
+) -> AcceptInviteResponse:
     invalid = HTTPException(
         status.HTTP_400_BAD_REQUEST, "This invite link is invalid or has expired"
     )
@@ -551,6 +575,21 @@ async def accept_invite(db: AsyncSession, user: User, token: str) -> AcceptInvit
             .where(User.id == user.id, or_(User.name.is_(None), User.name == ""))
             .values(name=invited_name)
         )
+
+    # A brand-new invitee sets their password here. It's stored on the Supabase auth
+    # user (the actual credential store) via the admin API — never in our own tables.
+    # Also lifts any ban from a past removal: accepting a fresh invite is the admin's
+    # signal that this person is welcome back, on this tenant or a different one.
+    attributes: AdminUserAttributes = {"ban_duration": "none"}
+    if password is not None:
+        attributes["password"] = password
+    try:
+        await run_in_threadpool(supabase.auth.admin.update_user_by_id, str(user.id), attributes)
+    except AuthApiError as exc:
+        log.exception("Failed to update Supabase user while accepting invite")
+        raise HTTPException(
+            status.HTTP_502_BAD_GATEWAY, "Couldn't finish accepting the invite. Try again."
+        ) from exc
 
     try:
         await db.commit()
