@@ -1,15 +1,18 @@
+from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID
 
 from fastapi import APIRouter, BackgroundTasks, Depends, Header, HTTPException, Response, status
 from pydantic import BaseModel
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from supabase import Client
 
 from app.core.db import get_db
 from app.core.supabase import get_supabase, get_supabase_auth
 from app.db.models.auth import LoginRequest, TokenResponse
+from app.db.models.role import Role
 from app.db.models.tenant import Tenant
 from app.db.models.tenant_member import TenantMember
 from app.db.models.users import User
@@ -67,53 +70,6 @@ async def login(
     service: AuthService = Depends(get_auth_service),
 ) -> TokenResponse:
     return await service.login(email=payload.email, password=payload.password)
-
-
-@router.post("/signup", status_code=status.HTTP_201_CREATED)
-async def signup(payload: dict[str, Any], db: AsyncSession = Depends(get_db)) -> dict[str, str]:
-    """
-    Expected payload:
-    {
-      email,
-      password,
-      name
-    }
-    """
-
-    # 1. Create Supabase user
-    # NOTE:
-    # In production use Supabase Admin SDK
-
-    user_id = "generated-user-id"
-
-    # 2. Create tenant
-
-    tenant = Tenant(
-        name=payload["name"],
-        slug=payload["slug"],
-        plan="free",
-        seat_limit=2,
-    )
-
-    db.add(tenant)
-    await db.commit()
-    await db.refresh(tenant)
-
-    # 3. Create owner membership
-
-    membership = TenantMember(
-        tenant_id=tenant.id,
-        user_id=user_id,
-        role="owner",
-    )
-
-    db.add(membership)
-    await db.commit()
-
-    return {
-        "message": "signup successful",
-        "tenant_id": str(tenant.id),
-    }
 
 
 @router.get("/me", response_model=MeResponse)
@@ -215,6 +171,73 @@ async def get_current_user(
     background_tasks.add_task(touch_last_active, user.id)
 
     return user
+
+
+@router.post("/signup", status_code=status.HTTP_201_CREATED)
+async def signup(
+    payload: dict[str, Any],
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> dict[str, str]:
+    """
+    Called after the client has already created (or signed into) their Supabase
+    account — get_current_user has a local `users` row for them by this point.
+    This just creates their tenant and makes them its owner.
+
+    Expected payload:
+    {
+      name, slug, workspace_id, country
+    }
+    """
+    has_workspace = await db.scalar(
+        select(TenantMember.id).where(
+            TenantMember.user_id == current_user.id, TenantMember.status == "active"
+        )
+    )
+    if has_workspace is not None:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Your account already belongs to a workspace")
+
+    # "Owner" isn't a stored role — the creator gets `admin` and is recorded as the
+    # owner via tenants.owner_id, matching how the rest of the API treats ownership.
+    admin_role = (await db.execute(select(Role).where(Role.name == "admin"))).scalar_one()
+
+    tenant = Tenant(
+        name=payload.get("name"),
+        slug=payload.get("slug"),
+        plan="free",
+        workspace_id=payload.get("workspace_id"),
+        seat_limit=15,
+        owner_id=current_user.id,
+        country=payload.get("country"),
+    )
+    db.add(tenant)
+    await db.flush()
+
+    now = datetime.now(UTC)
+    db.add(
+        TenantMember(
+            tenant_id=tenant.id,
+            user_id=current_user.id,
+            role_id=admin_role.id,
+            status="active",
+            joined_at=now,
+            created_at=now,
+            last_active_at=now,
+        )
+    )
+
+    try:
+        await db.commit()
+    except IntegrityError as exc:
+        await db.rollback()
+        raise HTTPException(
+            status.HTTP_409_CONFLICT, "That workspace URL is already taken"
+        ) from exc
+
+    return {
+        "message": "signup successful",
+        "tenant_id": str(tenant.id),
+    }
 
 
 async def get_current_tenant_id(

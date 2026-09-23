@@ -1,4 +1,5 @@
 from collections.abc import AsyncGenerator
+from uuid import uuid4
 
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
@@ -6,6 +7,7 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.pool import NullPool
 
 from app.core.config import get_settings
 
@@ -20,7 +22,21 @@ engine = create_async_engine(
     # exist"). prepared_statement_cache_size=0 is SQLAlchemy's asyncpg-dialect cache
     # (distinct from asyncpg's own statement_cache_size) — disabling it forces a fresh
     # PREPARE immediately before every EXECUTE instead of reusing a stale name.
-    connect_args={"statement_cache_size": 0, "prepared_statement_cache_size": 0},
+    #
+    # That alone isn't enough, though: the default statement-name generator is just a
+    # per-connection counter (__asyncpg_stmt_0__, _1__, ...). PgBouncer can route two
+    # different pooled connections to the same backend, and a shared backend has one
+    # prepared-statement namespace — so two connections independently counting from 0
+    # collide ("prepared statement ... already exists"). A UUID-based name avoids that,
+    # and NullPool stops SQLAlchemy from holding its own idle pool on top of PgBouncer's
+    # (recommended together — see the asyncpg dialect's "Prepared Statement Name with
+    # PGBouncer" docs).
+    poolclass=NullPool,
+    connect_args={
+        "statement_cache_size": 0,
+        "prepared_statement_cache_size": 0,
+        "prepared_statement_name_func": lambda: f"__asyncpg_{uuid4()}__",
+    },
 )
 
 
