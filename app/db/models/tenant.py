@@ -22,10 +22,11 @@ class Tenant(Base):
     plan: Mapped[str] = mapped_column(
         String, unique=True, index=True, nullable=True, default="free"
     )
-    seat_limit: Mapped[int] = mapped_column(Integer, nullable=True, default=5)
+    seat_limit: Mapped[int] = mapped_column(Integer, nullable=True, default=15)
     stripe_customer_id: Mapped[str | None] = mapped_column(String, nullable=True)
     stripe_subscription_id: Mapped[str | None] = mapped_column(String, nullable=True)
     logo_path: Mapped[str | None] = mapped_column(String, nullable=True)
+    country: Mapped[str | None] = mapped_column(String, nullable=True)
     owner_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
