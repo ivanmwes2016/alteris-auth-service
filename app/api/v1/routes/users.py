@@ -52,9 +52,10 @@ async def accept_team_invite(
     payload: AcceptInvite,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
+    supabase: Client = Depends(get_supabase),
 ) -> AcceptInviteResponse:
     """Called by the invitee after signing in from the emailed link."""
-    return await team.accept_invite(db, current_user, payload.token)
+    return await team.accept_invite(db, supabase, current_user, payload.token, payload.password)
 
 
 @router.patch("/{member_id}", response_model=TeamMemberRead)
@@ -73,9 +74,10 @@ async def remove_team_member(
     member_id: uuid.UUID,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
+    supabase: Client = Depends(get_supabase),
 ) -> Response:
     actor = await team.get_manager(db, current_user)
-    await team.remove_member(db, actor, member_id)
+    await team.remove_member(db, supabase, actor, member_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 

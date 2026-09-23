@@ -22,7 +22,7 @@ async def get_user_context(db: AsyncSession, user_id: str, supabase: Client) -> 
             select(TenantMember, Tenant, Role)
             .join(Tenant, Tenant.id == TenantMember.tenant_id)
             .join(Role, Role.id == TenantMember.role_id)
-            .where(TenantMember.user_id == user_id)
+            .where(TenantMember.user_id == user_id, TenantMember.status == "active")
         )
 
         row = result.first()
