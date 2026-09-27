@@ -23,6 +23,7 @@ from .staff import Staff, StaffQualification, StaffQualificationProfile, StaffSu
 from .student import Student
 from .student_parent import StudentParent
 from .tenant import Tenant
+from .tenant_gallery_image import TenantGalleryImage
 from .tenant_member import TenantMember
 from .tenant_profile import TenantProfile
 from .tution_fees import TutionFees
@@ -57,6 +58,7 @@ __all__ = [
     "SubjectClass",
     "SubjectTeacher",
     "Tenant",
+    "TenantGalleryImage",
     "TenantMember",
     "TenantProfile",
     "TutionFees",
