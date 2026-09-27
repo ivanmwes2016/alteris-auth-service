@@ -19,9 +19,7 @@ class Tenant(Base):
     name: Mapped[str] = mapped_column(String, nullable=False)
     slug: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=False)
     workspace_id: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=False)
-    plan: Mapped[str] = mapped_column(
-        String, unique=True, index=True, nullable=True, default="free"
-    )
+    plan: Mapped[str] = mapped_column(String, index=True, nullable=True, default="free")
     seat_limit: Mapped[int] = mapped_column(Integer, nullable=True, default=15)
     stripe_customer_id: Mapped[str | None] = mapped_column(String, nullable=True)
     stripe_subscription_id: Mapped[str | None] = mapped_column(String, nullable=True)
