@@ -19,6 +19,7 @@ from .routes import (
     students,
     subjects,
     tenant_profile,
+    tenants,
     users,
     workspaces,
 )
@@ -45,6 +46,7 @@ api_router.include_router(
 api_router.include_router(academic_terms.router, prefix="/terms", tags=["terms"])
 api_router.include_router(performance.router, prefix="/performance", tags=["performance"])
 api_router.include_router(users.router, prefix="/users", tags=["users"])
+api_router.include_router(tenants.router, prefix="/tenants", tags=["tenants"])
 api_router.include_router(medical.router, prefix="/students/{student_id}/medical", tags=["medical"])
 api_router.include_router(
     behaviour.router, prefix="/students/{student_id}/behaviour", tags=["behaviour"]
@@ -54,5 +56,4 @@ api_router.include_router(
 )
 
 
-# api_router.include_router(tenants.router, prefix="/tenants", tags=["tenants"])
 # api_router.include_router(members.router, prefix="/members", tags=["members"])
