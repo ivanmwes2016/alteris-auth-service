@@ -3,7 +3,16 @@ from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID
 
-from fastapi import APIRouter, BackgroundTasks, Depends, Header, HTTPException, Response, status
+from fastapi import (
+    APIRouter,
+    BackgroundTasks,
+    Depends,
+    Header,
+    HTTPException,
+    Request,
+    Response,
+    status,
+)
 from gotrue import User as SupabaseUser
 from pydantic import BaseModel
 from sqlalchemy import select
@@ -13,15 +22,23 @@ from supabase import Client
 
 from app.core.db import get_db
 from app.core.supabase import get_supabase, get_supabase_auth
-from app.db.models.auth import LoginRequest, TokenResponse
+from app.db.models.auth import (
+    AcceptedResponse,
+    EmailRequest,
+    LoginRequest,
+    RegisterRequest,
+    TokenResponse,
+)
 from app.db.models.role import Role
 from app.db.models.tenant import Tenant
 from app.db.models.tenant_member import TenantMember
 from app.db.models.users import User
 from app.helpers.jwt import get_user_from_token
 from app.helpers.last_active import touch_last_active
+from app.helpers.rate_limit import client_ip
 from app.helpers.stale_users import remove_if_stale
 from app.helpers.user_context import get_user_context
+from app.services import account
 from app.services.auth_service import AuthService
 
 log = logging.getLogger(__name__)
@@ -62,6 +79,27 @@ class SessionResponse(BaseModel):
     user_id: UUID
 
 
+def display_name(metadata: dict[str, Any] | None, stored_name: str | None) -> str | None:
+    """
+    The person's name for display. Their own signup metadata (first_name/last_name,
+    set by both signup forms) wins; then the name an inviter typed (users.name); then
+    older metadata keys.
+    """
+    meta = metadata or {}
+
+    def text(key: str) -> str:
+        value = meta.get(key)
+        return " ".join(value.split()) if isinstance(value, str) else ""
+
+    return (
+        " ".join(part for part in (text("first_name"), text("last_name")) if part)
+        or (stored_name or "").strip()
+        or text("full_name")
+        or text("name")
+        or None
+    )
+
+
 @router.post(
     "/login",
     response_model=TokenResponse,
@@ -75,6 +113,51 @@ async def login(
     service: AuthService = Depends(get_auth_service),
 ) -> TokenResponse:
     return await service.login(email=payload.email, password=payload.password)
+
+
+@router.post("/register", response_model=AcceptedResponse, status_code=status.HTTP_202_ACCEPTED)
+async def register(
+    payload: RegisterRequest,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+    supabase: Client = Depends(get_supabase),
+) -> AcceptedResponse:
+    """
+    Create an account and email a confirmation link (via Resend). The same answer
+    whether or not the email already has an account.
+    """
+    message = await account.register(db, supabase, payload, client_ip(request))
+    return AcceptedResponse(message=message)
+
+
+@router.post(
+    "/verification/resend",
+    response_model=AcceptedResponse,
+    status_code=status.HTTP_202_ACCEPTED,
+)
+async def resend_verification(
+    payload: EmailRequest,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+    supabase: Client = Depends(get_supabase),
+) -> AcceptedResponse:
+    message = await account.resend_verification(db, supabase, payload, client_ip(request))
+    return AcceptedResponse(message=message)
+
+
+@router.post(
+    "/password/forgot",
+    response_model=AcceptedResponse,
+    status_code=status.HTTP_202_ACCEPTED,
+)
+async def forgot_password(
+    payload: EmailRequest,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+    supabase: Client = Depends(get_supabase),
+) -> AcceptedResponse:
+    message = await account.forgot_password(db, supabase, payload, client_ip(request))
+    return AcceptedResponse(message=message)
 
 
 @router.get("/me", response_model=MeResponse)
@@ -101,7 +184,8 @@ async def me(
 
     user_id = user.id
     email = user.email
-    name = user.user_metadata.get("name")
+    stored_name = await db.scalar(select(User.name).where(User.id == user_id))
+    name = display_name(user.user_metadata, stored_name)
 
     user_context = await get_user_context(
         db,

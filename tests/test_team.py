@@ -412,6 +412,14 @@ async def test_a_used_invite_cannot_be_reused_by_a_non_member() -> None:
     assert error.value.status_code == status.HTTP_404_NOT_FOUND
 
 
+def test_accept_takes_optional_names_from_the_invite_page() -> None:
+    payload = AcceptInvite.model_validate(
+        {"token": "t", "first_name": "  Ivan ", "last_name": "Mwesigwa"}
+    )
+    assert (payload.first_name, payload.last_name) == ("Ivan", "Mwesigwa")
+    assert AcceptInvite.model_validate({"token": "t"}).first_name is None
+
+
 def test_accept_no_longer_takes_a_password() -> None:
     with pytest.raises(ValidationError):
         AcceptInvite.model_validate({"token": "t", "password": "hunter22"})

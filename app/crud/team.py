@@ -470,7 +470,14 @@ async def preview_invite(db: AsyncSession, token: str) -> InvitePreview:
 
 
 async def accept_invite(
-    db: AsyncSession, user: User, token: str, *, email: str | None, email_verified: bool
+    db: AsyncSession,
+    user: User,
+    token: str,
+    *,
+    email: str | None,
+    email_verified: bool,
+    first_name: str | None = None,
+    last_name: str | None = None,
 ) -> AcceptInviteResponse:
     """
     `email` and `email_verified` come from the caller's Supabase account (checked live on
@@ -541,8 +548,13 @@ async def accept_invite(
     )
     invite.accepted_at = now
 
-    # Carry the name the inviter typed over to the account, without overwriting one it has.
-    invited_name = " ".join(part for part in (invite.first_name, invite.last_name) if part)
+    # Name the account after what the invitee entered, else what the inviter typed,
+    # without overwriting a name it already has.
+    if first_name or last_name:
+        parts = (first_name, last_name)
+    else:
+        parts = (invite.first_name, invite.last_name)
+    invited_name = " ".join(part for part in parts if part)
     if invited_name:
         await db.execute(
             update(User)

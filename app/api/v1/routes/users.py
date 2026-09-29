@@ -72,6 +72,8 @@ async def accept_team_invite(
         payload.token,
         email=supabase_user.email,
         email_verified=supabase_user.email_confirmed_at is not None,
+        first_name=payload.first_name,
+        last_name=payload.last_name,
     )
 
 

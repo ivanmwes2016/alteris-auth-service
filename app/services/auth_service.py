@@ -1,66 +1,35 @@
 """
-Authentication orchestration for Supabase Auth and local profiles.
+Password login through Supabase Auth.
 
-Login returns the Supabase session tokens consumed by the existing protected
-routes. Registration and refresh retain the service's legacy local JWT flow.
+Returns Supabase's own session tokens; the service never issues tokens of its own.
+Signup, verification and password reset live in app/services/account.py.
 """
 
 import logging
-import uuid
 
 from fastapi import HTTPException, status
-from fastapi.security import HTTPBearer
 from gotrue.errors import AuthApiError
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.concurrency import run_in_threadpool
 from supabase import Client
 
-from app.core.config import get_settings
-from app.core.security import create_access_token, create_refresh_token
-from app.repositories.profile_repo import ProfileRepository
-
 from ..db.models.auth import TokenResponse
 
-security = HTTPBearer()
-
-config = get_settings()
 log = logging.getLogger(__name__)
+
+
+def _invalid_credentials() -> HTTPException:
+    return HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid email or password",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
 
 
 class AuthService:
     def __init__(self, supabase: Client, db: AsyncSession) -> None:
         self.supabase = supabase
-        self.repo = ProfileRepository(db)
-
-    # ── Register ──────────────────────────────────────────────────────────────
-
-    async def register(self, email: str, password: str, full_name: str) -> TokenResponse:
-        try:
-            res = self.supabase.auth.sign_up(
-                {
-                    "email": email,
-                    "password": password,
-                    "options": {"data": {"full_name": full_name}},
-                }
-            )
-        except Exception as exc:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
-
-        if res.user is None:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Registration failed — email may already exist.",
-            )
-
-        await self.repo.upsert(
-            user_id=uuid.UUID(res.user.id),
-            email=email,
-            full_name=full_name,
-        )
-
-        return self._build_tokens(res.user.id, email)
-
-    # ── Login ─────────────────────────────────────────────────────────────────
+        self.db = db
 
     async def login(self, email: str, password: str) -> TokenResponse:
         try:
@@ -69,11 +38,24 @@ class AuthService:
                 {"email": email, "password": password},
             )
         except AuthApiError as exc:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid email or password",
-                headers={"WWW-Authenticate": "Bearer"},
-            ) from exc
+            # Only reachable with the right password, so it reveals nothing new.
+            if exc.code == "email_not_confirmed":
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Email verification required.",
+                ) from exc
+            if exc.status == status.HTTP_429_TOO_MANY_REQUESTS:
+                raise HTTPException(
+                    status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                    detail="Too many attempts. Please wait a while and try again.",
+                ) from exc
+            if exc.status >= 500:
+                log.error("Supabase login failed: status=%s code=%s", exc.status, exc.code)
+                raise HTTPException(
+                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                    detail="Authentication service unavailable",
+                ) from exc
+            raise _invalid_credentials() from exc
         except Exception as exc:
             log.exception("Supabase login failed")
             raise HTTPException(
@@ -82,36 +64,10 @@ class AuthService:
             ) from exc
 
         if res.user is None or res.session is None:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid email or password",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
+            raise _invalid_credentials()
 
         return TokenResponse(
             access_token=res.session.access_token,
             refresh_token=res.session.refresh_token,
             token_type=res.session.token_type,
-        )
-
-    # ── Refresh ───────────────────────────────────────────────────────────────
-
-    async def refresh(self, user_id: str, email: str) -> TokenResponse:
-        return self._build_tokens(user_id, email)
-
-    # ── Password reset ────────────────────────────────────────────────────────
-
-    async def request_password_reset(self, email: str) -> None:
-        try:
-            self.supabase.auth.reset_password_email(email)
-        except Exception as exc:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
-
-    # ── Helpers ───────────────────────────────────────────────────────────────
-
-    def _build_tokens(self, user_id: str, email: str) -> TokenResponse:
-        return TokenResponse(
-            access_token=create_access_token(subject=user_id, extra_claims={"email": email}),
-            refresh_token=create_refresh_token(subject=user_id),
-            token_type=config.TOKEN_TYPE,
         )
