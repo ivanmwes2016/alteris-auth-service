@@ -1,8 +1,10 @@
+import logging
 from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID
 
 from fastapi import APIRouter, BackgroundTasks, Depends, Header, HTTPException, Response, status
+from gotrue import User as SupabaseUser
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
@@ -18,8 +20,11 @@ from app.db.models.tenant_member import TenantMember
 from app.db.models.users import User
 from app.helpers.jwt import get_user_from_token
 from app.helpers.last_active import touch_last_active
+from app.helpers.stale_users import remove_if_stale
 from app.helpers.user_context import get_user_context
 from app.services.auth_service import AuthService
+
+log = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -146,27 +151,54 @@ async def create_session(
     )
 
 
-async def get_current_user(
-    background_tasks: BackgroundTasks,
+def get_supabase_user(
     authorization: str = Header(None),
-    db: AsyncSession = Depends(get_db),
     supabase: Client = Depends(get_supabase),
-) -> User:
+) -> SupabaseUser:
+    """The caller's Supabase account, checked live. FastAPI runs this once per request."""
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing token")
 
     token = authorization.split(" ")[1]
-    supabase_user = get_user_from_token(supabase, token)
+    return get_user_from_token(supabase, token)
 
+
+async def get_current_user(
+    background_tasks: BackgroundTasks,
+    supabase_user: SupabaseUser = Depends(get_supabase_user),
+    db: AsyncSession = Depends(get_db),
+    supabase: Client = Depends(get_supabase),
+) -> User:
     user = await db.get(User, supabase_user.id)
 
     if not user:
+        # A Supabase account that was deleted and signed up again gets a new id, but its
+        # old users row still holds the email. Clear it if it's a pure leftover; one that
+        # still has memberships or a school is kept (not merged into this login either).
+        old_id = await db.scalar(
+            select(User.id).where(User.email == supabase_user.email, User.id != supabase_user.id)
+        )
+        if old_id is not None:
+            await remove_if_stale(db, supabase, old_id)
+
         user = User(
             id=supabase_user.id,
             email=supabase_user.email,
         )
         db.add(user)
-        await db.flush()
+        try:
+            await db.flush()
+        except IntegrityError as exc:
+            await db.rollback()
+            log.warning(
+                "Supabase user %s has an email already held by another users row",
+                supabase_user.id,
+            )
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="This email is linked to an older account. "
+                "Contact support to restore access.",
+            ) from exc
 
     background_tasks.add_task(touch_last_active, user.id)
 

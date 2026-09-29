@@ -19,6 +19,10 @@ class Settings(BaseModel):
     SUPABASE_SECRET_KEY: str
     SUPABASE_LOGO_BUCKET_NAME: str
 
+    # Transactional email (Resend) — invites. Supabase still sends its own auth emails.
+    RESEND_API_KEY: str | None = None
+    EMAIL_FROM: str | None = None  # e.g. "Skolarly <invites@skolarly.net>", verified in Resend
+
     # Stripe
     STRIPE_SECRET_KEY: str
     STRIPE_WEBHOOK_SECRET: str

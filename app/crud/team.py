@@ -20,12 +20,9 @@ from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 
 from fastapi import HTTPException, status
-from gotrue.errors import AuthApiError
-from gotrue.types import AdminUserAttributes
 from sqlalchemy import func, or_, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
-from starlette.concurrency import run_in_threadpool
 from supabase import Client
 
 from app.core.config import get_settings
@@ -38,17 +35,17 @@ from app.db.models.users import User
 from app.db.schemas.team import (
     AcceptInviteResponse,
     InviteCreate,
+    InvitePreview,
     TeamMemberRead,
     TeamRole,
 )
+from app.helpers.stale_users import remove_if_stale
+from app.services.email import EmailError, invite_email, send_email
 
 log = logging.getLogger(__name__)
 
 INVITE_TTL = timedelta(days=7)
 OWNER_LABEL = "Owner"
-# GoTrue has no "permanent" option — this is the effectively-forever ban Supabase's
-# own dashboard uses (100 years). Lifted again if the person is ever re-invited.
-PERMANENT_BAN_DURATION = "876000h"
 
 ROLE_DB_NAME: dict[TeamRole, str] = {
     TeamRole.head_teacher: "head_teacher",
@@ -82,24 +79,12 @@ def seats_available(*, seat_limit: int | None, members: int, pending_invites: in
     return seat_limit is None or members + pending_invites < seat_limit
 
 
-def _frontend_url(path: str, param: str, token: str) -> str:
-    return f"{get_settings().FRONTEND_URL.rstrip('/')}{path}?{param}={token}"
-
-
-def build_signup_url(token: str) -> str:
-    """Where a brand-new invitee lands: the signup page, which sees the invite token."""
-    return _frontend_url("/signup", "invite", token)
-
-
-def build_accept_url(token: str) -> str:
-    """Where an invitee with an existing account lands to accept."""
-    return _frontend_url("/accept-invite", "token", token)
-
-
-def _already_registered(exc: AuthApiError) -> bool:
-    return exc.code in {"email_exists", "user_already_exists"} or (
-        "already been registered" in exc.message.lower()
-    )
+def build_invite_url(token: str) -> str:
+    """
+    The invite page. It signs no one in: the invitee logs in, or creates an account with
+    the invited email, and then accepts. So it can be opened any number of times.
+    """
+    return f"{get_settings().FRONTEND_URL.rstrip('/')}/accept-invite?token={token}"
 
 
 # ---------------------------------------------------------------------------
@@ -254,72 +239,30 @@ def _not_found() -> HTTPException:
     return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Team member not found")
 
 
-def _invite_email_data(invite: Invite, role: Role, workspace_name: str) -> dict[str, str]:
-    """
-    Values the Supabase "Invite user" template can use as {{ .Data.<key> }}. Supabase also
-    stores them on the new account's user_metadata, hence the invited_* names: they're a
-    snapshot from invite time, not live account data.
-    """
-    data = {
-        "workspace_name": workspace_name,
-        "invited_role": display_role(role.name, is_owner=False),
-    }
-    if invite.first_name:
-        data["first_name"] = invite.first_name
-    if invite.last_name:
-        data["last_name"] = invite.last_name
-    return data
-
-
 # ---------------------------------------------------------------------------
-# Email delivery (Supabase Auth emails)
+# Email delivery (Resend)
 # ---------------------------------------------------------------------------
-async def _send_invite_email(
-    supabase: Client, supabase_auth: Client, email: str, token: str, data: dict[str, str]
-) -> None:
-    """
-    Make sure the invitee gets an email; raises if none could be sent.
-
-    A new address gets Supabase's invite email: the link signs them in and lands them on the
-    signup page, where they set their password. Supabase won't send that to an address that
-    already has an account, so those get a one-time sign-in link to the accept page instead
-    (that email can't be personalised per invite — Supabase ignores `data` for existing users).
-    """
+async def _send_invite_email(invite: Invite, role: Role, workspace_name: str) -> None:
+    """Email the invite link; raises an HTTPException if it couldn't be sent."""
+    subject, html_body, text_body = invite_email(
+        invite_url=build_invite_url(invite.token),
+        workspace_name=workspace_name,
+        role_label=display_role(role.name, is_owner=False),
+        first_name=invite.first_name,
+    )
     try:
-        try:
-            await run_in_threadpool(
-                supabase.auth.admin.invite_user_by_email,
-                email,
-                {"redirect_to": build_signup_url(token), "data": data},
-            )
-        except AuthApiError as exc:
-            if not _already_registered(exc):
-                raise
-            await run_in_threadpool(
-                supabase_auth.auth.sign_in_with_otp,
-                {
-                    "email": email,
-                    "options": {
-                        "email_redirect_to": build_accept_url(token),
-                        "should_create_user": False,
-                    },
-                },
-            )
-        return
-    except AuthApiError as exc:
-        if exc.status == status.HTTP_429_TOO_MANY_REQUESTS:
+        await send_email(to=invite.email, subject=subject, html_body=html_body, text_body=text_body)
+    except EmailError as exc:
+        if exc.rate_limited:
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 detail="Too many invite emails — wait a minute and try again",
             ) from exc
-        log.exception("Supabase rejected the invite email")
-    except Exception:
-        log.exception("Sending the invite email failed")
-
-    raise HTTPException(
-        status_code=status.HTTP_502_BAD_GATEWAY,
-        detail="Couldn't send the invite email. Try again.",
-    )
+        log.error("Sending the invite email failed: %s", exc)
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="Couldn't send the invite email. Try again.",
+        ) from exc
 
 
 # ---------------------------------------------------------------------------
@@ -362,9 +305,7 @@ async def list_team(db: AsyncSession, tenant_id: uuid.UUID) -> list[TeamMemberRe
     return team
 
 
-async def invite_member(
-    db: AsyncSession, supabase: Client, supabase_auth: Client, actor: Actor, payload: InviteCreate
-) -> TeamMemberRead:
+async def invite_member(db: AsyncSession, actor: Actor, payload: InviteCreate) -> TeamMemberRead:
     tenant = await _lock_tenant(db, actor.tenant_id)
     email = payload.email
 
@@ -415,9 +356,7 @@ async def invite_member(
 
     # Send before committing: if delivery fails the invite is rolled back too,
     # so the admin can simply retry instead of finding an un-notified ghost.
-    await _send_invite_email(
-        supabase, supabase_auth, email, invite.token, _invite_email_data(invite, role, tenant.name)
-    )
+    await _send_invite_email(invite, role, tenant.name)
     await db.commit()
     return _invite_read(invite, role)
 
@@ -458,22 +397,14 @@ async def remove_member(
         if member.user_id == owner_id:
             raise HTTPException(status.HTTP_403_FORBIDDEN, "The Owner can't be removed")
 
-        # Locks them out of the whole platform, not just this workspace: takes effect
-        # immediately since every request re-checks with Supabase (get_user_from_token
-        # calls auth.get_user, a live lookup, not just local JWT verification).
-        try:
-            await run_in_threadpool(
-                supabase.auth.admin.update_user_by_id,
-                str(member.user_id),
-                {"ban_duration": PERMANENT_BAN_DURATION},
-            )
-        except AuthApiError as exc:
-            log.exception("Failed to ban user while removing them")
-            raise HTTPException(
-                status.HTTP_502_BAD_GATEWAY, "Couldn't remove this person. Try again."
-            ) from exc
-
+        # Only this school's membership goes. Their account, and any other schools they
+        # belong to, are untouched. Access ends on their next request, since every
+        # request re-checks membership in this tenant.
         await db.delete(member)
+        await db.flush()
+        # If that was the last thing tying a deleted Supabase account to us, drop its
+        # users row too so the email is free if they ever sign up again.
+        await remove_if_stale(db, supabase, member.user_id)
         await db.commit()
         return
 
@@ -486,13 +417,7 @@ async def remove_member(
     raise _not_found()
 
 
-async def resend_invite(
-    db: AsyncSession,
-    supabase: Client,
-    supabase_auth: Client,
-    actor: Actor,
-    target_id: uuid.UUID,
-) -> TeamMemberRead:
+async def resend_invite(db: AsyncSession, actor: Actor, target_id: uuid.UUID) -> TeamMemberRead:
     invite_row = await _get_invite_row(db, actor.tenant_id, target_id)
     if invite_row is None:
         if await _get_member_row(db, actor.tenant_id, target_id) is not None:
@@ -506,38 +431,88 @@ async def resend_invite(
     await db.flush()
 
     workspace_name = await db.scalar(select(Tenant.name).where(Tenant.id == actor.tenant_id))
-    await _send_invite_email(
-        supabase,
-        supabase_auth,
-        invite.email,
-        invite.token,
-        _invite_email_data(invite, role, workspace_name or ""),
-    )
+    await _send_invite_email(invite, role, workspace_name or "")
     await db.commit()
     return _invite_read(invite, role)
 
 
-async def accept_invite(
-    db: AsyncSession, supabase: Client, user: User, token: str, password: str | None
-) -> AcceptInviteResponse:
-    invalid = HTTPException(
-        status.HTTP_400_BAD_REQUEST, "This invite link is invalid or has expired"
+def _invalid_invite() -> HTTPException:
+    return HTTPException(status.HTTP_404_NOT_FOUND, "This invitation is invalid or has expired")
+
+
+async def preview_invite(db: AsyncSession, token: str) -> InvitePreview:
+    """
+    What the invite page shows before anyone signs in. The token is a 256-bit secret
+    that was only ever emailed to the invitee, so it's enough to reveal who it's for.
+    Missing, expired and already-used invites all get the same answer.
+    """
+    row = (
+        await db.execute(
+            select(Invite, Role, Tenant.name)
+            .join(Role, Role.id == Invite.role_id)
+            .join(Tenant, Tenant.id == Invite.tenant_id)
+            .where(Invite.token == token)
+        )
+    ).first()
+    if row is None:
+        raise _invalid_invite()
+    invite, role, workspace_name = row
+    if invite.accepted_at is not None or invite.expires_at <= datetime.now(UTC):
+        raise _invalid_invite()
+
+    return InvitePreview(
+        email=invite.email,
+        workspaceName=workspace_name,
+        role=display_role(role.name, is_owner=False),
+        firstName=invite.first_name,
+        lastName=invite.last_name,
     )
 
+
+async def accept_invite(
+    db: AsyncSession, user: User, token: str, *, email: str | None, email_verified: bool
+) -> AcceptInviteResponse:
+    """
+    `email` and `email_verified` come from the caller's Supabase account (checked live on
+    this request), not from our copy of it: the invite is bound to an address, and only
+    Supabase knows whether this person has proved they own it.
+    """
     invite = (
         await db.execute(select(Invite).where(Invite.token == token).with_for_update())
     ).scalar_one_or_none()
-    if invite is None or invite.accepted_at is not None or invite.expires_at <= datetime.now(UTC):
-        raise invalid
+    if invite is None or invite.expires_at <= datetime.now(UTC):
+        raise _invalid_invite()
+
+    if not email_verified:
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "Email verification required.")
 
     # The token alone isn't enough: whoever redeems it must be signed in as the
-    # invited address, so a leaked link can't be used by someone else.
-    if invite.email != user.email.strip().lower():
+    # invited address, so a leaked or forwarded link can't be used by someone else.
+    if invite.email != (email or "").strip().lower():
         raise HTTPException(
             status.HTTP_403_FORBIDDEN, "This invite was sent to a different email address"
         )
 
-    # The rest of the API assumes one active workspace per user.
+    role = (await db.execute(select(Role).where(Role.id == invite.role_id))).scalar_one()
+    response = AcceptInviteResponse(
+        tenantId=invite.tenant_id, role=display_role(role.name, is_owner=False)
+    )
+
+    # Opening the link again after accepting (or a double click) is fine, not an error.
+    already_here = await db.scalar(
+        select(TenantMember.id).where(
+            TenantMember.tenant_id == invite.tenant_id, TenantMember.user_id == user.id
+        )
+    )
+    if already_here is not None:
+        if invite.accepted_at is None:
+            invite.accepted_at = datetime.now(UTC)
+            await db.commit()
+        return response
+    if invite.accepted_at is not None:
+        raise _invalid_invite()
+
+    # Until the API supports choosing a school per request, one active school per person.
     has_workspace = await db.scalar(
         select(TenantMember.id).where(
             TenantMember.user_id == user.id, TenantMember.status == "active"
@@ -552,7 +527,6 @@ async def accept_invite(
     ):
         raise HTTPException(status.HTTP_403_FORBIDDEN, "Seat limit reached")
 
-    role = (await db.execute(select(Role).where(Role.id == invite.role_id))).scalar_one()
     now = datetime.now(UTC)
     db.add(
         TenantMember(
@@ -576,21 +550,6 @@ async def accept_invite(
             .values(name=invited_name)
         )
 
-    # A brand-new invitee sets their password here. It's stored on the Supabase auth
-    # user (the actual credential store) via the admin API — never in our own tables.
-    # Also lifts any ban from a past removal: accepting a fresh invite is the admin's
-    # signal that this person is welcome back, on this tenant or a different one.
-    attributes: AdminUserAttributes = {"ban_duration": "none"}
-    if password is not None:
-        attributes["password"] = password
-    try:
-        await run_in_threadpool(supabase.auth.admin.update_user_by_id, str(user.id), attributes)
-    except AuthApiError as exc:
-        log.exception("Failed to update Supabase user while accepting invite")
-        raise HTTPException(
-            status.HTTP_502_BAD_GATEWAY, "Couldn't finish accepting the invite. Try again."
-        ) from exc
-
     try:
         await db.commit()
     except IntegrityError as exc:
@@ -599,4 +558,4 @@ async def accept_invite(
             status.HTTP_409_CONFLICT, "You're already a member of this workspace"
         ) from exc
 
-    return AcceptInviteResponse(tenantId=tenant.id, role=display_role(role.name, is_owner=False))
+    return response
