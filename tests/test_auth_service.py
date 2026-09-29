@@ -1,10 +1,13 @@
+import uuid
 from types import SimpleNamespace
-from unittest.mock import Mock
+from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 from fastapi import HTTPException, status
 from gotrue.errors import AuthApiError
+from sqlalchemy.exc import IntegrityError
 
+from app.api.v1.routes import auth
 from app.services.auth_service import AuthService
 
 
@@ -58,3 +61,53 @@ async def test_login_reports_provider_outage() -> None:
 
     assert error.value.status_code == status.HTTP_503_SERVICE_UNAVAILABLE
     assert error.value.detail == "Authentication service unavailable"
+
+
+@pytest.mark.asyncio
+async def test_new_login_whose_email_is_held_by_an_old_users_row_gets_409_not_500() -> None:
+    supabase_user = SimpleNamespace(id=str(uuid.uuid4()), email="a@b.com")
+    db = Mock()
+    db.get = AsyncMock(return_value=None)
+    db.scalar = AsyncMock(return_value=None)
+    db.flush = AsyncMock(side_effect=IntegrityError("insert", {}, Exception("ix_users_email")))
+    db.rollback = AsyncMock()
+
+    with pytest.raises(HTTPException) as error:
+        await auth.get_current_user(Mock(), supabase_user, db, Mock())
+
+    assert error.value.status_code == status.HTTP_409_CONFLICT
+    db.rollback.assert_awaited_once()
+
+
+def _new_login_db(old_id: uuid.UUID | None) -> Mock:
+    db = Mock()
+    db.get = AsyncMock(return_value=None)
+    db.scalar = AsyncMock(return_value=old_id)
+    db.flush = AsyncMock()
+    return db
+
+
+@pytest.mark.asyncio
+async def test_new_login_clears_a_leftover_row_holding_its_email() -> None:
+    supabase_user = SimpleNamespace(id=str(uuid.uuid4()), email="a@b.com")
+    old_id = uuid.uuid4()
+    db = _new_login_db(old_id)
+    cleanup = AsyncMock(return_value=True)
+
+    with patch.object(auth, "remove_if_stale", cleanup):
+        user = await auth.get_current_user(Mock(), supabase_user, db, Mock())
+
+    cleanup.assert_awaited_once()
+    assert cleanup.await_args.args[2] == old_id
+    assert user.id == supabase_user.id
+
+
+@pytest.mark.asyncio
+async def test_new_login_with_no_email_clash_skips_the_cleanup() -> None:
+    supabase_user = SimpleNamespace(id=str(uuid.uuid4()), email="a@b.com")
+    cleanup = AsyncMock()
+
+    with patch.object(auth, "remove_if_stale", cleanup):
+        await auth.get_current_user(Mock(), supabase_user, _new_login_db(None), Mock())
+
+    cleanup.assert_not_awaited()
