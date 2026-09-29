@@ -111,3 +111,46 @@ async def test_new_login_with_no_email_clash_skips_the_cleanup() -> None:
         await auth.get_current_user(Mock(), supabase_user, _new_login_db(None), Mock())
 
     cleanup.assert_not_awaited()
+
+
+@pytest.mark.parametrize(
+    ("metadata", "stored", "expected"),
+    [
+        ({"first_name": "Ivan", "last_name": "Mwesigwa"}, None, "Ivan Mwesigwa"),
+        ({"first_name": " Ivan ", "last_name": ""}, "Typed By Admin", "Ivan"),
+        ({}, "Ada Lovelace", "Ada Lovelace"),
+        ({"full_name": "Old Style"}, None, "Old Style"),
+        ({"name": "Older"}, "  ", "Older"),
+        ({}, None, None),
+        (None, None, None),
+    ],
+)
+def test_display_name_prefers_signup_first_and_last_name(
+    metadata: dict[str, str] | None, stored: str | None, expected: str | None
+) -> None:
+    assert auth.display_name(metadata, stored) == expected
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("error", "code"),
+    [
+        (
+            AuthApiError("Email not confirmed", 400, "email_not_confirmed"),
+            status.HTTP_403_FORBIDDEN,
+        ),
+        (
+            AuthApiError("slow down", 429, "over_request_rate_limit"),
+            status.HTTP_429_TOO_MANY_REQUESTS,
+        ),
+        (AuthApiError("boom", 500, "unexpected_failure"), status.HTTP_503_SERVICE_UNAVAILABLE),
+    ],
+)
+async def test_login_maps_supabase_states_to_clear_statuses(error: AuthApiError, code: int) -> None:
+    service = build_service(SimpleNamespace(user=None, session=None))
+    service.supabase.auth.sign_in_with_password.side_effect = error
+
+    with pytest.raises(HTTPException) as raised:
+        await service.login("user@example.com", "password")
+
+    assert raised.value.status_code == code

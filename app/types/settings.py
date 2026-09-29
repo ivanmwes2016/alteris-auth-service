@@ -28,7 +28,8 @@ class Settings(BaseModel):
     STRIPE_WEBHOOK_SECRET: str
 
     # Redis (optional cache)
-    REDIS_URL: str | None = None
+    REDIS_URL: str | None = None  # Upstash REST URL
+    REDIS_TOKEN: str | None = None  # Upstash REST token
 
     # Security
     JWT_ALGORITHM: str = "HS256"

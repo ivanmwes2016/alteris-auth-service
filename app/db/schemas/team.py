@@ -67,6 +67,14 @@ class AcceptInvite(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     token: str = Field(min_length=1, max_length=256)
+    # The invitee's own name from the invite page; falls back to what the inviter typed.
+    first_name: str | None = Field(default=None, max_length=100)
+    last_name: str | None = Field(default=None, max_length=100)
+
+    @field_validator("first_name", "last_name")
+    @classmethod
+    def _clean_name(cls, value: str | None) -> str | None:
+        return " ".join(value.split()) or None if value else None
 
 
 class InviteToken(BaseModel):
