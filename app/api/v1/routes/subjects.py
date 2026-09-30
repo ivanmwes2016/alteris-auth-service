@@ -98,7 +98,9 @@ async def get_subjects(
         select(Subject)
         .where(Subject.tenant_id == tenant_id)
         .options(*_eager_options())
-        .order_by(Subject.name)
+        # The order they were added, which is the order schools list them in
+        # (marks sheets, report cards), not alphabetical.
+        .order_by(Subject.created_at, Subject.id)
     )
     subjects = result.scalars().unique().all()
 

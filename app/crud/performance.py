@@ -1,24 +1,37 @@
 """
 Service layer for academic performance (marks entry).
 
-Marks are stored one row per (student, subject) for a given class/term/year
-and fully replaced on every PATCH, matching the frontend's editedMarks —
-the whole roster is resent on every save. A blank/missing score for a
-(student, subject) pair means "not persisted": any existing row for it gets
-deleted rather than stored as an empty string.
+Marks are stored one row per (student, subject) for a given class/term/year.
+A PATCH replaces the marks of the students it contains and leaves everyone
+else alone, so a paged screen can save just the students it edited. For a
+student in the payload, a blank/missing score for a subject means "not
+persisted": any existing row for it gets deleted rather than stored as an
+empty string.
 
 `classAverage` and trend averages only count entered numeric scores — a
 student with no mark yet for a subject isn't counted as a zero.
 """
 
+import math
 import uuid
 from collections import defaultdict
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.db.models.academics import SchoolClass, Subject, SubjectClass
 from app.db.models.performance import PerformanceRecord
-from app.db.schemas.performance import PerformanceRead, PerformanceUpdate, TrendPoint
+from app.db.models.student import Student
+from app.db.schemas.performance import (
+    PerformancePage,
+    PerformanceRead,
+    PerformanceSummary,
+    PerformanceUpdate,
+    RankedMarks,
+    TopStudent,
+    TrendPoint,
+)
+from app.helpers.pagination import PageParams
 
 
 def _safe_float(value: str) -> float | None:
@@ -87,12 +100,13 @@ async def get_performance(
 
     marks_by_student: dict[str, dict[str, str]] = {}
     scores_by_subject: dict[str, list[float]] = defaultdict(list)
-    subjects_seen: set[str] = set()
+    # Insertion-ordered, so leftover subjects keep the order their marks came in.
+    subjects_seen: dict[str, None] = {}
 
     for record in records:
         row = marks_by_student.setdefault(record.student_name, {"student": record.student_name})
         row[record.subject] = record.score
-        subjects_seen.add(record.subject)
+        subjects_seen.setdefault(record.subject)
 
         score = _safe_float(record.score)
         if score is not None:
@@ -106,8 +120,13 @@ async def get_performance(
 
     trends = await _get_trends(db, tenant_id=tenant_id, class_name=class_name)
 
+    # The class's subjects in the order they were added, not alphabetical;
+    # any other subject that has marks follows.
+    class_subjects = await _class_subjects(db, tenant_id, class_name)
+    subjects = class_subjects + [s for s in subjects_seen if s not in class_subjects]
+
     return PerformanceRead(
-        subjects=sorted(subjects_seen),
+        subjects=subjects,
         marks=list(marks_by_student.values()),
         classAverage=class_average,
         trends=trends,
@@ -126,6 +145,8 @@ async def sync_marks(
     )
     existing_by_key = {(r.student_name, r.subject): r for r in existing}
     seen_keys: set[tuple[str, str]] = set()
+    # Only these students' marks are replaced; everyone else keeps theirs.
+    students_sent = {row["student"] for row in data.marks if row.get("student")}
 
     for row in data.marks:
         student_name = row.get("student")
@@ -159,11 +180,122 @@ async def sync_marks(
             seen_keys.add(key)
 
     for key, existing_row in existing_by_key.items():
-        if key not in seen_keys:
+        if key[0] in students_sent and key not in seen_keys:
             await db.delete(existing_row)
 
     await db.commit()
 
     return await get_performance(
         db, tenant_id=tenant_id, class_name=class_name, term_label=term_label, year=year
+    )
+
+
+# ---------------------------------------------------------------------------
+# Paged view: roster, ranking and class-wide figures computed here, so the
+# page only downloads the rows it shows.
+# ---------------------------------------------------------------------------
+def _round_half_up(value: float) -> int:
+    """Same rounding as the frontend's Math.round (Python's round() is banker's)."""
+    return math.floor(value + 0.5)
+
+
+def _student_average(scores: dict[str, str], subjects: list[str]) -> float:
+    """Mean over the class's subjects; a missing or non-numeric mark counts as 0."""
+    if not subjects:
+        return 0.0
+    return sum(_safe_float(scores.get(s, "") or "") or 0.0 for s in subjects) / len(subjects)
+
+
+def _display_name(cls: SchoolClass) -> str:
+    # Mirrors the frontend's classDisplayName: name and stream joined by a space.
+    return " ".join(part for part in (cls.name, cls.stream) if part)
+
+
+async def _class_roster(db: AsyncSession, tenant_id: uuid.UUID, class_name: str) -> list[str]:
+    """Names of the students enrolled in the class, matched as the Students page does."""
+    classes = (
+        await db.scalars(select(SchoolClass).where(SchoolClass.tenant_id == tenant_id))
+    ).all()
+    match = next((c for c in classes if _display_name(c) == class_name), None)
+    if match is None:
+        return []
+
+    query = select(Student.name).where(
+        Student.tenant_id == tenant_id, Student.class_applied == match.name
+    )
+    query = query.where(
+        Student.faculty == match.stream if match.stream else Student.faculty.is_(None)
+    )
+    return list((await db.scalars(query)).all())
+
+
+async def _class_subjects(db: AsyncSession, tenant_id: uuid.UUID, class_name: str) -> list[str]:
+    """Subjects assigned to the class, in the order they were added."""
+    result = await db.scalars(
+        select(Subject.name)
+        .join(SubjectClass, SubjectClass.subject_id == Subject.id)
+        .where(Subject.tenant_id == tenant_id, SubjectClass.name == class_name)
+        .order_by(Subject.created_at, Subject.id)
+    )
+    return list(dict.fromkeys(result.all()))
+
+
+async def get_performance_page(
+    db: AsyncSession,
+    *,
+    tenant_id: uuid.UUID,
+    class_name: str,
+    term_label: str,
+    year: int,
+    params: PageParams,
+) -> PerformancePage:
+    assert params.page is not None
+    base = await get_performance(
+        db, tenant_id=tenant_id, class_name=class_name, term_label=term_label, year=year
+    )
+    subjects = await _class_subjects(db, tenant_id, class_name) or base.subjects
+
+    # Every enrolled student gets a row, plus anyone with marks who isn't on
+    # the roster any more, so no saved mark is hidden.
+    scores_by_student = {
+        row["student"]: {k: v for k, v in row.items() if k != "student"} for row in base.marks
+    }
+    names = list(
+        dict.fromkeys([*await _class_roster(db, tenant_id, class_name), *scores_by_student])
+    )
+
+    averages = {name: _student_average(scores_by_student.get(name, {}), subjects) for name in names}
+    ranked = sorted(names, key=lambda name: (-averages[name], name.lower()))
+    rows = [
+        RankedMarks(
+            student=name,
+            rank=position,
+            average=_round_half_up(averages[name]),
+            scores=scores_by_student.get(name, {}),
+        )
+        for position, name in enumerate(ranked, start=1)
+    ]
+
+    summary = PerformanceSummary(
+        students=len(rows),
+        average=_round_half_up(sum(r.average for r in rows) / len(rows)) if rows else 0,
+        top=TopStudent(student=rows[0].student, average=rows[0].average) if rows else None,
+    )
+
+    # Search narrows the rows shown; ranks stay the student's rank in the class.
+    if params.search:
+        term = params.search.lower()
+        rows = [r for r in rows if term in r.student.lower()]
+
+    start = (params.page - 1) * params.page_size
+    return PerformancePage(
+        items=rows[start : start + params.page_size],
+        total=len(rows),
+        page=params.page,
+        page_size=params.page_size,
+        pages=max(1, math.ceil(len(rows) / params.page_size)),
+        subjects=subjects,
+        classAverage=base.classAverage,
+        trends=base.trends,
+        summary=summary,
     )
