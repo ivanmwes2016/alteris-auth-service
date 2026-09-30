@@ -2,7 +2,7 @@ from datetime import date as date_
 from enum import Enum
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from sqlalchemy import delete, select
 from sqlalchemy.exc import SQLAlchemyError
@@ -13,6 +13,14 @@ from app.api.v1.routes.auth import get_current_tenant_id, get_current_user
 from app.core.db import get_db
 from app.db.models.staff import Staff, StaffSubject
 from app.db.models.users import User
+from app.helpers.pagination import (
+    Page,
+    PageParams,
+    fetch_page,
+    make_page,
+    page_params,
+    search_filter,
+)
 
 router = APIRouter()
 
@@ -135,22 +143,44 @@ async def _set_subjects(
     )
 
 
-@router.get("", response_model=list[StaffResponse], status_code=status.HTTP_200_OK)
+@router.get(
+    "",
+    response_model=list[StaffResponse] | Page[StaffResponse],
+    status_code=status.HTTP_200_OK,
+)
 async def get_staff_members(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> list[StaffResponse]:
+    params: PageParams = Depends(page_params),
+    role: str | None = Query(default=None, max_length=100),
+) -> list[StaffResponse] | Page[StaffResponse]:
+    """All staff, or one page of them with `?page=` (search: name or email)."""
     tenant_id = await get_current_tenant_id(db, current_user)
 
-    result = await db.execute(
+    query = (
         select(Staff)
         .where(Staff.tenant_id == tenant_id)
         .options(selectinload(Staff.subjects))
-        .order_by(Staff.first_name, Staff.last_name)
+        .order_by(Staff.first_name, Staff.last_name, Staff.id)
     )
-    staff_members = result.scalars().unique().all()
+    matches = search_filter(
+        params.search,
+        Staff.first_name,
+        Staff.last_name,
+        Staff.email,
+        Staff.first_name + " " + Staff.last_name,
+    )
+    if matches is not None:
+        query = query.where(matches)
+    if role:
+        query = query.where(Staff.role == role)
 
-    return [_to_response(s) for s in staff_members]
+    if params.page is None:
+        result = await db.execute(query)
+        return [_to_response(s) for s in result.scalars().unique().all()]
+
+    staff_members, total = await fetch_page(db, query, params)
+    return make_page([_to_response(s) for s in staff_members], total, params)
 
 
 @router.get("/{staff_id}", response_model=StaffResponse, status_code=status.HTTP_200_OK)

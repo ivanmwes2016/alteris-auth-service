@@ -2,7 +2,7 @@ from datetime import date, datetime
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
@@ -17,6 +17,14 @@ from app.db.models.student import Student
 from app.db.models.student_parent import StudentParent
 from app.db.models.tenant_member import TenantMember
 from app.db.models.users import User
+from app.helpers.pagination import (
+    Page,
+    PageParams,
+    fetch_page,
+    make_page,
+    page_params,
+    search_filter,
+)
 
 router = APIRouter()
 
@@ -176,6 +184,7 @@ async def create_student(
             class_applied=payload.class_applied,
             faculty=payload.faculty,
             course=payload.course,
+            study_format=payload.study_format,
         )
 
         db.add(student)
@@ -222,42 +231,72 @@ async def create_student(
         ) from exc
 
 
-@router.get("", response_model=list[StudentResponse], status_code=status.HTTP_200_OK)
+def _student_response(student: Student) -> StudentResponse:
+    return StudentResponse.model_validate(
+        {
+            **student.__dict__,
+            "attendanceRecords": student.attendance_profile.records
+            if student.attendance_profile
+            else [],
+            "dob": student.date_of_birth,
+        }
+    )
+
+
+@router.get(
+    "",
+    response_model=list[StudentResponse] | Page[StudentResponse],
+    status_code=status.HTTP_200_OK,
+)
 async def get_students(
     db: Annotated[AsyncSession, Depends(get_db)],
     current_user: Annotated[User, Depends(get_current_user)],
-) -> list[StudentResponse]:
-    member_result = await db.execute(
-        select(TenantMember).where(TenantMember.user_id == current_user.id)
-    )
-    member = member_result.scalar_one_or_none()
+    params: Annotated[PageParams, Depends(page_params)],
+    class_name: Annotated[str | None, Query(alias="class", max_length=100)] = None,
+    gender: Annotated[str | None, Query(max_length=50)] = None,
+) -> list[StudentResponse] | Page[StudentResponse]:
+    """All students, or one page of them with `?page=` (search: name or admission no.)."""
+    tenant_id = await get_current_tenant_id(db, current_user)
 
-    if not member:
-        raise HTTPException(status_code=403, detail="User does not belong to a school")
-
-    result = await db.execute(
+    query = (
         select(Student)
-        .where(Student.tenant_id == member.tenant_id)
+        .where(Student.tenant_id == tenant_id)
         .options(
             selectinload(Student.parents).selectinload(StudentParent.parent),
             selectinload(Student.attendance_profile).selectinload(StudentAttendanceProfile.records),
         )
+        .order_by(Student.name, Student.id)
     )
+    matches = search_filter(params.search, Student.name, Student.school_id)
+    if matches is not None:
+        query = query.where(matches)
+    if class_name:
+        query = query.where(Student.class_applied == class_name)
+    if gender:
+        query = query.where(Student.gender == gender)
 
-    students = result.scalars().all()
+    if params.page is None:
+        result = await db.execute(query)
+        return [_student_response(student) for student in result.scalars().all()]
 
-    return [
-        StudentResponse.model_validate(
-            {
-                **student.__dict__,
-                "attendanceRecords": student.attendance_profile.records
-                if student.attendance_profile
-                else [],
-                "dob": student.date_of_birth,
-            }
-        )
-        for student in students
-    ]
+    students, total = await fetch_page(db, query, params)
+    return make_page([_student_response(student) for student in students], total, params)
+
+
+@router.get("/classes", response_model=list[str], status_code=status.HTTP_200_OK)
+async def get_student_classes(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
+) -> list[str]:
+    """Every class students are in, for the class filter (a page only shows some)."""
+    tenant_id = await get_current_tenant_id(db, current_user)
+    result = await db.scalars(
+        select(Student.class_applied)
+        .where(Student.tenant_id == tenant_id, Student.class_applied.is_not(None))
+        .distinct()
+        .order_by(Student.class_applied)
+    )
+    return [name for name in result.all() if name]
 
 
 @router.get(

@@ -12,6 +12,14 @@ from app.core.db import get_db
 from app.db.models.parent import Parent
 from app.db.models.student_parent import StudentParent
 from app.db.models.users import User
+from app.helpers.pagination import (
+    Page,
+    PageParams,
+    fetch_page,
+    make_page,
+    page_params,
+    search_filter,
+)
 
 router = APIRouter()
 
@@ -65,23 +73,33 @@ class ParentStudentPatch(BaseModel):
 # Get all parents for the current user's tenant
 @router.get(
     "",
-    response_model=list[ParentResponse],
+    response_model=list[ParentResponse] | Page[ParentResponse],
     status_code=status.HTTP_200_OK,
 )
 async def get_parents(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> list[Parent]:
+    params: PageParams = Depends(page_params),
+) -> list[ParentResponse] | Page[ParentResponse]:
+    """All parents, or one page of them with `?page=` (search: name, email or phone)."""
     tenant_id = await get_current_tenant_id(db, current_user)
 
-    result = await db.execute(
+    query = (
         select(Parent)
         .where(Parent.tenant_id == tenant_id)
         .options(selectinload(Parent.students).selectinload(StudentParent.student))
-        .order_by(Parent.name)
+        .order_by(Parent.name, Parent.id)
     )
+    matches = search_filter(params.search, Parent.name, Parent.email, Parent.phone)
+    if matches is not None:
+        query = query.where(matches)
 
-    return list(result.scalars().unique().all())
+    if params.page is None:
+        result = await db.execute(query)
+        return [ParentResponse.model_validate(p) for p in result.scalars().unique().all()]
+
+    parents, total = await fetch_page(db, query, params)
+    return make_page([ParentResponse.model_validate(p) for p in parents], total, params)
 
 
 @router.get(
