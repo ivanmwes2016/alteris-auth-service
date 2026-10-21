@@ -1,4 +1,5 @@
 import json
+from collections.abc import Callable
 from types import SimpleNamespace
 from typing import Any
 
@@ -10,7 +11,9 @@ from app.helpers import rate_limit
 
 
 def _configure(
-    monkeypatch: pytest.MonkeyPatch, handler: Any, url: str | None = "https://r.test"
+    monkeypatch: pytest.MonkeyPatch,
+    handler: Callable[[httpx.Request], httpx.Response],
+    url: str | None = "https://r.test",
 ) -> list[httpx.Request]:
     seen: list[httpx.Request] = []
 
@@ -23,7 +26,7 @@ def _configure(
     )
     real = httpx.AsyncClient
     monkeypatch.setattr(
-        rate_limit.httpx,
+        httpx,
         "AsyncClient",
         lambda **kw: real(transport=httpx.MockTransport(record), **kw),
     )

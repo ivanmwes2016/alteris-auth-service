@@ -1,14 +1,17 @@
+from typing import Any
+
 import pytest
 from sqlalchemy import Column, MetaData, String, Table
 from sqlalchemy.dialects import postgresql
 
 from app.helpers.pagination import PageParams, make_page, page_params, search_filter
 
+DIALECT = postgresql.dialect()  # type: ignore[no-untyped-call]
 people = Table("people", MetaData(), Column("name", String), Column("email", String))
 
 
-def _sql(expr: object) -> str:
-    return str(expr.compile(dialect=postgresql.dialect(), compile_kwargs={"literal_binds": True}))  # type: ignore[attr-defined]
+def _sql(expr: Any) -> str:
+    return str(expr.compile(dialect=DIALECT, compile_kwargs={"literal_binds": True}))
 
 
 def test_no_search_term_means_no_filter() -> None:
@@ -23,9 +26,8 @@ def test_search_is_case_insensitive_contains_over_every_column() -> None:
 
 
 def test_like_wildcards_in_the_term_are_matched_literally() -> None:
-    compiled = search_filter("50%_off", people.c.name).compile(  # type: ignore[union-attr]
-        dialect=postgresql.dialect()
-    )
+    clause: Any = search_filter("50%_off", people.c.name)
+    compiled = clause.compile(dialect=DIALECT)
     assert list(compiled.params.values()) == ["%50\\%\\_off%"]
     assert "ESCAPE" in str(compiled)
 
@@ -40,6 +42,6 @@ def test_blank_search_is_dropped_and_full_list_is_the_default() -> None:
     ("total", "page_size", "pages"), [(0, 25, 1), (25, 25, 1), (26, 25, 2), (101, 10, 11)]
 )
 def test_page_count(total: int, page_size: int, pages: int) -> None:
-    page = make_page([], total, PageParams(page=1, page_size=page_size, search=None))
+    page = make_page(list[str](), total, PageParams(page=1, page_size=page_size, search=None))
     assert page.pages == pages
     assert page.total == total

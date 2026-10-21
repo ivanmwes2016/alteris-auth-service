@@ -95,6 +95,9 @@ class InvitePreview(BaseModel):
 
 class TeamMemberRead(BaseModel):
     id: uuid.UUID
+    # The person's account (Supabase user) id, which other services record, e.g. who
+    # created an assessment. None for invites that haven't been accepted yet.
+    userId: uuid.UUID | None = None  # noqa: N815
     name: str | None = None
     email: str
     role: str

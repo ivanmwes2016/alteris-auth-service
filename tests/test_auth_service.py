@@ -1,5 +1,6 @@
 import uuid
 from types import SimpleNamespace
+from typing import Any
 from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
@@ -11,9 +12,10 @@ from app.api.v1.routes import auth
 from app.services.auth_service import AuthService
 
 
-def build_service(auth_response: object) -> AuthService:
+def build_service(auth_response: object, error: Exception | None = None) -> AuthService:
     supabase = Mock()
     supabase.auth.sign_in_with_password.return_value = auth_response
+    supabase.auth.sign_in_with_password.side_effect = error
     return AuthService(supabase=supabase, db=Mock())
 
 
@@ -37,11 +39,13 @@ async def test_login_returns_supabase_session_tokens() -> None:
 
 @pytest.mark.asyncio
 async def test_login_rejects_invalid_credentials_without_leaking_provider_details() -> None:
-    service = build_service(SimpleNamespace(user=None, session=None))
-    service.supabase.auth.sign_in_with_password.side_effect = AuthApiError(
-        "provider-specific error",
-        status.HTTP_400_BAD_REQUEST,
-        "invalid_credentials",
+    service = build_service(
+        SimpleNamespace(user=None, session=None),
+        AuthApiError(
+            "provider-specific error",
+            status.HTTP_400_BAD_REQUEST,
+            "invalid_credentials",
+        ),
     )
 
     with pytest.raises(HTTPException) as error:
@@ -53,8 +57,9 @@ async def test_login_rejects_invalid_credentials_without_leaking_provider_detail
 
 @pytest.mark.asyncio
 async def test_login_reports_provider_outage() -> None:
-    service = build_service(SimpleNamespace(user=None, session=None))
-    service.supabase.auth.sign_in_with_password.side_effect = RuntimeError("network unavailable")
+    service = build_service(
+        SimpleNamespace(user=None, session=None), RuntimeError("network unavailable")
+    )
 
     with pytest.raises(HTTPException) as error:
         await service.login("user@example.com", "password")
@@ -65,7 +70,7 @@ async def test_login_reports_provider_outage() -> None:
 
 @pytest.mark.asyncio
 async def test_new_login_whose_email_is_held_by_an_old_users_row_gets_409_not_500() -> None:
-    supabase_user = SimpleNamespace(id=str(uuid.uuid4()), email="a@b.com")
+    supabase_user: Any = SimpleNamespace(id=str(uuid.uuid4()), email="a@b.com")
     db = Mock()
     db.get = AsyncMock(return_value=None)
     db.scalar = AsyncMock(return_value=None)
@@ -89,7 +94,7 @@ def _new_login_db(old_id: uuid.UUID | None) -> Mock:
 
 @pytest.mark.asyncio
 async def test_new_login_clears_a_leftover_row_holding_its_email() -> None:
-    supabase_user = SimpleNamespace(id=str(uuid.uuid4()), email="a@b.com")
+    supabase_user: Any = SimpleNamespace(id=str(uuid.uuid4()), email="a@b.com")
     old_id = uuid.uuid4()
     db = _new_login_db(old_id)
     cleanup = AsyncMock(return_value=True)
@@ -98,13 +103,14 @@ async def test_new_login_clears_a_leftover_row_holding_its_email() -> None:
         user = await auth.get_current_user(Mock(), supabase_user, db, Mock())
 
     cleanup.assert_awaited_once()
+    assert cleanup.await_args is not None
     assert cleanup.await_args.args[2] == old_id
     assert user.id == supabase_user.id
 
 
 @pytest.mark.asyncio
 async def test_new_login_with_no_email_clash_skips_the_cleanup() -> None:
-    supabase_user = SimpleNamespace(id=str(uuid.uuid4()), email="a@b.com")
+    supabase_user: Any = SimpleNamespace(id=str(uuid.uuid4()), email="a@b.com")
     cleanup = AsyncMock()
 
     with patch.object(auth, "remove_if_stale", cleanup):
@@ -147,8 +153,7 @@ def test_display_name_prefers_signup_first_and_last_name(
     ],
 )
 async def test_login_maps_supabase_states_to_clear_statuses(error: AuthApiError, code: int) -> None:
-    service = build_service(SimpleNamespace(user=None, session=None))
-    service.supabase.auth.sign_in_with_password.side_effect = error
+    service = build_service(SimpleNamespace(user=None, session=None), error)
 
     with pytest.raises(HTTPException) as raised:
         await service.login("user@example.com", "password")

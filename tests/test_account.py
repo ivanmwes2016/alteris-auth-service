@@ -9,6 +9,7 @@ from gotrue.errors import AuthApiError
 from pydantic import ValidationError
 
 from app.db.models.auth import EmailRequest, RegisterRequest
+from app.helpers import rate_limit
 from app.services import account
 from app.services.email import EmailError
 
@@ -20,7 +21,7 @@ def _env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         account, "get_settings", lambda: SimpleNamespace(FRONTEND_URL="https://app.test/")
     )
-    monkeypatch.setattr(account.rate_limit, "enforce", AsyncMock())
+    monkeypatch.setattr(rate_limit, "enforce", AsyncMock())
 
 
 def _db(state: bool | None) -> Mock:
@@ -53,6 +54,7 @@ def _register(**overrides: Any) -> RegisterRequest:
 
 
 def _link(sent: AsyncMock) -> dict[str, list[str]]:
+    assert sent.await_args is not None
     url = sent.await_args.kwargs["text_body"].split(": https://")[1].split("\n")[0]
     parsed = urlparse("https://" + url)
     assert parsed.path == "/auth/confirm"
@@ -106,6 +108,7 @@ async def test_new_signup_creates_the_account_and_emails_our_confirm_link() -> N
         "token_hash": ["hash/123"],
         "next": ["/accept-invite?token=t"],
     }
+    assert sent.await_args is not None
     assert sent.await_args.kwargs["to"] == "ivan@example.com"
     assert message == account.CHECK_EMAIL
 
@@ -117,6 +120,7 @@ async def test_signup_with_a_confirmed_email_sends_account_exists_and_same_answe
         message = await account.register(_db(True), supabase, _register(), IP)
 
     supabase.auth.admin.generate_link.assert_not_called()
+    assert sent.await_args is not None
     assert "already have an account" in sent.await_args.kwargs["subject"]
     assert message == account.CHECK_EMAIL
 
@@ -139,6 +143,7 @@ async def test_signup_race_with_existing_email_still_gives_the_same_answer() -> 
     with patch.object(account, "send_email", sent):
         message = await account.register(_db(None), supabase, _register(), IP)
 
+    assert sent.await_args is not None
     assert "already have an account" in sent.await_args.kwargs["subject"]
     assert message == account.CHECK_EMAIL
 
@@ -180,7 +185,7 @@ async def test_signup_email_failure_is_a_502_so_they_can_retry() -> None:
 async def test_signup_is_rate_limited_per_ip_and_email() -> None:
     enforce = AsyncMock()
     with (
-        patch.object(account.rate_limit, "enforce", enforce),
+        patch.object(rate_limit, "enforce", enforce),
         patch.object(account, "send_email", AsyncMock()),
     ):
         await account.register(_db(None), _supabase(), _register(), IP)

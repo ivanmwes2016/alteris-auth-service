@@ -24,7 +24,7 @@ format-check:
 	uv run ruff format . --check
 
 typecheck:
-	uv run mypy app/
+	uv run mypy app/ tests/
 
 # Run all checks (used in CI)
 check: format-check lint typecheck

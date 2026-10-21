@@ -1,6 +1,7 @@
 import uuid
 from datetime import UTC, datetime, timedelta
 from types import SimpleNamespace
+from typing import Any
 from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
@@ -148,9 +149,9 @@ def test_invalid_emails_are_rejected(bad: str) -> None:
 
 def test_owner_role_cannot_be_invited_or_assigned() -> None:
     with pytest.raises(ValidationError):
-        InviteCreate(email="a@b.com", role="Owner")  # type: ignore[arg-type]
+        InviteCreate(email="a@b.com", role="Owner")
     with pytest.raises(ValidationError):
-        RoleUpdate(role="Owner")  # type: ignore[arg-type]
+        RoleUpdate(role="Owner")
 
 
 def test_unknown_request_fields_fail_loudly_instead_of_being_dropped() -> None:
@@ -184,6 +185,7 @@ async def test_invite_email_goes_to_the_invitee_with_the_invite_link() -> None:
     with patch.object(team, "send_email", send):
         await team._send_invite_email(_pending(), SimpleNamespace(name="teacher"), "Vienna")  # type: ignore[arg-type]
 
+    assert send.await_args is not None
     kwargs = send.await_args.kwargs
     assert kwargs["to"] == "a@b.com"
     assert "Vienna" in kwargs["subject"]
@@ -332,7 +334,7 @@ def _invite_row(**overrides: object) -> SimpleNamespace:
     return SimpleNamespace(**values)
 
 
-USER = SimpleNamespace(id=uuid.uuid4())
+USER: Any = SimpleNamespace(id=uuid.uuid4())
 
 
 @pytest.mark.asyncio
@@ -343,7 +345,7 @@ async def test_unverified_email_cannot_accept() -> None:
             USER,
             "tok",
             email="a@b.com",
-            email_verified=False,  # type: ignore[arg-type]
+            email_verified=False,
         )
 
     assert error.value.status_code == status.HTTP_403_FORBIDDEN
@@ -358,7 +360,7 @@ async def test_a_different_signed_in_email_cannot_accept() -> None:
             USER,
             "tok",
             email="eve@b.com",
-            email_verified=True,  # type: ignore[arg-type]
+            email_verified=True,
         )
 
     assert error.value.status_code == status.HTTP_403_FORBIDDEN
@@ -368,7 +370,7 @@ async def test_a_different_signed_in_email_cannot_accept() -> None:
 async def test_email_match_ignores_case_and_spaces() -> None:
     db = _accept_db(_invite_row(), member_here=True)
 
-    await team.accept_invite(db, USER, "tok", email=" A@B.com ", email_verified=True)  # type: ignore[arg-type]
+    await team.accept_invite(db, USER, "tok", email=" A@B.com ", email_verified=True)
 
 
 @pytest.mark.asyncio
@@ -386,7 +388,7 @@ async def test_unknown_or_expired_invites_get_one_generic_404(
             USER,
             "tok",
             email="a@b.com",
-            email_verified=True,  # type: ignore[arg-type]
+            email_verified=True,
         )
 
     assert error.value.status_code == status.HTTP_404_NOT_FOUND
@@ -397,7 +399,7 @@ async def test_accepting_again_after_joining_is_not_an_error() -> None:
     invite = _invite_row(accepted_at=datetime.now(UTC))
     db = _accept_db(invite, member_here=True)
 
-    response = await team.accept_invite(db, USER, "tok", email="a@b.com", email_verified=True)  # type: ignore[arg-type]
+    response = await team.accept_invite(db, USER, "tok", email="a@b.com", email_verified=True)
 
     assert response.tenantId == invite.tenant_id
 
@@ -407,7 +409,7 @@ async def test_a_used_invite_cannot_be_reused_by_a_non_member() -> None:
     db = _accept_db(_invite_row(accepted_at=datetime.now(UTC)), member_here=False)
 
     with pytest.raises(HTTPException) as error:
-        await team.accept_invite(db, USER, "tok", email="a@b.com", email_verified=True)  # type: ignore[arg-type]
+        await team.accept_invite(db, USER, "tok", email="a@b.com", email_verified=True)
 
     assert error.value.status_code == status.HTTP_404_NOT_FOUND
 
@@ -423,3 +425,21 @@ def test_accept_takes_optional_names_from_the_invite_page() -> None:
 def test_accept_no_longer_takes_a_password() -> None:
     with pytest.raises(ValidationError):
         AcceptInvite.model_validate({"token": "t", "password": "hunter22"})
+
+
+def test_members_carry_their_account_id_but_invites_do_not() -> None:
+    from app.crud.team import _invite_read, _member_read
+
+    user_id, member_id = uuid.uuid4(), uuid.uuid4()
+    member: Any = SimpleNamespace(
+        id=member_id, user_id=user_id, last_active_at=None, status="active"
+    )
+    user: Any = SimpleNamespace(name="Grace Achieng", email="grace@school.test")
+    role: Any = SimpleNamespace(name="teacher")
+    read = _member_read(member, user, role, None, owner_id=None)
+    assert (read.id, read.userId, read.name) == (member_id, user_id, "Grace Achieng")
+
+    invite: Any = SimpleNamespace(
+        id=uuid.uuid4(), first_name="Peter", last_name=None, email="p@school.test"
+    )
+    assert _invite_read(invite, role).userId is None
