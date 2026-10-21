@@ -29,6 +29,18 @@ class Tenant(Base):
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
 
+    # A new school waits for approval by the platform team (an emailed link) before
+    # anyone can use it. Rows written outside the app (and every school that existed
+    # before approvals) default to approved; the app creates new schools as pending.
+    status: Mapped[str] = mapped_column(
+        String, nullable=False, default="pending", server_default="approved"
+    )
+    approved_at = mapped_column(DateTime(timezone=True), nullable=True)
+    # Free trial, counted from approval. None: never on a trial (e.g. older schools).
+    trial_ends_at = mapped_column(DateTime(timezone=True), nullable=True)
+    # SHA-256 of the one-time approve/reject link token; cleared once used.
+    review_token_hash: Mapped[str | None] = mapped_column(String, nullable=True, unique=True)
+
     created_at = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()

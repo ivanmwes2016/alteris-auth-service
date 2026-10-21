@@ -101,7 +101,7 @@ class Actor:
 async def get_actor(db: AsyncSession, user: User) -> Actor:
     row = (
         await db.execute(
-            select(TenantMember.tenant_id, Role.name, Tenant.owner_id)
+            select(TenantMember.tenant_id, Role.name, Tenant.owner_id, Tenant.status)
             .join(Role, Role.id == TenantMember.role_id)
             .join(Tenant, Tenant.id == TenantMember.tenant_id)
             .where(TenantMember.user_id == user.id, TenantMember.status == "active")
@@ -115,7 +115,11 @@ async def get_actor(db: AsyncSession, user: User) -> Actor:
             detail="User does not belong to an active tenant",
         )
 
-    tenant_id, role_name, owner_id = row
+    tenant_id, role_name, owner_id, tenant_status = row
+    if tenant_status != "approved":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="This school is awaiting approval."
+        )
     return Actor(
         user_id=user.id, tenant_id=tenant_id, role_name=role_name, is_owner=owner_id == user.id
     )

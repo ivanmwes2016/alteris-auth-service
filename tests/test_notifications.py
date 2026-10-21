@@ -19,6 +19,7 @@ async def _notify() -> None:
         workspace_id="org-abc",
         owner_name="Ivan Mwesigwa",
         owner_email="ivan@x.io",
+        review_url="https://app.test/review-school?token=t",
     )
 
 
@@ -33,7 +34,8 @@ async def test_every_admin_address_gets_the_alert() -> None:
 
     assert [call.kwargs["to"] for call in send.await_args_list] == ["a@x.io", "b@x.io"]
     kwargs = send.await_args.kwargs
-    assert kwargs["subject"] == "New school registered: Kinaawa High School"
+    assert kwargs["subject"] == "New school awaiting approval: Kinaawa High School"
+    assert "https://app.test/review-school?token=t" in kwargs["text_body"]
     assert "Ivan Mwesigwa <ivan@x.io>" in kwargs["text_body"]
     assert "Uganda" in kwargs["text_body"] and "org-abc" in kwargs["text_body"]
 
@@ -72,6 +74,37 @@ def test_school_names_are_escaped_in_the_html() -> None:
         workspace_id=None,
         owner="a@x.io",
         registered_at="now",
-        app_url="https://app.test",
+        review_url="https://app.test",
     )
     assert "<script>" not in html_body
+
+
+@pytest.mark.asyncio
+async def test_owner_is_thanked_and_told_the_school_is_pending() -> None:
+    send = AsyncMock()
+    with (
+        patch.object(notifications, "get_settings", _settings(None)),
+        patch.object(notifications, "send_email", send),
+    ):
+        await notifications.notify_owner_school_received(
+            school_name="Kinaawa High School", owner_name="Ivan Mwesigwa", owner_email="ivan@x.io"
+        )
+
+    kwargs = send.await_args.kwargs
+    assert kwargs["to"] == "ivan@x.io"
+    assert "Kinaawa High School" in kwargs["subject"]
+    body = kwargs["text_body"]
+    assert body.startswith("Hi Ivan,")
+    assert "Thank you for trying out Skolarly" in body
+    assert "pending" in body and "approved" in body
+
+
+@pytest.mark.asyncio
+async def test_owner_email_failure_never_raises() -> None:
+    with (
+        patch.object(notifications, "get_settings", _settings(None)),
+        patch.object(notifications, "send_email", AsyncMock(side_effect=EmailError("down"))),
+    ):
+        await notifications.notify_owner_school_received(
+            school_name="X", owner_name=None, owner_email="a@x.io"
+        )

@@ -6,10 +6,9 @@ from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.v1.routes.auth import get_current_user
+from app.api.v1.routes.auth import get_current_member, get_current_user
 from app.core.db import get_db
 from app.db.models.tenant import Tenant
-from app.db.models.tenant_member import TenantMember
 from app.db.models.tenant_profile import TenantProfile
 from app.db.models.tution_fees import TutionFees
 from app.db.models.users import User
@@ -121,16 +120,12 @@ class TenantProfileResponse(BaseModel):
     premium: bool = False
 
 
-@router.get("/", response_model=TenantProfileResponse)
+@router.get("", response_model=TenantProfileResponse)
 async def get_school_profile(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> TenantProfileResponse:
-    member_result = await db.execute(
-        select(TenantMember).where(TenantMember.user_id == current_user.id)
-    )
-
-    member = member_result.scalar_one_or_none()
+    member = await get_current_member(db, current_user)
 
     if not member:
         raise HTTPException(
@@ -214,17 +209,13 @@ async def get_school_profile(
     )
 
 
-@router.patch("/")
+@router.patch("")
 async def patch_school_profile(
     payload: ProfilePatch,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> ProfilePatch:
-    member_result = await db.execute(
-        select(TenantMember).where(TenantMember.user_id == current_user.id)
-    )
-
-    member = member_result.scalar_one_or_none()
+    member = await get_current_member(db, current_user)
 
     if not member:
         raise HTTPException(status_code=403, detail="User does not belong to a school")
@@ -263,11 +254,7 @@ async def patch_school_fees(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> TutionFeesPatch:
-    member_result = await db.execute(
-        select(TenantMember).where(TenantMember.user_id == current_user.id)
-    )
-
-    member = member_result.scalar_one_or_none()
+    member = await get_current_member(db, current_user)
 
     if not member:
         raise HTTPException(status_code=403, detail="User does not belong to a school")

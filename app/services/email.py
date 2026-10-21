@@ -142,20 +142,71 @@ def school_registered_email(
     workspace_id: str | None,
     owner: str,
     registered_at: str,
-    app_url: str,
+    review_url: str,
 ) -> Email:
-    """Internal alert to the platform team when a new school signs up."""
+    """Internal alert to the platform team: a new school is waiting for approval."""
     return _render(
-        subject=f"New school registered: {school_name}",
+        subject=f"New school awaiting approval: {school_name}",
         first_name=None,
         lines=[
-            f"{school_name} has just registered.",
+            f"{school_name} has just registered and is waiting for approval.",
             f"Owner: {owner}",
             f"Country: {country or 'not given'} · Plan: {plan or 'not given'}",
             f"Workspace: {workspace_id or 'not given'}",
             f"Registered: {registered_at}",
+            "Nobody can use the school until it's approved. Rejecting deletes it.",
         ],
-        action="Open the app",
+        action="Review this school",
+        url=review_url,
+        note="You get this because your address is in ADMIN_NOTIFY_EMAILS. "
+        "The review link works once; don't forward it.",
+    )
+
+
+def school_approved_email(
+    *, first_name: str | None, school_name: str, trial_ends: str, login_url: str
+) -> Email:
+    return _render(
+        subject=f"{school_name} is approved",
+        first_name=first_name,
+        lines=[
+            f"Good news: {school_name} has been approved and is ready to use.",
+            f"Your free trial runs until {trial_ends}.",
+        ],
+        action="Sign in",
+        url=login_url,
+        note="Questions? Just reply to this email.",
+    )
+
+
+def school_rejected_email(*, first_name: str | None, school_name: str, contact_url: str) -> Email:
+    return _render(
+        subject=f"About your registration for {school_name}",
+        first_name=first_name,
+        lines=[
+            f"Thank you for registering {school_name}. "
+            "We weren't able to approve it, so the registration has been removed.",
+            "If you think this is a mistake, please get in touch.",
+        ],
+        action="Visit Skolarly",
+        url=contact_url,
+        note="Your account itself hasn't been deleted.",
+    )
+
+
+def school_received_email(*, first_name: str | None, school_name: str, app_url: str) -> Email:
+    """To the person who registered a school: thanks, it's pending, we'll be in touch."""
+    return _render(
+        subject=f"Thanks for registering {school_name} with Skolarly",
+        first_name=first_name,
+        lines=[
+            "Thank you for trying out Skolarly!",
+            f"We've received your application for {school_name}. It's now pending review "
+            "by our team.",
+            "We'll email you as soon as your school has been approved. Your 14-day free "
+            "trial starts from that moment, so you won't lose any of it while you wait.",
+        ],
+        action="Visit Skolarly",
         url=app_url,
-        note="You get this because your address is in ADMIN_NOTIFY_EMAILS.",
+        note="You're receiving this because you registered a school on Skolarly.",
     )

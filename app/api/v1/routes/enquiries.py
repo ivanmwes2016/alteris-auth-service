@@ -7,10 +7,9 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.v1.routes.auth import get_current_user
+from app.api.v1.routes.auth import get_current_member, get_current_user
 from app.core.db import get_db
 from app.db.models.enquiries import Enquiry
-from app.db.models.tenant_member import TenantMember
 from app.db.models.users import User
 from app.helpers import rate_limit
 
@@ -96,11 +95,7 @@ async def list_enquiries(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> list[EnquiryGetResponse]:
-    member_result = await db.execute(
-        select(TenantMember).where(TenantMember.user_id == current_user.id)
-    )
-
-    member = member_result.scalar_one_or_none()
+    member = await get_current_member(db, current_user)
 
     if not member:
         raise HTTPException(status_code=403, detail="User does not belong to a school")
@@ -129,10 +124,7 @@ async def patch_inquiry(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> dict[str, str]:
-    member_result = await db.execute(
-        select(TenantMember).where(TenantMember.user_id == current_user.id)
-    )
-    member = member_result.scalar_one_or_none()
+    member = await get_current_member(db, current_user)
 
     if not member:
         raise HTTPException(status_code=403, detail="User does not belong to a school")

@@ -43,7 +43,11 @@ from app.helpers.stale_users import remove_if_stale
 from app.helpers.user_context import get_user_context
 from app.services import account
 from app.services.auth_service import AuthService
-from app.services.notifications import notify_school_registered
+from app.services.notifications import (
+    notify_owner_school_received,
+    notify_school_registered,
+)
+from app.services.school_approval import new_review_token, review_url
 
 log = logging.getLogger(__name__)
 
@@ -69,6 +73,11 @@ class CurrentTenantResponse(BaseModel):
     workspace_id: str | None = None
     logo_path: str | None = None
     plan: str
+    # "pending" until the platform team approves the school; nothing works before then.
+    status: str = "approved"
+    trial_ends_at: datetime | None = None
+    # The free trial is over and the school hasn't moved to a paid plan.
+    trial_expired: bool = False
 
 
 class MeResponse(BaseModel):
@@ -357,6 +366,8 @@ async def signup(
     # owner via tenants.owner_id, matching how the rest of the API treats ownership.
     admin_role = (await db.execute(select(Role).where(Role.name == "admin"))).scalar_one()
 
+    # Waits for approval by the platform team, who get a one-time review link.
+    review_token, review_token_hash = new_review_token()
     tenant = Tenant(
         name=payload.get("name"),
         slug=payload.get("slug"),
@@ -365,7 +376,12 @@ async def signup(
         seat_limit=15,
         owner_id=current_user.id,
         country=payload.get("country"),
+        status="pending",
+        review_token_hash=review_token_hash,
     )
+    owner_name = display_name(supabase_user.user_metadata, current_user.name)
+    if owner_name and not current_user.name:
+        current_user.name = owner_name  # so the review page and team list can show it
     db.add(tenant)
     await db.flush()
 
@@ -397,33 +413,58 @@ async def signup(
         country=tenant.country,
         plan=payload.get("plan") or tenant.plan,
         workspace_id=tenant.workspace_id,
-        owner_name=display_name(supabase_user.user_metadata, current_user.name),
+        owner_name=owner_name,
+        owner_email=current_user.email,
+        review_url=review_url(review_token),
+    )
+    # ...and thank the person who registered: it's pending, they'll hear back.
+    background_tasks.add_task(
+        notify_owner_school_received,
+        school_name=tenant.name,
+        owner_name=owner_name,
         owner_email=current_user.email,
     )
 
     return {
         "message": "signup successful",
         "tenant_id": str(tenant.id),
+        "status": tenant.status,
     }
+
+
+SCHOOL_PENDING = "This school is awaiting approval."
+
+
+def ensure_school_approved(tenant_status: str) -> None:
+    """Every school-scoped request goes through this: pending schools can't be used yet."""
+    if tenant_status != "approved":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=SCHOOL_PENDING)
+
+
+async def get_current_member(db: AsyncSession, current_user: User) -> TenantMember:
+    """The caller's active membership, refused while its school awaits approval."""
+    row = (
+        await db.execute(
+            select(TenantMember, Tenant.status)
+            .join(Tenant, Tenant.id == TenantMember.tenant_id)
+            .where(TenantMember.user_id == current_user.id, TenantMember.status == "active")
+            .order_by(TenantMember.joined_at)
+        )
+    ).first()
+
+    if row is None:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="User does not belong to an active tenant",
+        )
+
+    member: TenantMember = row[0]
+    ensure_school_approved(row[1])
+    return member
 
 
 async def get_current_tenant_id(
     db: AsyncSession,
     current_user: User,
 ) -> UUID:
-    result = await db.execute(
-        select(TenantMember.tenant_id).where(
-            TenantMember.user_id == current_user.id,
-            TenantMember.status == "active",
-        )
-    )
-
-    tenant_id = result.scalar_one_or_none()
-
-    if tenant_id is None:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="User does not belong to an active tenant",
-        )
-
-    return tenant_id
+    return (await get_current_member(db, current_user)).tenant_id
