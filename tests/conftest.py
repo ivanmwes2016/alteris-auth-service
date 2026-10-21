@@ -6,7 +6,7 @@ from typing import Any
 import httpx
 import pytest
 
-from app.helpers import captcha, rate_limit
+from app.helpers import captcha, password, rate_limit
 
 
 def limiter_settings(**overrides: Any) -> SimpleNamespace:
@@ -25,9 +25,15 @@ def limiter_settings(**overrides: Any) -> SimpleNamespace:
 @pytest.fixture(autouse=True)
 def _isolated_rate_limiter(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
     """
-    Never reach the Upstash instance in .env or Cloudflare, and start every test with
-    empty counts. Turnstile is off unless a test turns it on.
+    Never reach the Upstash instance in .env, Cloudflare or Pwned Passwords (which
+    finds no breaches), and start every test with empty counts. Turnstile is off
+    unless a test turns it on.
     """
+
+    async def no_breaches(prefix: str) -> str:
+        return ""
+
+    monkeypatch.setattr(password, "_range", no_breaches)
     monkeypatch.setattr(rate_limit, "get_settings", limiter_settings)
     monkeypatch.setattr(captcha, "get_settings", lambda: SimpleNamespace(TURNSTILE_SECRET_KEY=None))
     monkeypatch.setattr(rate_limit, "_http", None)

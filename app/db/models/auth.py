@@ -1,10 +1,13 @@
 from enum import StrEnum
+from typing import Self
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from app.db.schemas.team import normalize_email as _normalize_email
+from app.helpers import password as password_rules
 
-MIN_PASSWORD_LENGTH = 8
+# Bounds the work done on a request; the password rules set the real limit.
+MAX_PASSWORD_INPUT = 1024
 
 
 class TokenType(StrEnum):
@@ -26,8 +29,9 @@ class RegisterRequest(BaseModel):
     first_name: str = Field(min_length=1, max_length=100)
     last_name: str = Field(min_length=1, max_length=100)
     email: str = Field(min_length=3, max_length=320)
-    # Supabase hashes with bcrypt, which only reads the first 72 bytes.
-    password: str = Field(min_length=MIN_PASSWORD_LENGTH, max_length=72)
+    # NFKC-normalized, then checked against the password rules (app/helpers/password.py).
+    # The breach check needs the network, so account.register does that one.
+    password: str = Field(max_length=MAX_PASSWORD_INPUT)
     # Where the confirmation link should land once confirmed, e.g. the invite page.
     next: str | None = Field(default=None, max_length=512)
     # Cloudflare Turnstile token from the form (app/helpers/captcha.py).
@@ -50,6 +54,26 @@ class RegisterRequest(BaseModel):
     @classmethod
     def _next(cls, value: str | None) -> str | None:
         return _safe_next(value)
+
+    @field_validator("password")
+    @classmethod
+    def _password(cls, value: str) -> str:
+        return password_rules.normalize(value)
+
+    @model_validator(mode="after")
+    def _password_rules(self) -> Self:
+        message = password_rules.problem(self.password, self.email)
+        if message is not None:
+            raise ValueError(message)
+        return self
+
+
+class PasswordChangeRequest(BaseModel):
+    """A new password for the signed-in user; checked in the route, which knows their email."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    password: str = Field(min_length=1, max_length=MAX_PASSWORD_INPUT)
 
 
 class EmailRequest(BaseModel):

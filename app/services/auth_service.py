@@ -14,6 +14,7 @@ from starlette.concurrency import run_in_threadpool
 from supabase import Client
 
 from ..db.models.auth import TokenResponse
+from ..helpers import password as password_rules
 
 log = logging.getLogger(__name__)
 
@@ -32,6 +33,16 @@ class AuthService:
         self.db = db
 
     async def login(self, email: str, password: str) -> TokenResponse:
+        normalized = password_rules.normalize(password)
+        try:
+            return await self._sign_in(email, normalized)
+        except HTTPException as exc:
+            # Passwords set before normalization was added were stored exactly as typed.
+            if exc.status_code != status.HTTP_401_UNAUTHORIZED or normalized == password:
+                raise
+            return await self._sign_in(email, password)
+
+    async def _sign_in(self, email: str, password: str) -> TokenResponse:
         try:
             res = await run_in_threadpool(
                 self.supabase.auth.sign_in_with_password,
