@@ -26,8 +26,15 @@ from app.db.schemas.team import (
     RoleUpdate,
     TeamMemberRead,
 )
+from app.helpers import rate_limit
 
 router = APIRouter()
+
+
+async def _limit_invite_emails(actor: team.Actor) -> None:
+    """Invites send email: cap each administrator, and each school across its admins."""
+    await rate_limit.enforce("invite_user", str(actor.user_id))
+    await rate_limit.enforce("invite_tenant", str(actor.tenant_id))
 
 
 @router.get("", response_model=list[TeamMemberRead])
@@ -46,6 +53,7 @@ async def invite_team_member(
     current_user: User = Depends(get_current_user),
 ) -> TeamMemberRead:
     actor = await team.get_manager(db, current_user)
+    await _limit_invite_emails(actor)
     return await team.invite_member(db, actor, payload)
 
 
@@ -107,4 +115,5 @@ async def resend_team_invite(
     current_user: User = Depends(get_current_user),
 ) -> TeamMemberRead:
     actor = await team.get_manager(db, current_user)
+    await _limit_invite_emails(actor)
     return await team.resend_invite(db, actor, member_id)

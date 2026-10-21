@@ -33,6 +33,7 @@ from app.db.models.role import Role
 from app.db.models.tenant import Tenant
 from app.db.models.tenant_member import TenantMember
 from app.db.models.users import User
+from app.helpers import rate_limit
 from app.helpers.jwt import get_user_from_token
 from app.helpers.last_active import touch_last_active
 from app.helpers.rate_limit import client_ip
@@ -106,14 +107,26 @@ def display_name(metadata: dict[str, Any] | None, stored_name: str | None) -> st
     response_model=TokenResponse,
     responses={
         status.HTTP_401_UNAUTHORIZED: {"description": "Invalid email or password"},
+        status.HTTP_429_TOO_MANY_REQUESTS: {"description": "Too many attempts"},
         status.HTTP_503_SERVICE_UNAVAILABLE: {"description": "Authentication unavailable"},
     },
 )
 async def login(
     payload: LoginRequest,
+    request: Request,
     service: AuthService = Depends(get_auth_service),
 ) -> TokenResponse:
-    return await service.login(email=payload.email, password=payload.password)
+    """
+    Every attempt counts against the caller's IP and the account. Only a successful
+    sign-in (which needs the password) clears the account's count, so guessing stops
+    after a few tries however many IPs the guesses come from. Unknown emails are
+    counted the same way, so the limit says nothing about which accounts exist.
+    """
+    await rate_limit.enforce("login_ip", client_ip(request))
+    await rate_limit.enforce("login_account", payload.email)
+    tokens = await service.login(email=payload.email, password=payload.password)
+    await rate_limit.reset("login_account", payload.email)
+    return tokens
 
 
 @router.post("/register", response_model=AcceptedResponse, status_code=status.HTTP_202_ACCEPTED)
@@ -182,6 +195,7 @@ async def me(
     token = authorization.removeprefix("Bearer ").strip()
 
     user = get_user_from_token(supabase, token)
+    await rate_limit.enforce("api_user", str(user.id), sensitive=False)
 
     user_id = user.id
     email = user.email
@@ -220,6 +234,7 @@ async def create_session(
 
     token = authorization.removeprefix("Bearer ").strip()
     user = get_user_from_token(supabase, token)
+    await rate_limit.enforce("api_user", str(user.id), sensitive=False)
 
     response.set_cookie(
         key="session",
@@ -254,6 +269,8 @@ async def get_current_user(
     db: AsyncSession = Depends(get_db),
     supabase: Client = Depends(get_supabase),
 ) -> User:
+    # Every authenticated route depends on this; checked before touching the database.
+    await rate_limit.enforce("api_user", str(supabase_user.id), sensitive=False)
     user = await db.get(User, supabase_user.id)
 
     if not user:

@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -12,6 +12,7 @@ from app.core.db import get_db
 from app.db.models.enquiries import Enquiry
 from app.db.models.tenant_member import TenantMember
 from app.db.models.users import User
+from app.helpers import rate_limit
 
 router = APIRouter()
 
@@ -48,8 +49,11 @@ class EnquiryGetResponse(BaseModel):
 @router.post("/enquiries", status_code=201)
 async def create_enquiry(
     payload: EnquiryPayload,
+    request: Request,
     db: AsyncSession = Depends(get_db),
 ) -> dict[str, str]:
+    # Needs no sign-in, so cap it per IP against spam.
+    await rate_limit.enforce("enquiry_ip", rate_limit.client_ip(request), sensitive=False)
     try:
         enquiry = Enquiry(
             tenant_id=payload.tenant_id,

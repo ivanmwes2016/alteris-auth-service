@@ -29,6 +29,7 @@ def _db(state: bool | None) -> Mock:
     result.first.return_value = None if state is None else (state,)
     db = Mock()
     db.execute = AsyncMock(return_value=result)
+    db.scalar = AsyncMock(return_value=None)  # no pending invite matches
     return db
 
 
