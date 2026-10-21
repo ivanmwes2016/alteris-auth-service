@@ -39,6 +39,7 @@ DEFAULT_RULES: dict[str, str] = {
     "register_invited_ip": "30/3600",  # invitees signing up (a school adding its staff)
     "verify_account": "3/3600",  # confirmation emails to one address (signup + resend)
     "reset_account": "3/3600",  # password reset emails to one address
+    "password_change": "10/3600",  # new passwords set by one user
     "email_ip": "20/3600",  # resend + reset requests from one IP
     "invite_user": "10/3600",  # invites sent or resent by one administrator
     "invite_tenant": "30/3600",  # ... and by one school, however many admins it has

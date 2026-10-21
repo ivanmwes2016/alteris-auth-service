@@ -26,6 +26,7 @@ from app.db.models.auth import (
     AcceptedResponse,
     EmailRequest,
     LoginRequest,
+    PasswordChangeRequest,
     RegisterRequest,
     TokenResponse,
 )
@@ -33,6 +34,7 @@ from app.db.models.role import Role
 from app.db.models.tenant import Tenant
 from app.db.models.tenant_member import TenantMember
 from app.db.models.users import User
+from app.helpers import password as password_rules
 from app.helpers import rate_limit
 from app.helpers.jwt import get_user_from_token
 from app.helpers.last_active import touch_last_active
@@ -305,6 +307,24 @@ async def get_current_user(
     background_tasks.add_task(touch_last_active, user.id)
 
     return user
+
+
+@router.post("/password", status_code=status.HTTP_204_NO_CONTENT)
+async def change_password(
+    payload: PasswordChangeRequest,
+    supabase_user: SupabaseUser = Depends(get_supabase_user),
+    supabase: Client = Depends(get_supabase),
+) -> Response:
+    """
+    Set the signed-in user's password (after a reset link, or when joining from an
+    invite), checked against the password rules first. The frontend calls this instead
+    of Supabase's updateUser, which can't apply them.
+    """
+    await rate_limit.enforce("password_change", str(supabase_user.id))
+    new_password = password_rules.normalize(payload.password)
+    await password_rules.check(new_password, supabase_user.email)
+    await account.set_password(supabase, str(supabase_user.id), new_password)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.post("/signup", status_code=status.HTTP_201_CREATED)

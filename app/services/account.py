@@ -1,6 +1,7 @@
 """
 Account emails we send ourselves (through Resend) instead of letting Supabase send them:
-signup confirmation, resending it, and password reset.
+signup confirmation, resending it, and password reset. Also setting a new password,
+so it's checked against the password rules before Supabase stores it.
 
 Supabase still owns the account, the password and the verification state. Its admin
 `generate_link` creates the account (for signup) and a one-time token WITHOUT emailing
@@ -27,6 +28,7 @@ from app.core.config import get_settings
 from app.db.models.auth import EmailRequest, RegisterRequest
 from app.db.models.invite import Invite
 from app.helpers import captcha, rate_limit
+from app.helpers import password as password_rules
 from app.services.email import (
     Email,
     EmailError,
@@ -141,6 +143,8 @@ async def register(db: AsyncSession, supabase: Client, payload: RegisterRequest,
     ip_rule = "register_invited_ip" if await _is_invited(db, payload) else "register_ip"
     await rate_limit.enforce(ip_rule, ip)
     await rate_limit.enforce("verify_account", payload.email)
+    # Checked whether or not the account exists, so the answer reveals nothing.
+    await password_rules.check(payload.password, payload.email)
     next_path = payload.next or "/get-started"
 
     try:
@@ -222,3 +226,25 @@ async def forgot_password(
         # Logged, not returned: an error here would reveal that the account exists.
         log.error("Sending a password reset failed: %s", exc)
     return MAYBE_SENT_RESET
+
+
+async def set_password(supabase: Client, user_id: str, password: str) -> None:
+    """Store a new password (already normalized and checked) for an existing account."""
+    try:
+        await run_in_threadpool(
+            supabase.auth.admin.update_user_by_id, user_id, {"password": password}
+        )
+    except AuthApiError as exc:
+        if exc.code == "weak_password":
+            raise HTTPException(
+                status.HTTP_422_UNPROCESSABLE_ENTITY, "Choose a stronger password."
+            ) from exc
+        if exc.status < 500:
+            log.warning("Supabase rejected a new password: status=%s code=%s", exc.status, exc.code)
+            raise HTTPException(
+                status.HTTP_400_BAD_REQUEST, "We couldn't update your password."
+            ) from exc
+        log.error("Supabase update_user_by_id failed: %s", exc)
+        raise HTTPException(
+            status.HTTP_503_SERVICE_UNAVAILABLE, "Authentication service unavailable. Try again."
+        ) from exc
