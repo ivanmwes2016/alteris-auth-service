@@ -143,6 +143,7 @@ def _member_read(
 ) -> TeamMemberRead:
     return TeamMemberRead(
         id=member.id,
+        userId=member.user_id,
         name=user.name or full_name,
         email=user.email,
         role=display_role(role.name, is_owner=member.user_id == owner_id),
@@ -369,7 +370,7 @@ async def change_role(
 
     member_row = await _get_member_row(db, actor.tenant_id, target_id)
     if member_row is not None:
-        member, user, _old_role, full_name = member_row
+        member, user, _, full_name = member_row
         if member.user_id == owner_id:
             raise HTTPException(status.HTTP_403_FORBIDDEN, "The Owner's role can't be changed")
         member.role_id = role.id
@@ -378,7 +379,7 @@ async def change_role(
 
     invite_row = await _get_invite_row(db, actor.tenant_id, target_id)
     if invite_row is not None:
-        invite, _old_role = invite_row
+        invite, _ = invite_row
         invite.role_id = role.id
         await db.commit()
         return _invite_read(invite, role)

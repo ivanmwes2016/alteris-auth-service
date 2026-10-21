@@ -3,7 +3,7 @@ from unittest.mock import Mock
 
 import pytest
 from fastapi import HTTPException
-from gotrue.errors import AuthApiError
+from gotrue.errors import AuthApiError, ErrorCode
 
 from app.helpers.jwt import get_user_from_token
 
@@ -17,12 +17,12 @@ def _supabase(*, user: object = None, error: Exception | None = None) -> Mock:
 def test_valid_token_returns_the_supabase_user() -> None:
     user = SimpleNamespace(id="u1")
 
-    assert get_user_from_token(_supabase(user=user), "tok") is user  # type: ignore[arg-type]
+    assert get_user_from_token(_supabase(user=user), "tok") is user
 
 
 def test_token_with_no_user_is_unauthorized() -> None:
     with pytest.raises(HTTPException) as error:
-        get_user_from_token(_supabase(user=None), "tok")  # type: ignore[arg-type]
+        get_user_from_token(_supabase(user=None), "tok")
 
     assert error.value.status_code == 401
 
@@ -35,11 +35,13 @@ def test_token_with_no_user_is_unauthorized() -> None:
         (400, "invalid JWT", "bad_jwt"),
     ],
 )
-def test_tokens_supabase_rejects_are_401_not_a_crash(status: int, message: str, code: str) -> None:
+def test_tokens_supabase_rejects_are_401_not_a_crash(
+    status: int, message: str, code: ErrorCode
+) -> None:
     supabase = _supabase(error=AuthApiError(message, status, code))
 
     with pytest.raises(HTTPException) as error:
-        get_user_from_token(supabase, "tok")  # type: ignore[arg-type]
+        get_user_from_token(supabase, "tok")
 
     assert error.value.status_code == 401
     assert error.value.detail == "Invalid token"
@@ -50,7 +52,7 @@ def test_a_supabase_outage_is_503_so_clients_are_not_signed_out(status: int) -> 
     supabase = _supabase(error=AuthApiError("upstream down", status, "unexpected_failure"))
 
     with pytest.raises(HTTPException) as error:
-        get_user_from_token(supabase, "tok")  # type: ignore[arg-type]
+        get_user_from_token(supabase, "tok")
 
     assert error.value.status_code == 503
 
@@ -59,7 +61,7 @@ def test_the_reason_is_logged_but_never_the_token(caplog: pytest.LogCaptureFixtu
     supabase = _supabase(error=AuthApiError("token is expired", 401, "bad_jwt"))
 
     with caplog.at_level("WARNING"), pytest.raises(HTTPException):
-        get_user_from_token(supabase, "super-secret-token")  # type: ignore[arg-type]
+        get_user_from_token(supabase, "super-secret-token")
 
     assert "bad_jwt" in caplog.text
     assert "token is expired" in caplog.text

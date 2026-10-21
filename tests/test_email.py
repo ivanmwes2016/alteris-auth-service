@@ -23,7 +23,7 @@ def _transport(status_code: int, seen: list[httpx.Request]) -> httpx.MockTranspo
 def _use(monkeypatch: pytest.MonkeyPatch, status_code: int, seen: list[httpx.Request]) -> None:
     real = httpx.AsyncClient
     monkeypatch.setattr(
-        email.httpx,
+        httpx,
         "AsyncClient",
         lambda **kw: real(transport=_transport(status_code, seen), **kw),
     )
