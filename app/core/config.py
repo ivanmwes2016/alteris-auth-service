@@ -27,4 +27,13 @@ def get_settings() -> Settings:
         REDIS_TOKEN=os.getenv("UPSTASH_REDIS_REST_TOKEN"),
         FRONTEND_URL=os.getenv("FRONTEND_URL"),
         TOKEN_TYPE=os.getenv("TOKEN_TYPE"),
+        RATE_LIMITING_ENABLED=os.getenv("RATE_LIMITING_ENABLED", "true").strip().lower()
+        not in {"0", "false", "no", "off"},
+        RATE_LIMITS={
+            name.removeprefix("RATE_LIMIT_").lower(): value
+            for name, value in os.environ.items()
+            if name.startswith("RATE_LIMIT_")
+        },
+        CLIENT_IP_HEADER=os.getenv("CLIENT_IP_HEADER", "cf-connecting-ip") or None,
+        TRUSTED_PROXY_HOPS=int(os.getenv("TRUSTED_PROXY_HOPS", "1")),
     )

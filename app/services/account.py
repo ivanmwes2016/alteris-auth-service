@@ -11,19 +11,21 @@ Public responses never say whether an address has an account.
 """
 
 import logging
+from datetime import UTC, datetime
 from typing import Literal
-from urllib.parse import quote
+from urllib.parse import parse_qs, quote, urlparse
 
 from fastapi import HTTPException, status
 from gotrue.errors import AuthApiError
 from gotrue.types import GenerateLinkParams
-from sqlalchemy import text
+from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.concurrency import run_in_threadpool
 from supabase import Client
 
 from app.core.config import get_settings
 from app.db.models.auth import EmailRequest, RegisterRequest
+from app.db.models.invite import Invite
 from app.helpers import rate_limit
 from app.services.email import (
     Email,
@@ -36,7 +38,6 @@ from app.services.email import (
 
 log = logging.getLogger(__name__)
 
-HOUR = 60 * 60
 CHECK_EMAIL = "Check your email for a link to confirm your account."
 MAYBE_SENT_CONFIRM = "If that email has an unconfirmed account, we've sent a new confirmation link."
 MAYBE_SENT_RESET = "If an account exists for that email, we've sent a link to reset the password."
@@ -96,9 +97,33 @@ def _supabase_unavailable(exc: Exception) -> HTTPException:
     )
 
 
-async def _limit(scope: str, email: str, ip: str) -> None:
-    await rate_limit.enforce(f"{scope}:ip", ip, limit=20, window_seconds=HOUR)
-    await rate_limit.enforce(f"{scope}:email", email, limit=5, window_seconds=HOUR)
+async def _limit(account_rule: str, email: str, ip: str) -> None:
+    await rate_limit.enforce("email_ip", ip)
+    await rate_limit.enforce(account_rule, email)
+
+
+async def _is_invited(db: AsyncSession, payload: RegisterRequest) -> bool:
+    """
+    Signing up from an invite link (next=/accept-invite?token=...) for the invited
+    email. The token is a secret only the invitee was sent, so this can't be faked, and
+    it lets a school's staff sign up from one office network without hitting the
+    per-IP limit for new accounts.
+    """
+    if not payload.next:
+        return False
+    url = urlparse(payload.next)
+    token = parse_qs(url.query).get("token", [""])[0]
+    if url.path != "/accept-invite" or not token:
+        return False
+    invite_id = await db.scalar(
+        select(Invite.id).where(
+            Invite.token == token,
+            Invite.email == payload.email,
+            Invite.accepted_at.is_(None),
+            Invite.expires_at > datetime.now(UTC),
+        )
+    )
+    return invite_id is not None
 
 
 async def _send_confirmation_for_existing(supabase: Client, email: str, next_path: str) -> None:
@@ -111,7 +136,9 @@ async def _send_confirmation_for_existing(supabase: Client, email: str, next_pat
 
 
 async def register(db: AsyncSession, supabase: Client, payload: RegisterRequest, ip: str) -> str:
-    await _limit("verify", payload.email, ip)
+    ip_rule = "register_invited_ip" if await _is_invited(db, payload) else "register_ip"
+    await rate_limit.enforce(ip_rule, ip)
+    await rate_limit.enforce("verify_account", payload.email)
     next_path = payload.next or "/get-started"
 
     try:
@@ -164,7 +191,7 @@ async def register(db: AsyncSession, supabase: Client, payload: RegisterRequest,
 async def resend_verification(
     db: AsyncSession, supabase: Client, payload: EmailRequest, ip: str
 ) -> str:
-    await _limit("verify", payload.email, ip)
+    await _limit("verify_account", payload.email, ip)
     # Failures are logged, not returned: they'd only ever happen for real accounts.
     try:
         if await _account_state(db, payload.email) is False:
@@ -179,7 +206,7 @@ async def resend_verification(
 async def forgot_password(
     db: AsyncSession, supabase: Client, payload: EmailRequest, ip: str
 ) -> str:
-    await _limit("reset", payload.email, ip)
+    await _limit("reset_account", payload.email, ip)
     try:
         if await _account_state(db, payload.email) is not None:
             token = await _token(supabase, {"type": "recovery", "email": payload.email})

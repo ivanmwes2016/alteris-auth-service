@@ -33,6 +33,15 @@ class Settings(BaseModel):
     REDIS_URL: str | None = None  # Upstash REST URL
     REDIS_TOKEN: str | None = None  # Upstash REST token
 
+    # Rate limiting (app/helpers/rate_limit.py)
+    RATE_LIMITING_ENABLED: bool = True
+    # Rule name -> "count/seconds", from RATE_LIMIT_<RULE> env vars, e.g. RATE_LIMIT_LOGIN_IP
+    RATE_LIMITS: dict[str, str] = {}
+    # Header holding the caller's IP that only our proxy can set (Cloudflare, ahead of Render)
+    CLIENT_IP_HEADER: str | None = "cf-connecting-ip"
+    # Without that header: proxies that append to X-Forwarded-For, counted from the right
+    TRUSTED_PROXY_HOPS: int = 1
+
     # Security
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
