@@ -7,7 +7,12 @@ import logging
 from datetime import UTC, datetime
 
 from app.core.config import get_settings
-from app.services.email import EmailError, school_registered_email, send_email
+from app.services.email import (
+    EmailError,
+    school_received_email,
+    school_registered_email,
+    send_email,
+)
 
 log = logging.getLogger(__name__)
 
@@ -25,6 +30,7 @@ async def notify_school_registered(
     workspace_id: str | None,
     owner_name: str | None,
     owner_email: str,
+    review_url: str,
 ) -> None:
     recipients = _recipients()
     if not recipients:
@@ -38,7 +44,7 @@ async def notify_school_registered(
         workspace_id=workspace_id,
         owner=owner,
         registered_at=datetime.now(UTC).strftime("%d %b %Y, %H:%M UTC"),
-        app_url=get_settings().FRONTEND_URL,
+        review_url=review_url,
     )
     for address in recipients:
         try:
@@ -47,3 +53,19 @@ async def notify_school_registered(
             log.error("New-school alert to an admin address failed: %s", exc)
         except Exception:
             log.exception("New-school alert failed")
+
+
+async def notify_owner_school_received(
+    *, school_name: str, owner_name: str | None, owner_email: str
+) -> None:
+    """Thank the person who registered and tell them the school is pending approval."""
+    first_name = (owner_name or "").split(" ")[0] or None
+    subject, html_body, text_body = school_received_email(
+        first_name=first_name, school_name=school_name, app_url=get_settings().FRONTEND_URL
+    )
+    try:
+        await send_email(to=owner_email, subject=subject, html_body=html_body, text_body=text_body)
+    except EmailError as exc:
+        log.error("Couldn't send the school-received email to its owner: %s", exc)
+    except Exception:
+        log.exception("Couldn't send the school-received email to its owner")

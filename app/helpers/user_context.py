@@ -1,4 +1,5 @@
 import logging
+from datetime import UTC, datetime
 from typing import Any
 
 from fastapi import HTTPException
@@ -14,6 +15,16 @@ from app.db.models.tenant_member import TenantMember
 
 log = logging.getLogger(__name__)
 config = get_settings()
+
+
+def trial_expired(tenant: Tenant) -> bool:
+    """Approved, past the end of its free trial, and still on the free plan."""
+    return (
+        tenant.status == "approved"
+        and tenant.trial_ends_at is not None
+        and tenant.trial_ends_at <= datetime.now(UTC)
+        and (tenant.plan or "free") == "free"
+    )
 
 
 async def get_user_context(db: AsyncSession, user_id: str, supabase: Client) -> dict[str, Any]:
@@ -52,6 +63,9 @@ async def get_user_context(db: AsyncSession, user_id: str, supabase: Client) -> 
                 "workspace_id": tenant.workspace_id,
                 "logo_path": logo_url,
                 "plan": tenant.plan,
+                "status": tenant.status,
+                "trial_ends_at": tenant.trial_ends_at,
+                "trial_expired": trial_expired(tenant),
             },
             "role": role.name,
             "subscription_active": True,  # To Do ==> get from stripe subscription

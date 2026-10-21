@@ -45,6 +45,7 @@ DEFAULT_RULES: dict[str, str] = {
     "invite_tenant": "30/3600",  # ... and by one school, however many admins it has
     "api_user": "120/60",  # any authenticated request by one user
     "enquiry_ip": "60/3600",  # unauthenticated enquiry submissions from one IP
+    "school_review_ip": "30/3600",  # approve/reject link actions from one IP
 }
 
 LOCAL_MAX_KEYS = 10_000

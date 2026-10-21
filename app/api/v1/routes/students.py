@@ -9,13 +9,12 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.api.v1.routes.auth import get_current_tenant_id, get_current_user
+from app.api.v1.routes.auth import get_current_member, get_current_tenant_id, get_current_user
 from app.core.db import get_db
 from app.db.models.attendance import StudentAttendanceProfile
 from app.db.models.parent import Parent
 from app.db.models.student import Student
 from app.db.models.student_parent import StudentParent
-from app.db.models.tenant_member import TenantMember
 from app.db.models.users import User
 from app.helpers.pagination import (
     Page,
@@ -162,10 +161,7 @@ async def create_student(
     current_user: Annotated[User, Depends(get_current_user)],
 ) -> dict[str, str]:
     try:
-        member_result = await db.execute(
-            select(TenantMember).where(TenantMember.user_id == current_user.id)
-        )
-        member = member_result.scalar_one_or_none()
+        member = await get_current_member(db, current_user)
 
         if not member:
             raise HTTPException(status_code=403, detail="User not found")
@@ -309,10 +305,7 @@ async def get_student_by_id(
     db: Annotated[AsyncSession, Depends(get_db)],
     current_user: Annotated[User, Depends(get_current_user)],
 ) -> StudentResponse:
-    member_result = await db.execute(
-        select(TenantMember).where(TenantMember.user_id == current_user.id)
-    )
-    member = member_result.scalar_one_or_none()
+    member = await get_current_member(db, current_user)
 
     if not member:
         raise HTTPException(
@@ -359,10 +352,7 @@ async def update_student(
     current_user: Annotated[User, Depends(get_current_user)],
 ) -> dict[str, str]:
     try:
-        member_result = await db.execute(
-            select(TenantMember).where(TenantMember.user_id == current_user.id)
-        )
-        member = member_result.scalar_one_or_none()
+        member = await get_current_member(db, current_user)
 
         if not member:
             raise HTTPException(status_code=403, detail="User does not belong to a school")

@@ -14,7 +14,11 @@ from app.db.models.role import Role
 from app.db.models.tenant import Tenant
 from app.db.models.tenant_member import TenantMember
 from app.db.models.users import User
-from app.services.notifications import notify_school_registered
+from app.services.notifications import (
+    notify_owner_school_received,
+    notify_school_registered,
+)
+from app.services.school_approval import new_review_token, review_url
 
 router = APIRouter()
 
@@ -40,11 +44,14 @@ async def update_workspace(
     current_user: User = Depends(get_current_user),
 ) -> WorkSpaceResponse:
     slug = slugify(payload.name)
+    review_token, review_token_hash = new_review_token()
     tenant = Tenant(
         name=payload.name,
         slug=slug,
         workspace_id=payload.workspace_id,
         owner_id=current_user.id,
+        status="pending",
+        review_token_hash=review_token_hash,
     )
 
     existing_tenant = await db.execute(select(Tenant).where(Tenant.slug == slug))
@@ -76,6 +83,13 @@ async def update_workspace(
         country=tenant.country,
         plan=tenant.plan,
         workspace_id=tenant.workspace_id,
+        owner_name=current_user.name,
+        owner_email=current_user.email,
+        review_url=review_url(review_token),
+    )
+    background_tasks.add_task(
+        notify_owner_school_received,
+        school_name=tenant.name,
         owner_name=current_user.name,
         owner_email=current_user.email,
     )

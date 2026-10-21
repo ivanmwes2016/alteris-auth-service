@@ -64,9 +64,11 @@ def test_only_owner_and_head_teacher_can_manage_users(
     assert team.can_manage_users(is_owner=is_owner, role_name=role_name) is allowed
 
 
-def _row(tenant_id: uuid.UUID, role_name: str, owner_id: uuid.UUID | None) -> Mock:
+def _row(
+    tenant_id: uuid.UUID, role_name: str, owner_id: uuid.UUID | None, status: str = "approved"
+) -> Mock:
     result = Mock()
-    result.first.return_value = (tenant_id, role_name, owner_id)
+    result.first.return_value = (tenant_id, role_name, owner_id, status)
     db = Mock()
     db.execute = AsyncMock(return_value=result)
     return db
@@ -92,6 +94,18 @@ async def test_manager_check_accepts_owner_and_head_teacher() -> None:
     head = SimpleNamespace(id=uuid.uuid4())
     as_head = await team.get_manager(_row(uuid.uuid4(), "head_teacher", uuid.uuid4()), head)  # type: ignore[arg-type]
     assert not as_head.is_owner
+
+
+@pytest.mark.asyncio
+async def test_school_awaiting_approval_is_refused_even_to_its_owner() -> None:
+    owner = SimpleNamespace(id=uuid.uuid4())
+    db = _row(uuid.uuid4(), "admin", owner.id, status="pending")
+
+    with pytest.raises(HTTPException) as error:
+        await team.get_actor(db, owner)  # type: ignore[arg-type]
+
+    assert error.value.status_code == status.HTTP_403_FORBIDDEN
+    assert "awaiting approval" in str(error.value.detail)
 
 
 @pytest.mark.asyncio

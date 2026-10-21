@@ -4,6 +4,7 @@ from app.api.v1.routes import stripe_webhooks
 
 from .routes import (
     academic_terms,
+    admin_schools,
     attendance,
     auth,
     behaviour,
@@ -27,6 +28,7 @@ from .routes import (
 api_router = APIRouter()
 api_router.include_router(health.router, tags=["health"])
 api_router.include_router(auth.router, prefix="/auth", tags=["auth"])
+api_router.include_router(admin_schools.router, prefix="/admin/schools", tags=["admin"])
 api_router.include_router(workspaces.router, prefix="/workspaces", tags=["workspaces"])
 api_router.include_router(stripe_webhooks.router, prefix="/stripe", tags=["stripe"])
 api_router.include_router(billing.router, prefix="/billing", tags=["billing"])
