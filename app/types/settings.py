@@ -22,6 +22,8 @@ class Settings(BaseModel):
     # Transactional email (Resend) — invites. Supabase still sends its own auth emails.
     RESEND_API_KEY: str | None = None
     EMAIL_FROM: str | None = None  # e.g. "Skolarly <invites@skolarly.net>", verified in Resend
+    # Comma-separated addresses told whenever a new school registers. Empty: no alerts.
+    ADMIN_NOTIFY_EMAILS: str | None = None
 
     # Stripe
     STRIPE_SECRET_KEY: str

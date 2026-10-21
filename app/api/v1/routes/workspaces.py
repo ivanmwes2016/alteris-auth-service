@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, BackgroundTasks, Depends, File, HTTPException, UploadFile
 from pydantic import BaseModel
 from slugify import slugify
 from sqlalchemy import select
@@ -14,6 +14,7 @@ from app.db.models.role import Role
 from app.db.models.tenant import Tenant
 from app.db.models.tenant_member import TenantMember
 from app.db.models.users import User
+from app.services.notifications import notify_school_registered
 
 router = APIRouter()
 
@@ -34,6 +35,7 @@ class WorkSpaceResponse(BaseModel):
 @router.patch("/onboarding")
 async def update_workspace(
     payload: UpdateWorkspaceRequest,
+    background_tasks: BackgroundTasks,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> WorkSpaceResponse:
@@ -67,6 +69,16 @@ async def update_workspace(
     db.add(member)
     await db.commit()
     await db.refresh(tenant)
+
+    background_tasks.add_task(
+        notify_school_registered,
+        school_name=tenant.name,
+        country=tenant.country,
+        plan=tenant.plan,
+        workspace_id=tenant.workspace_id,
+        owner_name=current_user.name,
+        owner_email=current_user.email,
+    )
 
     return WorkSpaceResponse(
         tenant_id=tenant.id,

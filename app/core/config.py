@@ -20,6 +20,7 @@ def get_settings() -> Settings:
         SUPABASE_LOGO_BUCKET_NAME=os.getenv("SUPABASE_LOGO_BUCKET_NAME"),
         RESEND_API_KEY=os.getenv("RESEND_API_KEY"),
         EMAIL_FROM=os.getenv("EMAIL_FROM"),
+        ADMIN_NOTIFY_EMAILS=os.getenv("ADMIN_NOTIFY_EMAILS"),
         STRIPE_SECRET_KEY=os.getenv("STRIPE_SECRET_KEY"),
         STRIPE_WEBHOOK_SECRET=os.getenv("STRIPE_WEBHOOK_SECRET"),
         REDIS_URL=os.getenv("UPSTASH_REDIS_REST_URL"),

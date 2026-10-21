@@ -132,3 +132,30 @@ def reset_password_email(*, reset_url: str) -> Email:
         note="If you didn't ask for this, you can ignore this email. "
         "Your password stays the same until you choose a new one.",
     )
+
+
+def school_registered_email(
+    *,
+    school_name: str,
+    country: str | None,
+    plan: str | None,
+    workspace_id: str | None,
+    owner: str,
+    registered_at: str,
+    app_url: str,
+) -> Email:
+    """Internal alert to the platform team when a new school signs up."""
+    return _render(
+        subject=f"New school registered: {school_name}",
+        first_name=None,
+        lines=[
+            f"{school_name} has just registered.",
+            f"Owner: {owner}",
+            f"Country: {country or 'not given'} · Plan: {plan or 'not given'}",
+            f"Workspace: {workspace_id or 'not given'}",
+            f"Registered: {registered_at}",
+        ],
+        action="Open the app",
+        url=app_url,
+        note="You get this because your address is in ADMIN_NOTIFY_EMAILS.",
+    )

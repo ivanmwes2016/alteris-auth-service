@@ -40,6 +40,7 @@ from app.helpers.stale_users import remove_if_stale
 from app.helpers.user_context import get_user_context
 from app.services import account
 from app.services.auth_service import AuthService
+from app.services.notifications import notify_school_registered
 
 log = logging.getLogger(__name__)
 
@@ -292,8 +293,10 @@ async def get_current_user(
 @router.post("/signup", status_code=status.HTTP_201_CREATED)
 async def signup(
     payload: dict[str, Any],
+    background_tasks: BackgroundTasks,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
+    supabase_user: SupabaseUser = Depends(get_supabase_user),
 ) -> dict[str, str]:
     """
     Called after the client has already created (or signed into) their Supabase
@@ -349,6 +352,17 @@ async def signup(
         raise HTTPException(
             status.HTTP_409_CONFLICT, "That workspace URL is already taken"
         ) from exc
+
+    # Tell the platform team; runs after the response, and a failure never affects signup.
+    background_tasks.add_task(
+        notify_school_registered,
+        school_name=tenant.name,
+        country=tenant.country,
+        plan=payload.get("plan") or tenant.plan,
+        workspace_id=tenant.workspace_id,
+        owner_name=display_name(supabase_user.user_metadata, current_user.name),
+        owner_email=current_user.email,
+    )
 
     return {
         "message": "signup successful",
