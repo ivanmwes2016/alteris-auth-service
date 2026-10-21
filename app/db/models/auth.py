@@ -30,6 +30,8 @@ class RegisterRequest(BaseModel):
     password: str = Field(min_length=MIN_PASSWORD_LENGTH, max_length=72)
     # Where the confirmation link should land once confirmed, e.g. the invite page.
     next: str | None = Field(default=None, max_length=512)
+    # Cloudflare Turnstile token from the form (app/helpers/captcha.py).
+    captcha_token: str | None = Field(default=None, max_length=2048)
 
     @field_validator("email")
     @classmethod
@@ -57,6 +59,7 @@ class EmailRequest(BaseModel):
 
     email: str = Field(min_length=3, max_length=320)
     next: str | None = Field(default=None, max_length=512)
+    captcha_token: str | None = Field(default=None, max_length=2048)
 
     @field_validator("email")
     @classmethod

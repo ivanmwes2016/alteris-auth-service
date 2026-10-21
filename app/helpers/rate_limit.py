@@ -100,7 +100,7 @@ def rule(name: str) -> Rule:
         try:
             return Rule(name, *_parse(override))
         except ValueError:
-            _log_throttled(
+            log_throttled(
                 f"config:{name}",
                 logging.ERROR,
                 "rate_limit.bad_config rule=%s value=%r (expected count/seconds); using default",
@@ -121,7 +121,7 @@ def _key(rule_name: str, subject: str) -> str:
 _last_logged: dict[str, float] = {}
 
 
-def _log_throttled(key: str, level: int, message: str, *args: object) -> None:
+def log_throttled(key: str, level: int, message: str, *args: object) -> None:
     now = time.monotonic()
     if now - _last_logged.get(key, -math.inf) < LOG_EVERY_SECONDS:
         return
@@ -209,7 +209,7 @@ async def hit(name: str, subject: str, *, sensitive: bool = True) -> int:
     try:
         retry_ms = await _redis_hit(key, current.limit, window_ms)
     except RedisUnavailableError as exc:
-        _log_throttled(
+        log_throttled(
             "redis",
             logging.ERROR,
             "rate_limit.redis_unavailable reason=%s fallback=%s",
@@ -231,7 +231,7 @@ async def enforce(name: str, subject: str, *, sensitive: bool = True) -> None:
 
     # IPs are logged as-is (needed to investigate); anything else only by its hash.
     shown = subject if name.endswith("_ip") else _key(name, subject).rsplit(":", 1)[1][:12]
-    _log_throttled(
+    log_throttled(
         _key(name, subject),
         logging.WARNING,
         "rate_limit.blocked rule=%s subject=%s retry_after=%s",
@@ -251,7 +251,7 @@ async def reset(name: str, subject: str) -> None:
     try:
         await _redis(["DEL", key])
     except RedisUnavailableError as exc:
-        _log_throttled("redis", logging.ERROR, "rate_limit.redis_unavailable reason=%s", exc)
+        log_throttled("redis", logging.ERROR, "rate_limit.redis_unavailable reason=%s", exc)
 
 
 def too_many_requests(retry_after: int) -> HTTPException:

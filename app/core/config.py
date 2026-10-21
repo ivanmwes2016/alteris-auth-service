@@ -36,4 +36,5 @@ def get_settings() -> Settings:
         },
         CLIENT_IP_HEADER=os.getenv("CLIENT_IP_HEADER", "cf-connecting-ip") or None,
         TRUSTED_PROXY_HOPS=int(os.getenv("TRUSTED_PROXY_HOPS", "1")),
+        TURNSTILE_SECRET_KEY=os.getenv("TURNSTILE_SECRET_KEY") or None,
     )

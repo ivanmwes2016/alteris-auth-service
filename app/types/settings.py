@@ -42,6 +42,9 @@ class Settings(BaseModel):
     # Without that header: proxies that append to X-Forwarded-For, counted from the right
     TRUSTED_PROXY_HOPS: int = 1
 
+    # Cloudflare Turnstile on public forms (app/helpers/captcha.py). Unset: not enforced.
+    TURNSTILE_SECRET_KEY: str | None = None
+
     # Security
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30

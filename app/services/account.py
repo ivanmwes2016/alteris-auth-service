@@ -26,7 +26,7 @@ from supabase import Client
 from app.core.config import get_settings
 from app.db.models.auth import EmailRequest, RegisterRequest
 from app.db.models.invite import Invite
-from app.helpers import rate_limit
+from app.helpers import captcha, rate_limit
 from app.services.email import (
     Email,
     EmailError,
@@ -136,6 +136,8 @@ async def _send_confirmation_for_existing(supabase: Client, email: str, next_pat
 
 
 async def register(db: AsyncSession, supabase: Client, payload: RegisterRequest, ip: str) -> str:
+    # Human check first: bot requests then never use up a shared network's limits.
+    await captcha.verify(payload.captcha_token, form="register", ip=ip)
     ip_rule = "register_invited_ip" if await _is_invited(db, payload) else "register_ip"
     await rate_limit.enforce(ip_rule, ip)
     await rate_limit.enforce("verify_account", payload.email)
@@ -191,6 +193,7 @@ async def register(db: AsyncSession, supabase: Client, payload: RegisterRequest,
 async def resend_verification(
     db: AsyncSession, supabase: Client, payload: EmailRequest, ip: str
 ) -> str:
+    await captcha.verify(payload.captcha_token, form="resend_verification", ip=ip)
     await _limit("verify_account", payload.email, ip)
     # Failures are logged, not returned: they'd only ever happen for real accounts.
     try:
@@ -206,6 +209,7 @@ async def resend_verification(
 async def forgot_password(
     db: AsyncSession, supabase: Client, payload: EmailRequest, ip: str
 ) -> str:
+    await captcha.verify(payload.captcha_token, form="forgot_password", ip=ip)
     await _limit("reset_account", payload.email, ip)
     try:
         if await _account_state(db, payload.email) is not None:
