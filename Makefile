@@ -10,6 +10,11 @@ install:
 run:
 	uv run uvicorn app.main:app --reload --port 8001
 
+# API spec + Postman collection in docs/ (Postman: Import → the .postman_collection.json)
+openapi:
+	uv run python -m scripts.export_openapi
+	uv run python -m scripts.postman_collection
+
 # ── Linting ───────────────────────────────────────────────────────────────────
 lint:
 	uv run ruff check .
