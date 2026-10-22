@@ -340,7 +340,7 @@
           "auth"
         ],
         "summary": "Signup",
-        "description": "Called after the client has already created (or signed into) their Supabase\naccount \u2014 get_current_user has a local `users` row for them by this point.\nThis just creates their tenant and makes them its owner.\n\nExpected payload:\n{\n  name, slug, workspace_id, country\n}",
+        "description": "Called after the client has already created (or signed into) their Supabase\naccount \u2014 get_current_user has a local `users` row for them by this point.\nThis just creates their tenant and makes them its owner.\n\nExpected payload:\n{\n  name, slug, workspace_id, country, phone (required), type, source\n}",
         "operationId": "signup_auth_signup_post",
         "requestBody": {
           "required": true,
@@ -505,47 +505,6 @@
           }
         },
         "security": []
-      }
-    },
-    "/workspaces/onboarding": {
-      "patch": {
-        "tags": [
-          "workspaces"
-        ],
-        "summary": "Update Workspace",
-        "operationId": "update_workspace_workspaces_onboarding_patch",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateWorkspaceRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WorkSpaceResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/workspaces/{workspace_id}/logo": {
@@ -2733,7 +2692,7 @@
           "performance"
         ],
         "summary": "Update Class Performance",
-        "description": "Replaces the marks of the students in the payload for the given class/term/year;\nstudents not in it keep theirs. For a student in the payload, a blank/omitted\nscore for a subject removes any previously-saved score for it.",
+        "description": "Replaces the marks of the students in the payload for the given class/term/year;\nstudents not in it keep theirs. For a student in the payload, a blank/omitted\nscore for a subject removes any previously-saved score for it. Rows name the\nstudent by `student_id`; a row with only `student` (a name) is for older marks\nthat were never matched to a student.",
         "operationId": "update_class_performance_performance_patch",
         "requestBody": {
           "required": true,
@@ -7129,6 +7088,29 @@
       },
       "RankedMarks": {
         "properties": {
+          "student_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Student Id"
+          },
+          "school_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "School Id"
+          },
           "student": {
             "type": "string",
             "title": "Student"
@@ -8931,6 +8913,18 @@
       },
       "TopStudent": {
         "properties": {
+          "student_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Student Id"
+          },
           "student": {
             "type": "string",
             "title": "Student"
@@ -9026,24 +9020,6 @@
         "type": "object",
         "title": "TutionFeesPatch"
       },
-      "UpdateWorkspaceRequest": {
-        "properties": {
-          "name": {
-            "type": "string",
-            "title": "Name"
-          },
-          "workspace_id": {
-            "type": "string",
-            "title": "Workspace Id"
-          }
-        },
-        "type": "object",
-        "required": [
-          "name",
-          "workspace_id"
-        ],
-        "title": "UpdateWorkspaceRequest"
-      },
       "ValidationError": {
         "properties": {
           "loc": {
@@ -9076,30 +9052,6 @@
           "type"
         ],
         "title": "ValidationError"
-      },
-      "WorkSpaceResponse": {
-        "properties": {
-          "tenant_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Tenant Id"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name"
-          },
-          "role": {
-            "type": "string",
-            "title": "Role"
-          }
-        },
-        "type": "object",
-        "required": [
-          "tenant_id",
-          "name",
-          "role"
-        ],
-        "title": "WorkSpaceResponse"
       },
       "app__api__v1__routes__parents__ParentResponse": {
         "properties": {

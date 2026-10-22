@@ -1,12 +1,19 @@
 """
 Pydantic schemas for the Academic Performance page.
 
-`marks` rows are dynamic-keyed objects ({ student, [subject]: score }) on the
-frontend — represented here as plain `dict[str, str]` rather than a fixed
-model, since subject names aren't known ahead of time.
+`marks` rows are dynamic-keyed objects ({ student_id, student, [subject]: score })
+on the frontend — represented here as plain `dict[str, str]` rather than a fixed
+model, since subject names aren't known ahead of time. `student_id` (the student's
+id) is what a mark belongs to; `student` is their name, and identifies a row only
+for older marks that were never matched to a student.
 """
 
+import uuid
+
 from pydantic import BaseModel, ConfigDict, Field
+
+# Keys of a marks row that aren't subjects.
+STUDENT_KEYS = frozenset({"student", "student_id", "school_id"})
 
 
 class TrendPoint(BaseModel):
@@ -33,6 +40,9 @@ class PerformanceUpdate(BaseModel):
 class RankedMarks(BaseModel):
     """One student's row: their scores keyed by subject, class rank and average."""
 
+    # None only for older marks that couldn't be matched to a student.
+    student_id: uuid.UUID | None = None
+    school_id: str | None = None
     student: str
     rank: int
     average: int
@@ -40,6 +50,7 @@ class RankedMarks(BaseModel):
 
 
 class TopStudent(BaseModel):
+    student_id: uuid.UUID | None = None
     student: str
     average: int
 
