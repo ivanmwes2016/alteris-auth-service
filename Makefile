@@ -1,6 +1,6 @@
 .PHONY: install dev lint lint-fix format format-check typecheck check test \
         migrate migrate-down migration migrate-history package sam-build \
-        deploy-dev deploy-prod stripe-listen
+        deploy-dev deploy-prod stripe-listen db-local run-local migrate-local db-local-reset
 
 install:
 	uv python install 3.12
@@ -57,6 +57,29 @@ migration:
 
 migrate-history:
 	uv run alembic history --verbose
+
+# ── Local database (Docker) ───────────────────────────────────────────────────
+# A Postgres on this machine instead of the live one. Sign-in still uses Supabase.
+# Note: plain `make migrate` uses .env, i.e. the live database; use migrate-local here.
+LOCAL_DB = postgres:postgres@localhost:54330/skolarly
+LOCAL_ENV = DATABASE_URL=postgresql+asyncpg://$(LOCAL_DB) DATABASE_URL_SYNC=postgresql://$(LOCAL_DB)
+
+db-local:
+	@docker start skolarly-db >/dev/null 2>&1 || docker run -d --name skolarly-db \
+		-e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=skolarly -p 54330:5432 \
+		-v skolarly-db:/var/lib/postgresql/data postgres:16 >/dev/null
+	@until docker exec skolarly-db pg_isready -U postgres -d skolarly >/dev/null 2>&1; do sleep 1; done
+	$(LOCAL_ENV) uv run python -m scripts.local_db
+
+# Rate limits count in memory, so local requests never touch the live Redis.
+run-local: db-local
+	$(LOCAL_ENV) UPSTASH_REDIS_REST_URL= uv run uvicorn app.main:app --reload --port 8001
+
+migrate-local:
+	$(LOCAL_ENV) uv run alembic upgrade head
+
+db-local-reset:
+	docker rm -f skolarly-db && docker volume rm skolarly-db
 
 # ── Lambda packaging ──────────────────────────────────────────────────────────
 package:
