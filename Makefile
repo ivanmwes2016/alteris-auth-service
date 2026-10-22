@@ -61,12 +61,13 @@ migrate-history:
 # ── Local database (Docker) ───────────────────────────────────────────────────
 # A Postgres on this machine instead of the live one. Sign-in still uses Supabase.
 # Note: plain `make migrate` uses .env, i.e. the live database; use migrate-local here.
-LOCAL_DB = postgres:postgres@localhost:54330/skolarly
+# No password: the container only listens on this machine (127.0.0.1).
+LOCAL_DB = postgres@localhost:54330/skolarly
 LOCAL_ENV = DATABASE_URL=postgresql+asyncpg://$(LOCAL_DB) DATABASE_URL_SYNC=postgresql://$(LOCAL_DB)
 
 db-local:
 	@docker start skolarly-db >/dev/null 2>&1 || docker run -d --name skolarly-db \
-		-e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=skolarly -p 54330:5432 \
+		-e POSTGRES_HOST_AUTH_METHOD=trust -e POSTGRES_DB=skolarly -p 127.0.0.1:54330:5432 \
 		-v skolarly-db:/var/lib/postgresql/data postgres:16 >/dev/null
 	@until docker exec skolarly-db pg_isready -U postgres -d skolarly >/dev/null 2>&1; do sleep 1; done
 	$(LOCAL_ENV) uv run python -m scripts.local_db
