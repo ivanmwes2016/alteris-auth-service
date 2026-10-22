@@ -3,12 +3,17 @@ Two endpoints for the Academic Performance page. tenant_id always comes
 from the authenticated user, never from the request body/query.
 """
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.v1.routes.auth import get_current_tenant_id, get_current_user
 from app.core.db import get_db
-from app.crud.performance import get_performance, get_performance_page, sync_marks
+from app.crud.performance import (
+    UnknownStudentError,
+    get_performance,
+    get_performance_page,
+    sync_marks,
+)
 from app.db.models.users import User
 from app.db.schemas.performance import PerformancePage, PerformanceRead, PerformanceUpdate
 from app.helpers.pagination import PageParams, page_params
@@ -54,7 +59,12 @@ async def update_class_performance(
     """
     Replaces the marks of the students in the payload for the given class/term/year;
     students not in it keep theirs. For a student in the payload, a blank/omitted
-    score for a subject removes any previously-saved score for it.
+    score for a subject removes any previously-saved score for it. Rows name the
+    student by `student_id`; a row with only `student` (a name) is for older marks
+    that were never matched to a student.
     """
     tenant_id = await get_current_tenant_id(db, current_user)
-    return await sync_marks(db, tenant_id=tenant_id, data=data)
+    try:
+        return await sync_marks(db, tenant_id=tenant_id, data=data)
+    except UnknownStudentError as exc:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, str(exc)) from exc
