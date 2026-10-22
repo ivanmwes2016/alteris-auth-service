@@ -1,9 +1,14 @@
+import logging
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
 
 from app.api.v1 import api_router
 from app.core.config import get_settings
+from app.services.notifications import admin_recipients
+
+log = logging.getLogger(__name__)
 
 settings = get_settings()
 
@@ -28,6 +33,12 @@ def create_app() -> FastAPI:
 
     # ── Routes ────────────────────────────────────────────────────────────────
     app.include_router(api_router)
+
+    if not admin_recipients():
+        log.warning(
+            "ADMIN_NOTIFY_EMAILS is not set: new schools will wait for approval "
+            "without anyone being emailed"
+        )
 
     return app
 

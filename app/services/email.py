@@ -141,6 +141,9 @@ def school_registered_email(
     plan: str | None,
     workspace_id: str | None,
     owner: str,
+    phone: str | None,
+    school_type: str | None,
+    referral_source: str | None,
     registered_at: str,
     review_url: str,
 ) -> Email:
@@ -151,7 +154,10 @@ def school_registered_email(
         lines=[
             f"{school_name} has just registered and is waiting for approval.",
             f"Owner: {owner}",
-            f"Country: {country or 'not given'} · Plan: {plan or 'not given'}",
+            f"Phone: {phone or 'not given'}",
+            f"Type: {school_type or 'not given'} · Country: {country or 'not given'} · "
+            f"Plan: {plan or 'not given'}",
+            f"Heard about us from: {referral_source or 'not given'}",
             f"Workspace: {workspace_id or 'not given'}",
             f"Registered: {registered_at}",
             "Nobody can use the school until it's approved. Rejecting deletes it.",

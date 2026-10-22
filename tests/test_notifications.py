@@ -19,6 +19,9 @@ async def _notify() -> None:
         workspace_id="org-abc",
         owner_name="Ivan Mwesigwa",
         owner_email="ivan@x.io",
+        phone="+256 700 123456",
+        school_type="Nursery",
+        referral_source="Friend or colleague",
         review_url="https://app.test/review-school?token=t",
     )
 
@@ -38,11 +41,16 @@ async def test_every_admin_address_gets_the_alert() -> None:
     assert "https://app.test/review-school?token=t" in kwargs["text_body"]
     assert "Ivan Mwesigwa <ivan@x.io>" in kwargs["text_body"]
     assert "Uganda" in kwargs["text_body"] and "org-abc" in kwargs["text_body"]
+    assert "Phone: +256 700 123456" in kwargs["text_body"]
+    assert "Type: Nursery" in kwargs["text_body"]
+    assert "Heard about us from: Friend or colleague" in kwargs["text_body"]
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("recipients", [None, "", " , "])
-async def test_no_recipients_means_no_email(recipients: str | None) -> None:
+async def test_no_recipients_means_no_email_but_an_error_in_the_logs(
+    recipients: str | None, caplog: pytest.LogCaptureFixture
+) -> None:
     send = AsyncMock()
     with (
         patch.object(notifications, "get_settings", _settings(recipients)),
@@ -51,6 +59,7 @@ async def test_no_recipients_means_no_email(recipients: str | None) -> None:
         await _notify()
 
     send.assert_not_awaited()
+    assert "school_alert.no_recipients school='Kinaawa High School'" in caplog.text
 
 
 @pytest.mark.asyncio
@@ -73,6 +82,9 @@ def test_school_names_are_escaped_in_the_html() -> None:
         plan=None,
         workspace_id=None,
         owner="a@x.io",
+        phone=None,
+        school_type=None,
+        referral_source=None,
         registered_at="now",
         review_url="https://app.test",
     )

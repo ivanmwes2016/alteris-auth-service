@@ -25,6 +25,11 @@ class Tenant(Base):
     stripe_subscription_id: Mapped[str | None] = mapped_column(String, nullable=True)
     logo_path: Mapped[str | None] = mapped_column(String, nullable=True)
     country: Mapped[str | None] = mapped_column(String, nullable=True)
+    # From the sign-up form, for the platform team to contact and understand the school.
+    # Required for new schools; older schools don't have them.
+    phone: Mapped[str | None] = mapped_column(String, nullable=True)
+    school_type: Mapped[str | None] = mapped_column(String, nullable=True)
+    referral_source: Mapped[str | None] = mapped_column(String, nullable=True)
     owner_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )

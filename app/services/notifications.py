@@ -17,7 +17,7 @@ from app.services.email import (
 log = logging.getLogger(__name__)
 
 
-def _recipients() -> list[str]:
+def admin_recipients() -> list[str]:
     raw = get_settings().ADMIN_NOTIFY_EMAILS or ""
     return [address.strip() for address in raw.split(",") if address.strip()]
 
@@ -30,10 +30,17 @@ async def notify_school_registered(
     workspace_id: str | None,
     owner_name: str | None,
     owner_email: str,
+    phone: str | None,
+    school_type: str | None,
+    referral_source: str | None,
     review_url: str,
 ) -> None:
-    recipients = _recipients()
+    recipients = admin_recipients()
     if not recipients:
+        # Loud, or the school waits unseen. scripts/resend_school_reviews.py catches up.
+        log.error(
+            "school_alert.no_recipients school=%r: ADMIN_NOTIFY_EMAILS is not set", school_name
+        )
         return
 
     owner = f"{owner_name} <{owner_email}>" if owner_name else owner_email
@@ -43,6 +50,9 @@ async def notify_school_registered(
         plan=plan,
         workspace_id=workspace_id,
         owner=owner,
+        phone=phone,
+        school_type=school_type,
+        referral_source=referral_source,
         registered_at=datetime.now(UTC).strftime("%d %b %Y, %H:%M UTC"),
         review_url=review_url,
     )

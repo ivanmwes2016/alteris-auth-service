@@ -38,6 +38,7 @@ from app.helpers import password as password_rules
 from app.helpers import rate_limit
 from app.helpers.jwt import get_user_from_token
 from app.helpers.last_active import touch_last_active
+from app.helpers.phone import clean_phone
 from app.helpers.rate_limit import client_ip
 from app.helpers.stale_users import remove_if_stale
 from app.helpers.user_context import get_user_context
@@ -336,6 +337,16 @@ async def change_password(
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
+INVALID_PHONE = "Please enter a valid phone number, e.g. +256 700 123456."
+
+
+def _short_answer(value: object) -> str | None:
+    """An optional sign-up answer (school type, how they heard of us), tidied."""
+    if not isinstance(value, str):
+        return None
+    return " ".join(value.split())[:100] or None
+
+
 @router.post("/signup", status_code=status.HTTP_201_CREATED)
 async def signup(
     payload: dict[str, Any],
@@ -351,9 +362,13 @@ async def signup(
 
     Expected payload:
     {
-      name, slug, workspace_id, country
+      name, slug, workspace_id, country, phone (required), type, source
     }
     """
+    phone = clean_phone(payload.get("phone"))
+    if phone is None:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, INVALID_PHONE)
+
     has_workspace = await db.scalar(
         select(TenantMember.id).where(
             TenantMember.user_id == current_user.id, TenantMember.status == "active"
@@ -376,6 +391,9 @@ async def signup(
         seat_limit=15,
         owner_id=current_user.id,
         country=payload.get("country"),
+        phone=phone,
+        school_type=_short_answer(payload.get("type")),
+        referral_source=_short_answer(payload.get("source")),
         status="pending",
         review_token_hash=review_token_hash,
     )
@@ -415,6 +433,9 @@ async def signup(
         workspace_id=tenant.workspace_id,
         owner_name=owner_name,
         owner_email=current_user.email,
+        phone=tenant.phone,
+        school_type=tenant.school_type,
+        referral_source=tenant.referral_source,
         review_url=review_url(review_token),
     )
     # ...and thank the person who registered: it's pending, they'll hear back.
