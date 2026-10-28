@@ -26,6 +26,7 @@ from .tenant import Tenant
 from .tenant_gallery_image import TenantGalleryImage
 from .tenant_member import TenantMember
 from .tenant_profile import TenantProfile
+from .timetable import Lesson, OptionsPeriod, Timetable, TimetablePeriod
 from .tution_fees import TutionFees
 from .users import User
 
@@ -36,6 +37,8 @@ __all__ = [
     "BehaviourRecognition",
     "Enquiry",
     "Invite",
+    "Lesson",
+    "OptionsPeriod",
     "Parent",
     "PerformanceRecord",
     "Profile",
@@ -61,6 +64,8 @@ __all__ = [
     "TenantGalleryImage",
     "TenantMember",
     "TenantProfile",
+    "Timetable",
+    "TimetablePeriod",
     "TutionFees",
     "User",
 ]
