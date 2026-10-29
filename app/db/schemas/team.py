@@ -100,6 +100,8 @@ class TeamMemberRead(BaseModel):
     role: str
     lastActive: datetime | None = None  # noqa: N815
     status: str
+    # The account's user id; None for a pending invite (no account yet).
+    userId: uuid.UUID | None = None  # noqa: N815
 
 
 class AcceptInviteResponse(BaseModel):
