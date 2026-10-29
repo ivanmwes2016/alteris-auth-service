@@ -22,6 +22,7 @@ def get_settings() -> Settings:
         EMAIL_FROM=os.getenv("EMAIL_FROM"),
         ADMIN_NOTIFY_EMAILS=os.getenv("ADMIN_NOTIFY_EMAILS"),
         EXPO_ACCESS_TOKEN=os.getenv("EXPO_ACCESS_TOKEN"),
+        PLANNING_FILES_BUCKET=os.getenv("PLANNING_FILES_BUCKET") or "lesson-plan-files",
         STRIPE_SECRET_KEY=os.getenv("STRIPE_SECRET_KEY"),
         STRIPE_WEBHOOK_SECRET=os.getenv("STRIPE_WEBHOOK_SECRET"),
         REDIS_URL=os.getenv("UPSTASH_REDIS_REST_URL"),

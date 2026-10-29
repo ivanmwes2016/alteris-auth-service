@@ -21,8 +21,9 @@ log = logging.getLogger(__name__)
 
 EXPO_PUSH_URL = "https://exp.host/--/api/v2/push/send"
 BATCH_SIZE = 100  # Expo's limit per request
-# The app's Android channel for attendance notifications.
+# The app's Android channels.
 ATTENDANCE_CHANNEL = "attendance"
+PLANNING_CHANNEL = "planning"
 
 
 async def tokens_for(db: AsyncSession, user_ids: Sequence[uuid.UUID]) -> list[str]:
@@ -32,7 +33,14 @@ async def tokens_for(db: AsyncSession, user_ids: Sequence[uuid.UUID]) -> list[st
     return list(rows)
 
 
-async def send_push(tokens: Sequence[str], *, title: str, body: str, data: dict[str, str]) -> None:
+async def send_push(
+    tokens: Sequence[str],
+    *,
+    title: str,
+    body: str,
+    data: dict[str, str],
+    channel: str = ATTENDANCE_CHANNEL,
+) -> None:
     if not tokens:
         return
     headers = {"Accept": "application/json"}
@@ -51,7 +59,7 @@ async def send_push(tokens: Sequence[str], *, title: str, body: str, data: dict[
                     "body": body,
                     "data": data,
                     "sound": "default",
-                    "channelId": ATTENDANCE_CHANNEL,
+                    "channelId": channel,
                 }
                 for token in batch
             ]

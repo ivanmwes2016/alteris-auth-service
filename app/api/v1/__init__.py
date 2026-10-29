@@ -15,6 +15,7 @@ from .routes import (
     medical,
     parents,
     performance,
+    planning,
     registers,
     staff,
     staff_qualifications,
@@ -61,6 +62,7 @@ api_router.include_router(
 )
 api_router.include_router(registers.router, prefix="/attendance", tags=["attendance"])
 api_router.include_router(registers.push_router, prefix="/push-tokens", tags=["notifications"])
+api_router.include_router(planning.router, prefix="/planning", tags=["planning"])
 
 
 # api_router.include_router(members.router, prefix="/members", tags=["members"])

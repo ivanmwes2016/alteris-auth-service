@@ -5545,6 +5545,1469 @@
           }
         }
       }
+    },
+    "/planning/week": {
+      "get": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Get Week",
+        "description": "The week (Monday to Sunday) holding `date`: each lesson with its plan and record.",
+        "operationId": "get_week_planning_week_get",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Date"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "mine",
+                "all"
+              ],
+              "type": "string",
+              "default": "mine",
+              "title": "Scope"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeekRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/schemes": {
+      "get": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "List Schemes",
+        "operationId": "list_schemes_planning_schemes_get",
+        "parameters": [
+          {
+            "name": "term",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Term"
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Year"
+            }
+          },
+          {
+            "name": "className",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Classname"
+            }
+          },
+          {
+            "name": "subjectId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Subjectid"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "draft",
+                    "submitted",
+                    "approved",
+                    "sent_back"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SchemeSummary"
+                  },
+                  "title": "Response List Schemes Planning Schemes Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Create Scheme",
+        "description": "A new draft, empty or copied from an earlier scheme for the same class and subject.",
+        "operationId": "create_scheme_planning_schemes_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchemeCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchemeRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/schemes/{scheme_id}": {
+      "get": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Get Scheme",
+        "operationId": "get_scheme_planning_schemes__scheme_id__get",
+        "parameters": [
+          {
+            "name": "scheme_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Scheme Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchemeRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Delete Scheme",
+        "operationId": "delete_scheme_planning_schemes__scheme_id__delete",
+        "parameters": [
+          {
+            "name": "scheme_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Scheme Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/schemes/{scheme_id}/entries": {
+      "put": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Write Entries",
+        "description": "Every entry: ids change, no id adds, left out removes. Resubmits an approved scheme.",
+        "operationId": "write_entries_planning_schemes__scheme_id__entries_put",
+        "parameters": [
+          {
+            "name": "scheme_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Scheme Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EntriesWrite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchemeRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/schemes/{scheme_id}/entries/{entry_id}": {
+      "put": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Write Entry",
+        "description": "One entry. Resubmits an approved scheme.",
+        "operationId": "write_entry_planning_schemes__scheme_id__entries__entry_id__put",
+        "parameters": [
+          {
+            "name": "scheme_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Scheme Id"
+            }
+          },
+          {
+            "name": "entry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Entry Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EntryIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchemeRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/schemes/{scheme_id}/submit": {
+      "post": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Submit Scheme",
+        "operationId": "submit_scheme_planning_schemes__scheme_id__submit_post",
+        "parameters": [
+          {
+            "name": "scheme_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Scheme Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchemeRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/schemes/{scheme_id}/approve": {
+      "post": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Approve Scheme",
+        "description": "Approvers.",
+        "operationId": "approve_scheme_planning_schemes__scheme_id__approve_post",
+        "parameters": [
+          {
+            "name": "scheme_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Scheme Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchemeRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/schemes/{scheme_id}/send-back": {
+      "post": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Send Back Scheme",
+        "description": "Approvers. The comment starts the scheme's thread.",
+        "operationId": "send_back_scheme_planning_schemes__scheme_id__send_back_post",
+        "parameters": [
+          {
+            "name": "scheme_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Scheme Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendBack"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchemeRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/schemes/{scheme_id}/comments": {
+      "get": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "List Scheme Comments",
+        "operationId": "list_scheme_comments_planning_schemes__scheme_id__comments_get",
+        "parameters": [
+          {
+            "name": "scheme_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Scheme Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommentRead"
+                  },
+                  "title": "Response List Scheme Comments Planning Schemes  Scheme Id  Comments Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Add Scheme Comment",
+        "operationId": "add_scheme_comment_planning_schemes__scheme_id__comments_post",
+        "parameters": [
+          {
+            "name": "scheme_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Scheme Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommentIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/schemes/{scheme_id}/entries/{entry_id}/attachments": {
+      "post": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Attach To Entry",
+        "operationId": "attach_to_entry_planning_schemes__scheme_id__entries__entry_id__attachments_post",
+        "parameters": [
+          {
+            "name": "scheme_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Scheme Id"
+            }
+          },
+          {
+            "name": "entry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Entry Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AttachmentIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttachmentRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/schemes/{scheme_id}/record-of-work": {
+      "get": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Get Record Of Work",
+        "description": "Every lesson of the scheme's class and subject that term, and what it covered.",
+        "operationId": "get_record_of_work_planning_schemes__scheme_id__record_of_work_get",
+        "parameters": [
+          {
+            "name": "scheme_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Scheme Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecordOfWorkRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/plans": {
+      "get": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "List Plans",
+        "operationId": "list_plans_planning_plans_get",
+        "parameters": [
+          {
+            "name": "term",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Term"
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Year"
+            }
+          },
+          {
+            "name": "className",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Classname"
+            }
+          },
+          {
+            "name": "subjectId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Subjectid"
+            }
+          },
+          {
+            "name": "week",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Week"
+            }
+          },
+          {
+            "name": "authorId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlanSummary"
+                  },
+                  "title": "Response List Plans Planning Plans Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/plans/{plan_id}": {
+      "get": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Get Plan",
+        "operationId": "get_plan_planning_plans__plan_id__get",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Plan Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Save Plan",
+        "description": "Creates or replaces the plan with this id (chosen by the phone). An older\nsave than the one stored changes nothing and comes back with `stale`.",
+        "operationId": "save_plan_planning_plans__plan_id__put",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Plan Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanWrite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanSaveResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Delete Plan",
+        "operationId": "delete_plan_planning_plans__plan_id__delete",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Plan Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/plans/{plan_id}/versions": {
+      "get": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Get Plan Versions",
+        "description": "Earlier versions, newest first.",
+        "operationId": "get_plan_versions_planning_plans__plan_id__versions_get",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Plan Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlanVersionRead"
+                  },
+                  "title": "Response Get Plan Versions Planning Plans  Plan Id  Versions Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/plans/{plan_id}/comments": {
+      "get": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "List Plan Comments",
+        "operationId": "list_plan_comments_planning_plans__plan_id__comments_get",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Plan Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommentRead"
+                  },
+                  "title": "Response List Plan Comments Planning Plans  Plan Id  Comments Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Add Plan Comment",
+        "operationId": "add_plan_comment_planning_plans__plan_id__comments_post",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Plan Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommentIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/plans/{plan_id}/attachments": {
+      "post": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Attach To Plan",
+        "operationId": "attach_to_plan_planning_plans__plan_id__attachments_post",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Plan Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AttachmentIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttachmentRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/records": {
+      "put": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Save Record",
+        "description": "A lesson's record of work, after it happened. The latest record wins.\nNot taught needs no plan; Taught and Partly taught do.",
+        "operationId": "save_record_planning_records_put",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordWrite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/app__db__schemas__planning__RecordRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/attachments/upload-url": {
+      "post": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Create Upload Url",
+        "description": "Where to upload a photo or PDF; then attach the returned path to an entry or a plan.",
+        "operationId": "create_upload_url_planning_attachments_upload_url_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadUrlRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadUrlRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/attachments/{attachment_id}": {
+      "delete": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Delete Attachment",
+        "operationId": "delete_attachment_planning_attachments__attachment_id__delete",
+        "parameters": [
+          {
+            "name": "attachment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Attachment Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/reports/gaps": {
+      "get": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Get Gaps",
+        "description": "Unplanned, unrecorded and late lessons: teachers see their own, approvers\neveryone's and also records that disagree with the register.",
+        "operationId": "get_gaps_planning_reports_gaps_get",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Start"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "End"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanningGapsRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/reports/progress": {
+      "get": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Get Progress",
+        "description": "Each stream's place in each of the term's schemes.",
+        "operationId": "get_progress_planning_reports_progress_get",
+        "parameters": [
+          {
+            "name": "term",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Term"
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Year"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SchemeProgressRead"
+                  },
+                  "title": "Response Get Progress Planning Reports Progress Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -5707,6 +7170,81 @@
         ],
         "title": "AllergyRead"
       },
+      "AttachmentIn": {
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 500,
+            "title": "Path"
+          },
+          "fileName": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Filename"
+          },
+          "contentType": {
+            "type": "string",
+            "maxLength": 100,
+            "title": "Contenttype"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Size"
+          }
+        },
+        "type": "object",
+        "required": [
+          "path",
+          "fileName",
+          "contentType",
+          "size"
+        ],
+        "title": "AttachmentIn",
+        "description": "A file already uploaded to the path an upload URL gave."
+      },
+      "AttachmentRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "fileName": {
+            "type": "string",
+            "title": "Filename"
+          },
+          "contentType": {
+            "type": "string",
+            "title": "Contenttype"
+          },
+          "size": {
+            "type": "integer",
+            "title": "Size"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "fileName",
+          "contentType",
+          "size",
+          "url"
+        ],
+        "title": "AttachmentRead"
+      },
       "AttendanceProfileBulkUpdate": {
         "properties": {
           "notes": {
@@ -5775,7 +7313,7 @@
           },
           "records": {
             "items": {
-              "$ref": "#/components/schemas/RecordRead"
+              "$ref": "#/components/schemas/app__db__schemas__attendance_profile__RecordRead"
             },
             "type": "array",
             "title": "Records",
@@ -6315,6 +7853,60 @@
         },
         "type": "object",
         "title": "ClassUpdate"
+      },
+      "CommentIn": {
+        "properties": {
+          "body": {
+            "type": "string",
+            "maxLength": 5000,
+            "minLength": 1,
+            "title": "Body"
+          }
+        },
+        "type": "object",
+        "required": [
+          "body"
+        ],
+        "title": "CommentIn"
+      },
+      "CommentRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "author": {
+            "$ref": "#/components/schemas/PersonRead"
+          },
+          "byApprover": {
+            "type": "boolean",
+            "title": "Byapprover"
+          },
+          "sentBack": {
+            "type": "boolean",
+            "title": "Sentback"
+          },
+          "body": {
+            "type": "string",
+            "title": "Body"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "author",
+          "byApprover",
+          "sentBack",
+          "body",
+          "createdAt"
+        ],
+        "title": "CommentRead"
       },
       "ConditionIn": {
         "properties": {
@@ -6995,6 +8587,236 @@
         ],
         "title": "EnquiryPayload"
       },
+      "EntriesWrite": {
+        "properties": {
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/EntryIn"
+            },
+            "type": "array",
+            "maxItems": 500,
+            "title": "Entries"
+          }
+        },
+        "type": "object",
+        "title": "EntriesWrite",
+        "description": "Every entry of the scheme: ones left out are removed."
+      },
+      "EntryIn": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "week": {
+            "type": "integer",
+            "maximum": 60.0,
+            "minimum": 1.0,
+            "title": "Week"
+          },
+          "position": {
+            "type": "integer",
+            "maximum": 1000.0,
+            "minimum": 0.0,
+            "title": "Position",
+            "default": 0
+          },
+          "topic": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Topic"
+          },
+          "subtopic": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subtopic"
+          },
+          "objectives": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Objectives"
+          },
+          "methods": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Methods"
+          },
+          "materials": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Materials"
+          },
+          "references": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "References"
+          },
+          "lessons": {
+            "type": "integer",
+            "maximum": 50.0,
+            "minimum": 1.0,
+            "title": "Lessons",
+            "default": 1
+          }
+        },
+        "type": "object",
+        "required": [
+          "week",
+          "topic"
+        ],
+        "title": "EntryIn",
+        "description": "A scheme entry; with an id it changes that entry, without one it adds one."
+      },
+      "EntryRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "week": {
+            "type": "integer",
+            "title": "Week"
+          },
+          "position": {
+            "type": "integer",
+            "title": "Position"
+          },
+          "topic": {
+            "type": "string",
+            "title": "Topic"
+          },
+          "subtopic": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subtopic"
+          },
+          "objectives": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Objectives"
+          },
+          "methods": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Methods"
+          },
+          "materials": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Materials"
+          },
+          "references": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "References"
+          },
+          "lessons": {
+            "type": "integer",
+            "title": "Lessons"
+          },
+          "attachments": {
+            "items": {
+              "$ref": "#/components/schemas/AttachmentRead"
+            },
+            "type": "array",
+            "title": "Attachments"
+          },
+          "changedSinceApproval": {
+            "type": "boolean",
+            "title": "Changedsinceapproval",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "week",
+          "position",
+          "topic",
+          "subtopic",
+          "objectives",
+          "methods",
+          "materials",
+          "references",
+          "lessons"
+        ],
+        "title": "EntryRead"
+      },
       "FeeDetails": {
         "properties": {
           "description": {
@@ -7600,6 +9422,96 @@
           "periodId"
         ],
         "title": "LessonCreate"
+      },
+      "LessonKey": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "lessonId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lessonid"
+          },
+          "className": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Classname"
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          },
+          "subjectId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subjectid"
+          },
+          "startsAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Startsat"
+          },
+          "minutes": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 600.0,
+                "minimum": 5.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minutes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date"
+        ],
+        "title": "LessonKey",
+        "description": "A timetabled lesson: date and lessonId. An extra lesson: date, className,\noptional stream, subjectId, startsAt and minutes."
       },
       "LessonRead": {
         "properties": {
@@ -9426,6 +11338,795 @@
         "type": "object",
         "title": "PersonRead"
       },
+      "PlanRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "className": {
+            "type": "string",
+            "title": "Classname"
+          },
+          "subjectId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subjectid"
+          },
+          "subjectName": {
+            "type": "string",
+            "title": "Subjectname"
+          },
+          "term": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Term"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "week": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Week"
+          },
+          "topic": {
+            "type": "string",
+            "title": "Topic"
+          },
+          "subtopic": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subtopic"
+          },
+          "late": {
+            "type": "boolean",
+            "title": "Late"
+          },
+          "writtenAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Writtenat"
+          },
+          "writtenBy": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PersonRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lessons": {
+            "items": {
+              "$ref": "#/components/schemas/PlannedLessonRead"
+            },
+            "type": "array",
+            "title": "Lessons"
+          },
+          "schemeEntryId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Schemeentryid"
+          },
+          "objectives": {
+            "type": "string",
+            "title": "Objectives"
+          },
+          "materials": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Materials"
+          },
+          "introduction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Introduction"
+          },
+          "development": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Development"
+          },
+          "assessment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assessment"
+          },
+          "conclusion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conclusion"
+          },
+          "savedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Savedat"
+          },
+          "updatedBy": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PersonRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "attachments": {
+            "items": {
+              "$ref": "#/components/schemas/AttachmentRead"
+            },
+            "type": "array",
+            "title": "Attachments"
+          },
+          "versions": {
+            "type": "integer",
+            "title": "Versions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "className",
+          "subjectId",
+          "subjectName",
+          "term",
+          "year",
+          "week",
+          "topic",
+          "subtopic",
+          "late",
+          "writtenAt",
+          "writtenBy",
+          "lessons",
+          "schemeEntryId",
+          "objectives",
+          "materials",
+          "introduction",
+          "development",
+          "assessment",
+          "conclusion",
+          "savedAt",
+          "updatedBy",
+          "attachments",
+          "versions"
+        ],
+        "title": "PlanRead"
+      },
+      "PlanSaveResult": {
+        "properties": {
+          "plan": {
+            "$ref": "#/components/schemas/PlanRead"
+          },
+          "stale": {
+            "type": "boolean",
+            "title": "Stale",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "plan"
+        ],
+        "title": "PlanSaveResult"
+      },
+      "PlanSummary": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "className": {
+            "type": "string",
+            "title": "Classname"
+          },
+          "subjectId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subjectid"
+          },
+          "subjectName": {
+            "type": "string",
+            "title": "Subjectname"
+          },
+          "term": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Term"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "week": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Week"
+          },
+          "topic": {
+            "type": "string",
+            "title": "Topic"
+          },
+          "subtopic": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subtopic"
+          },
+          "late": {
+            "type": "boolean",
+            "title": "Late"
+          },
+          "writtenAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Writtenat"
+          },
+          "writtenBy": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PersonRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lessons": {
+            "items": {
+              "$ref": "#/components/schemas/PlannedLessonRead"
+            },
+            "type": "array",
+            "title": "Lessons"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "className",
+          "subjectId",
+          "subjectName",
+          "term",
+          "year",
+          "week",
+          "topic",
+          "subtopic",
+          "late",
+          "writtenAt",
+          "writtenBy",
+          "lessons"
+        ],
+        "title": "PlanSummary"
+      },
+      "PlanVersionRead": {
+        "properties": {
+          "topic": {
+            "type": "string",
+            "title": "Topic"
+          },
+          "subtopic": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subtopic"
+          },
+          "objectives": {
+            "type": "string",
+            "title": "Objectives"
+          },
+          "materials": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Materials"
+          },
+          "introduction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Introduction"
+          },
+          "development": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Development"
+          },
+          "assessment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assessment"
+          },
+          "conclusion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conclusion"
+          },
+          "savedBy": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PersonRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "savedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Savedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "topic",
+          "subtopic",
+          "objectives",
+          "materials",
+          "introduction",
+          "development",
+          "assessment",
+          "conclusion",
+          "savedBy",
+          "savedAt"
+        ],
+        "title": "PlanVersionRead"
+      },
+      "PlanWrite": {
+        "properties": {
+          "lessons": {
+            "items": {
+              "$ref": "#/components/schemas/LessonKey"
+            },
+            "type": "array",
+            "maxItems": 10,
+            "minItems": 1,
+            "title": "Lessons"
+          },
+          "schemeEntryId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Schemeentryid"
+          },
+          "topic": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Topic"
+          },
+          "subtopic": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subtopic"
+          },
+          "objectives": {
+            "type": "string",
+            "maxLength": 5000,
+            "minLength": 1,
+            "title": "Objectives"
+          },
+          "materials": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Materials"
+          },
+          "introduction": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Introduction"
+          },
+          "development": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Development"
+          },
+          "assessment": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assessment"
+          },
+          "conclusion": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conclusion"
+          },
+          "savedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Savedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lessons",
+          "topic",
+          "objectives",
+          "savedAt"
+        ],
+        "title": "PlanWrite",
+        "description": "The whole plan, sent with the phone's time of the save. The first save\ncreates it; later ones replace its content and lessons (latest save wins)."
+      },
+      "PlannedLessonRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "key": {
+            "$ref": "#/components/schemas/LessonKey"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "className": {
+            "type": "string",
+            "title": "Classname"
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          },
+          "subjectName": {
+            "type": "string",
+            "title": "Subjectname"
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "time",
+            "title": "Startsat"
+          },
+          "minutes": {
+            "type": "integer",
+            "title": "Minutes"
+          },
+          "teacher": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PersonRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "record": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/app__db__schemas__planning__RecordRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "key",
+          "date",
+          "className",
+          "stream",
+          "subjectName",
+          "startsAt",
+          "minutes",
+          "teacher",
+          "record"
+        ],
+        "title": "PlannedLessonRead"
+      },
+      "PlanningGap": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "unplanned",
+              "unrecorded",
+              "late",
+              "taught_no_register",
+              "register_not_taught"
+            ],
+            "title": "Kind"
+          },
+          "key": {
+            "$ref": "#/components/schemas/LessonKey"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "className": {
+            "type": "string",
+            "title": "Classname"
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          },
+          "subjectName": {
+            "type": "string",
+            "title": "Subjectname"
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "time",
+            "title": "Startsat"
+          },
+          "teacher": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PersonRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "planId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Planid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "key",
+          "date",
+          "className",
+          "stream",
+          "subjectName",
+          "startsAt",
+          "teacher",
+          "planId"
+        ],
+        "title": "PlanningGap"
+      },
+      "PlanningGapsRead": {
+        "properties": {
+          "start": {
+            "type": "string",
+            "format": "date",
+            "title": "Start"
+          },
+          "end": {
+            "type": "string",
+            "format": "date",
+            "title": "End"
+          },
+          "needsTermDates": {
+            "type": "boolean",
+            "title": "Needstermdates"
+          },
+          "gaps": {
+            "items": {
+              "$ref": "#/components/schemas/PlanningGap"
+            },
+            "type": "array",
+            "title": "Gaps"
+          }
+        },
+        "type": "object",
+        "required": [
+          "start",
+          "end",
+          "needsTermDates",
+          "gaps"
+        ],
+        "title": "PlanningGapsRead"
+      },
       "ProfilePatch-Input": {
         "properties": {
           "tenant_id": {
@@ -10390,47 +13091,237 @@
         ],
         "title": "RecordIn"
       },
-      "RecordRead": {
+      "RecordOfWorkRead": {
+        "properties": {
+          "className": {
+            "type": "string",
+            "title": "Classname"
+          },
+          "subjectName": {
+            "type": "string",
+            "title": "Subjectname"
+          },
+          "term": {
+            "type": "string",
+            "title": "Term"
+          },
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/RecordOfWorkRow"
+            },
+            "type": "array",
+            "title": "Rows"
+          }
+        },
+        "type": "object",
+        "required": [
+          "className",
+          "subjectName",
+          "term",
+          "year",
+          "rows"
+        ],
+        "title": "RecordOfWorkRead"
+      },
+      "RecordOfWorkRow": {
         "properties": {
           "date": {
             "type": "string",
             "format": "date",
             "title": "Date"
           },
-          "status": {
-            "$ref": "#/components/schemas/AttendanceStatus",
-            "default": "Present"
-          },
-          "note": {
+          "week": {
             "anyOf": [
               {
-                "type": "string",
-                "maxLength": 1000
+                "type": "integer"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Note"
+            "title": "Week"
           },
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Id"
+          "stream": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
           },
-          "created_at": {
+          "startsAt": {
             "type": "string",
-            "format": "date-time",
-            "title": "Created At"
+            "format": "time",
+            "title": "Startsat"
+          },
+          "topic": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Topic"
+          },
+          "subtopic": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subtopic"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "taught",
+                  "partly_taught",
+                  "not_taught"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "school_event",
+                  "teacher_away",
+                  "class_away",
+                  "other"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comment"
+          },
+          "teacher": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PersonRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",
         "required": [
           "date",
-          "id",
-          "created_at"
+          "week",
+          "stream",
+          "startsAt",
+          "topic",
+          "subtopic",
+          "status",
+          "reason",
+          "comment",
+          "teacher"
         ],
-        "title": "RecordRead"
+        "title": "RecordOfWorkRow"
+      },
+      "RecordWrite": {
+        "properties": {
+          "lesson": {
+            "$ref": "#/components/schemas/LessonKey"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "taught",
+              "partly_taught",
+              "not_taught"
+            ],
+            "title": "Status"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "school_event",
+                  "teacher_away",
+                  "class_away",
+                  "other"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comment"
+          },
+          "reflection": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reflection"
+          },
+          "recordedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Recordedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lesson",
+          "status",
+          "recordedAt"
+        ],
+        "title": "RecordWrite",
+        "description": "A lesson's record of work, with the phone's time it was made."
       },
       "RegisterCounts": {
         "properties": {
@@ -11100,6 +13991,366 @@
         ],
         "title": "RoleUpdate"
       },
+      "SchemeCreate": {
+        "properties": {
+          "className": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Classname"
+          },
+          "subjectId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Subjectid"
+          },
+          "term": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1,
+            "title": "Term"
+          },
+          "year": {
+            "type": "integer",
+            "maximum": 2100.0,
+            "minimum": 2000.0,
+            "title": "Year"
+          },
+          "copyFromId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Copyfromid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "className",
+          "subjectId",
+          "term",
+          "year"
+        ],
+        "title": "SchemeCreate"
+      },
+      "SchemeProgressRead": {
+        "properties": {
+          "schemeId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Schemeid"
+          },
+          "className": {
+            "type": "string",
+            "title": "Classname"
+          },
+          "subjectName": {
+            "type": "string",
+            "title": "Subjectname"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "submitted",
+              "approved",
+              "sent_back"
+            ],
+            "title": "Status"
+          },
+          "currentWeek": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currentweek"
+          },
+          "streams": {
+            "items": {
+              "$ref": "#/components/schemas/StreamProgress"
+            },
+            "type": "array",
+            "title": "Streams"
+          }
+        },
+        "type": "object",
+        "required": [
+          "schemeId",
+          "className",
+          "subjectName",
+          "status",
+          "currentWeek",
+          "streams"
+        ],
+        "title": "SchemeProgressRead"
+      },
+      "SchemeRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "className": {
+            "type": "string",
+            "title": "Classname"
+          },
+          "subjectId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subjectid"
+          },
+          "subjectName": {
+            "type": "string",
+            "title": "Subjectname"
+          },
+          "term": {
+            "type": "string",
+            "title": "Term"
+          },
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "submitted",
+              "approved",
+              "sent_back"
+            ],
+            "title": "Status"
+          },
+          "entryCount": {
+            "type": "integer",
+            "title": "Entrycount"
+          },
+          "changedSinceApproval": {
+            "type": "boolean",
+            "title": "Changedsinceapproval"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updatedat"
+          },
+          "submittedBy": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PersonRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "submittedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Submittedat"
+          },
+          "decidedBy": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PersonRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "decidedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decidedat"
+          },
+          "approvedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approvedat"
+          },
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/EntryRead"
+            },
+            "type": "array",
+            "title": "Entries"
+          },
+          "removedSinceApproval": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Removedsinceapproval"
+          },
+          "weeks": {
+            "items": {
+              "$ref": "#/components/schemas/TermWeekRead"
+            },
+            "type": "array",
+            "title": "Weeks"
+          },
+          "currentWeek": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currentweek"
+          },
+          "needsTermDates": {
+            "type": "boolean",
+            "title": "Needstermdates"
+          },
+          "progress": {
+            "items": {
+              "$ref": "#/components/schemas/StreamProgress"
+            },
+            "type": "array",
+            "title": "Progress"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "className",
+          "subjectId",
+          "subjectName",
+          "term",
+          "year",
+          "status",
+          "entryCount",
+          "changedSinceApproval",
+          "updatedAt",
+          "submittedBy",
+          "submittedAt",
+          "decidedBy",
+          "decidedAt",
+          "approvedAt",
+          "entries",
+          "removedSinceApproval",
+          "weeks",
+          "currentWeek",
+          "needsTermDates",
+          "progress"
+        ],
+        "title": "SchemeRead"
+      },
+      "SchemeSummary": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "className": {
+            "type": "string",
+            "title": "Classname"
+          },
+          "subjectId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subjectid"
+          },
+          "subjectName": {
+            "type": "string",
+            "title": "Subjectname"
+          },
+          "term": {
+            "type": "string",
+            "title": "Term"
+          },
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "submitted",
+              "approved",
+              "sent_back"
+            ],
+            "title": "Status"
+          },
+          "entryCount": {
+            "type": "integer",
+            "title": "Entrycount"
+          },
+          "changedSinceApproval": {
+            "type": "boolean",
+            "title": "Changedsinceapproval"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updatedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "className",
+          "subjectId",
+          "subjectName",
+          "term",
+          "year",
+          "status",
+          "entryCount",
+          "changedSinceApproval",
+          "updatedAt"
+        ],
+        "title": "SchemeSummary"
+      },
       "SchoolReview": {
         "properties": {
           "id": {
@@ -11191,6 +14442,21 @@
           "registered_at"
         ],
         "title": "SchoolReview"
+      },
+      "SendBack": {
+        "properties": {
+          "comment": {
+            "type": "string",
+            "maxLength": 5000,
+            "minLength": 1,
+            "title": "Comment"
+          }
+        },
+        "type": "object",
+        "required": [
+          "comment"
+        ],
+        "title": "SendBack"
       },
       "SessionResponse": {
         "properties": {
@@ -11715,6 +14981,46 @@
         },
         "type": "object",
         "title": "StaffUpdate"
+      },
+      "StreamProgress": {
+        "properties": {
+          "stream": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          },
+          "coveredThroughWeek": {
+            "type": "integer",
+            "title": "Coveredthroughweek"
+          },
+          "weeksBehind": {
+            "type": "integer",
+            "title": "Weeksbehind"
+          },
+          "lessonsTaught": {
+            "type": "integer",
+            "title": "Lessonstaught"
+          },
+          "lessonsPlannedSoFar": {
+            "type": "integer",
+            "title": "Lessonsplannedsofar"
+          }
+        },
+        "type": "object",
+        "required": [
+          "stream",
+          "coveredThroughWeek",
+          "weeksBehind",
+          "lessonsTaught",
+          "lessonsPlannedSoFar"
+        ],
+        "title": "StreamProgress"
       },
       "StudentAccessResponse": {
         "properties": {
@@ -13004,6 +16310,45 @@
         "type": "object",
         "title": "TermSettingsUpdate"
       },
+      "TermWeekRead": {
+        "properties": {
+          "week": {
+            "type": "integer",
+            "title": "Week"
+          },
+          "startsOn": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Startson"
+          },
+          "endsOn": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Endson"
+          }
+        },
+        "type": "object",
+        "required": [
+          "week",
+          "startsOn",
+          "endsOn"
+        ],
+        "title": "TermWeekRead"
+      },
       "TimetableCreate": {
         "properties": {
           "term": {
@@ -13350,6 +16695,51 @@
         "type": "object",
         "title": "TutionFeesPatch"
       },
+      "UploadUrlRead": {
+        "properties": {
+          "path": {
+            "type": "string",
+            "title": "Path"
+          },
+          "token": {
+            "type": "string",
+            "title": "Token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "path",
+          "token"
+        ],
+        "title": "UploadUrlRead"
+      },
+      "UploadUrlRequest": {
+        "properties": {
+          "fileName": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Filename"
+          },
+          "contentType": {
+            "type": "string",
+            "maxLength": 100,
+            "title": "Contenttype"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Size"
+          }
+        },
+        "type": "object",
+        "required": [
+          "fileName",
+          "contentType",
+          "size"
+        ],
+        "title": "UploadUrlRequest"
+      },
       "ValidationError": {
         "properties": {
           "loc": {
@@ -13382,6 +16772,218 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "WeekDay": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "noSchool": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Noschool"
+          },
+          "lessons": {
+            "items": {
+              "$ref": "#/components/schemas/WeekLesson"
+            },
+            "type": "array",
+            "title": "Lessons"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "noSchool",
+          "lessons"
+        ],
+        "title": "WeekDay"
+      },
+      "WeekLesson": {
+        "properties": {
+          "key": {
+            "$ref": "#/components/schemas/LessonKey"
+          },
+          "className": {
+            "type": "string",
+            "title": "Classname"
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          },
+          "subjectId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subjectid"
+          },
+          "subjectName": {
+            "type": "string",
+            "title": "Subjectname"
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "time",
+            "title": "Startsat"
+          },
+          "endsAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Endsat"
+          },
+          "minutes": {
+            "type": "integer",
+            "title": "Minutes"
+          },
+          "teacher": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PersonRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "mine": {
+            "type": "boolean",
+            "title": "Mine"
+          },
+          "extra": {
+            "type": "boolean",
+            "title": "Extra"
+          },
+          "plan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PlanSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "record": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/app__db__schemas__planning__RecordRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "className",
+          "stream",
+          "subjectId",
+          "subjectName",
+          "startsAt",
+          "endsAt",
+          "minutes",
+          "teacher",
+          "mine",
+          "extra",
+          "plan",
+          "record"
+        ],
+        "title": "WeekLesson"
+      },
+      "WeekRead": {
+        "properties": {
+          "startsOn": {
+            "type": "string",
+            "format": "date",
+            "title": "Startson"
+          },
+          "today": {
+            "type": "string",
+            "format": "date",
+            "title": "Today"
+          },
+          "term": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Term"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "week": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Week"
+          },
+          "days": {
+            "items": {
+              "$ref": "#/components/schemas/WeekDay"
+            },
+            "type": "array",
+            "title": "Days"
+          }
+        },
+        "type": "object",
+        "required": [
+          "startsOn",
+          "today",
+          "term",
+          "year",
+          "week",
+          "days"
+        ],
+        "title": "WeekRead"
       },
       "app__api__v1__routes__parents__ParentResponse": {
         "properties": {
@@ -13556,6 +17158,125 @@
           "name"
         ],
         "title": "ParentResponse"
+      },
+      "app__db__schemas__attendance_profile__RecordRead": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AttendanceStatus",
+            "default": "Present"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "id",
+          "created_at"
+        ],
+        "title": "RecordRead"
+      },
+      "app__db__schemas__planning__RecordRead": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "taught",
+              "partly_taught",
+              "not_taught"
+            ],
+            "title": "Status"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "school_event",
+                  "teacher_away",
+                  "class_away",
+                  "other"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comment"
+          },
+          "reflection": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reflection"
+          },
+          "recordedBy": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PersonRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "recordedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Recordedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "reason",
+          "comment",
+          "reflection",
+          "recordedBy",
+          "recordedAt"
+        ],
+        "title": "RecordRead"
       }
     },
     "securitySchemes": {

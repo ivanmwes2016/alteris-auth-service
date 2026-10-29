@@ -26,6 +26,15 @@ from .medical_note import (
 )
 from .parent import Parent
 from .performance import PerformanceRecord
+from .planning import (
+    LessonPlan,
+    LessonPlanVersion,
+    PlannedLesson,
+    PlanningAttachment,
+    PlanningComment,
+    SchemeEntry,
+    SchemeOfWork,
+)
 from .profile import Profile
 from .push_token import PushToken
 from .role import Role
@@ -54,13 +63,20 @@ __all__ = [
     "Enquiry",
     "Invite",
     "Lesson",
+    "LessonPlan",
+    "LessonPlanVersion",
     "NoSchoolDay",
     "OptionsPeriod",
     "Parent",
     "PerformanceRecord",
+    "PlannedLesson",
+    "PlanningAttachment",
+    "PlanningComment",
     "Profile",
     "PushToken",
     "Role",
+    "SchemeEntry",
+    "SchemeOfWork",
     "SchoolClass",
     "Staff",
     "StaffQualification",
