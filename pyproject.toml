@@ -23,6 +23,7 @@ dependencies = [
     "stripe==11.1.0",
     "supabase==2.9.1",
     "uvicorn==0.31.0",
+    "tzdata>=2026.6",
 ]
 
 [dependency-groups]

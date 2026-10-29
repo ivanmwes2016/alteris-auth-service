@@ -33,4 +33,4 @@ httpx==0.27.2       # async test client
 
 stripe
 python-slugify
-alembic
+alembictzdata==2026.6

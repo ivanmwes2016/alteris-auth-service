@@ -1,6 +1,15 @@
-from .academic_term import AcademicTermSettings
+from .academic_term import AcademicTermDates, AcademicTermSettings
 from .academics import SchoolClass, Subject, SubjectClass, SubjectTeacher
-from .attendance import StudentAttendanceProfile, StudentAttendanceRecord
+from .attendance import (
+    AttendanceMark,
+    AttendanceMarkChange,
+    AttendanceRegister,
+    CorrectionRequest,
+    CorrectionRequestItem,
+    NoSchoolDay,
+    StudentAttendanceProfile,
+    StudentAttendanceRecord,
+)
 from .behaviour import (
     BehaviourIncident,
     BehaviourNote,
@@ -18,9 +27,10 @@ from .medical_note import (
 from .parent import Parent
 from .performance import PerformanceRecord
 from .profile import Profile
+from .push_token import PushToken
 from .role import Role
 from .staff import Staff, StaffQualification, StaffQualificationProfile, StaffSubject
-from .student import Student
+from .student import Student, StudentSubject, StudentSubjectChange
 from .student_parent import StudentParent
 from .tenant import Tenant
 from .tenant_gallery_image import TenantGalleryImage
@@ -31,17 +41,25 @@ from .tution_fees import TutionFees
 from .users import User
 
 __all__ = [
+    "AcademicTermDates",
     "AcademicTermSettings",
+    "AttendanceMark",
+    "AttendanceMarkChange",
+    "AttendanceRegister",
     "BehaviourIncident",
     "BehaviourNote",
     "BehaviourRecognition",
+    "CorrectionRequest",
+    "CorrectionRequestItem",
     "Enquiry",
     "Invite",
     "Lesson",
+    "NoSchoolDay",
     "OptionsPeriod",
     "Parent",
     "PerformanceRecord",
     "Profile",
+    "PushToken",
     "Role",
     "SchoolClass",
     "Staff",
@@ -57,6 +75,8 @@ __all__ = [
     "StudentMedicalProfile",
     "StudentMedication",
     "StudentParent",
+    "StudentSubject",
+    "StudentSubjectChange",
     "Subject",
     "SubjectClass",
     "SubjectTeacher",

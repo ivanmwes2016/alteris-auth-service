@@ -1,6 +1,7 @@
 import uuid
+from datetime import date
 
-from sqlalchemy import ForeignKey, Integer, Text
+from sqlalchemy import CheckConstraint, Date, ForeignKey, Integer, Text, UniqueConstraint
 from sqlalchemy.dialects.postgresql import ARRAY, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -28,3 +29,22 @@ class AcademicTermSettings(Base):
     current_year: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     tenant = relationship("Tenant")
+
+
+class AcademicTermDates(Base):
+    """When one of the school's terms runs, e.g. Term II 2026: 26 May to 22 Aug."""
+
+    __tablename__ = "academic_term_dates"
+    __table_args__ = (
+        UniqueConstraint("tenant_id", "year", "label", name="uq_academic_term_dates_year_label"),
+        CheckConstraint("ends_on >= starts_on", name="ck_academic_term_dates_order"),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False
+    )
+    label: Mapped[str] = mapped_column(Text, nullable=False)
+    year: Mapped[int] = mapped_column(Integer, nullable=False)
+    starts_on: Mapped[date] = mapped_column(Date, nullable=False)
+    ends_on: Mapped[date] = mapped_column(Date, nullable=False)
