@@ -21,6 +21,7 @@ class TeamRole(StrEnum):
     admissions_officer = "Admissions Officer"
     teacher = "Teacher"
     bursar = "Bursar"
+    nurse = "Nurse"
 
 
 def normalize_email(value: str) -> str:

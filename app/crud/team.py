@@ -53,6 +53,7 @@ ROLE_DB_NAME: dict[TeamRole, str] = {
     TeamRole.admissions_officer: "admissions_officer",
     TeamRole.teacher: "teacher",
     TeamRole.bursar: "bursar",
+    TeamRole.nurse: "nurse",
 }
 DB_ROLE_LABEL: dict[str, str] = {db_name: role.value for role, db_name in ROLE_DB_NAME.items()}
 TEAM_DB_ROLES = list(DB_ROLE_LABEL)

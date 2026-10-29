@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from supabase import Client
 
 from app.core.config import get_settings
+from app.crud.student_access import student_access
 from app.db.models.role import Role
 from app.db.models.tenant import Tenant
 from app.db.models.tenant_member import TenantMember
@@ -34,6 +35,8 @@ async def get_user_context(db: AsyncSession, user_id: str, supabase: Client) -> 
             .join(Tenant, Tenant.id == TenantMember.tenant_id)
             .join(Role, Role.id == TenantMember.role_id)
             .where(TenantMember.user_id == user_id, TenantMember.status == "active")
+            # The same membership the routes act in (app.crud.team.get_actor).
+            .order_by(TenantMember.joined_at)
         )
 
         row = result.first()
@@ -42,10 +45,13 @@ async def get_user_context(db: AsyncSession, user_id: str, supabase: Client) -> 
             return {
                 "tenant": None,
                 "role": None,
+                "is_owner": False,
+                "student_access": None,
                 "subscription_active": False,
             }
 
         _, tenant, role = row
+        is_owner = tenant.owner_id is not None and str(tenant.owner_id) == str(user_id)
 
         logo_url = ""
 
@@ -68,6 +74,8 @@ async def get_user_context(db: AsyncSession, user_id: str, supabase: Client) -> 
                 "trial_expired": trial_expired(tenant),
             },
             "role": role.name,
+            "is_owner": is_owner,
+            "student_access": student_access(is_owner=is_owner, role_name=role.name).as_dict(),
             "subscription_active": True,  # To Do ==> get from stripe subscription
         }
 

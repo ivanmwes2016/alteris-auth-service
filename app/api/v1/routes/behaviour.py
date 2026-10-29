@@ -8,8 +8,9 @@ import uuid
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.v1.routes.auth import get_current_tenant_id, get_current_user
+from app.api.v1.routes.auth import get_current_user
 from app.core.db import get_db
+from app.crud import student_access
 from app.crud.student_behaviour_profile import get_or_create_profile, sync_profile
 from app.db.models.behaviour import StudentBehaviourProfile
 from app.db.models.users import User
@@ -24,8 +25,9 @@ async def get_behaviour_profile(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> StudentBehaviourProfile:
-    tenant_id = await get_current_tenant_id(db, current_user)
-    return await get_or_create_profile(db, student_id=student_id, tenant_id=tenant_id)
+    caller = await student_access.require(db, current_user, "view_records")
+    await student_access.ensure_in_school(db, caller.tenant_id, student_id)
+    return await get_or_create_profile(db, student_id=student_id, tenant_id=caller.tenant_id)
 
 
 @router.patch("", response_model=BehaviourProfileRead)
@@ -41,5 +43,6 @@ async def sync_behaviour_profile(
     Any existing row whose id is left out of the list gets deleted.
     Omit a list key entirely to leave that section untouched.
     """
-    tenant_id = await get_current_tenant_id(db, current_user)
-    return await sync_profile(db, student_id=student_id, tenant_id=tenant_id, data=data)
+    caller = await student_access.require(db, current_user, "edit_behaviour")
+    await student_access.ensure_in_school(db, caller.tenant_id, student_id)
+    return await sync_profile(db, student_id=student_id, tenant_id=caller.tenant_id, data=data)

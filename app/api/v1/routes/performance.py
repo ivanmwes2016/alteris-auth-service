@@ -6,8 +6,9 @@ from the authenticated user, never from the request body/query.
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.v1.routes.auth import get_current_tenant_id, get_current_user
+from app.api.v1.routes.auth import get_current_user
 from app.core.db import get_db
+from app.crud import student_access
 from app.crud.performance import (
     UnknownStudentError,
     get_performance,
@@ -35,7 +36,7 @@ async def get_class_performance(
     of the class roster ranked by average (search: student name), plus class-wide
     subjects, averages, trends and summary.
     """
-    tenant_id = await get_current_tenant_id(db, current_user)
+    tenant_id = (await student_access.require(db, current_user, "view_records")).tenant_id
     if params.page is not None:
         return await get_performance_page(
             db,
@@ -63,7 +64,7 @@ async def update_class_performance(
     student by `student_id`; a row with only `student` (a name) is for older marks
     that were never matched to a student.
     """
-    tenant_id = await get_current_tenant_id(db, current_user)
+    tenant_id = (await student_access.require(db, current_user, "edit_marks")).tenant_id
     try:
         return await sync_marks(db, tenant_id=tenant_id, data=data)
     except UnknownStudentError as exc:
