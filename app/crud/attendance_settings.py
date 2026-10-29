@@ -15,7 +15,13 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud import team
-from app.crud.attendance import Viewer, require_approver, timezone_source, user_names
+from app.crud.attendance import (
+    Viewer,
+    require_approver,
+    school_today,
+    timezone_source,
+    user_names,
+)
 from app.db.models.academic_term import AcademicTermDates
 from app.db.models.academics import Subject
 from app.db.models.attendance import NoSchoolDay
@@ -56,7 +62,9 @@ def settings_read(viewer: Viewer) -> AttendanceSettingsRead:
         timezone=viewer.tz.key,
         source=viewer.tz_source,
         country=viewer.country,
+        today=viewer.today,
         approver=viewer.approver,
+        takes_registers=viewer.takes_registers,
         can_change_timezone=can_change_timezone(viewer),
     )
 
@@ -80,7 +88,10 @@ async def update_settings(
         timezone=tz.key,
         source=timezone_source(explicit=tenant.timezone, country=tenant.country),
         country=tenant.country,
+        # The new zone can move the date.
+        today=school_today(tz, viewer.now),
         approver=viewer.approver,
+        takes_registers=viewer.takes_registers,
         can_change_timezone=True,
     )
 

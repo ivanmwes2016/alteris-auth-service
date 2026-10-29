@@ -252,8 +252,11 @@ class AttendanceSettingsRead(_Camel):
     timezone: str
     source: Literal["school", "country", "default"]
     country: str | None = None
+    # The school's date now, in its timezone.
+    today: date
     # What the caller may do, so screens can show the right actions.
     approver: bool = False
+    takes_registers: bool = False
     can_change_timezone: bool = False
 
 

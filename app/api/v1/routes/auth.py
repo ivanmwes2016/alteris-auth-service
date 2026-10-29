@@ -82,10 +82,24 @@ class CurrentTenantResponse(BaseModel):
     trial_expired: bool = False
 
 
+class StudentAccessResponse(BaseModel):
+    """What the caller's role can do with students (app.crud.student_access)."""
+
+    view_records: bool
+    add_students: bool
+    edit_details: bool
+    edit_marks: bool
+    edit_attendance: bool
+    edit_behaviour: bool
+    edit_medical: bool
+
+
 class MeResponse(BaseModel):
     user: CurrentUserResponse
     tenant: CurrentTenantResponse | None = None
     role: str | None = None
+    is_owner: bool = False
+    student_access: StudentAccessResponse | None = None
     subscription_active: bool
 
 
@@ -229,6 +243,8 @@ async def me(
         ),
         tenant=user_context.get("tenant"),
         role=user_context.get("role"),
+        is_owner=bool(user_context.get("is_owner")),
+        student_access=user_context.get("student_access"),
         subscription_active=bool(user_context.get("subscription_active")),
     )
 

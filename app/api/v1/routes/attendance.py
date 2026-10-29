@@ -14,6 +14,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.v1.routes.auth import get_current_tenant_id, get_current_user
 from app.core.db import get_db
+from app.crud import student_access
 from app.crud.attendance import daily_records
 from app.crud.student_attendance_profile import get_or_create_profile, sync_profile
 from app.db.models.student import Student
@@ -75,7 +76,7 @@ async def update_attendance_notes(
             status_code=status.HTTP_410_GONE,
             detail="Attendance is now taken in registers (/attendance); records can't be set here",
         )
-    tenant_id = await get_current_tenant_id(db, current_user)
+    tenant_id = (await student_access.require(db, current_user, "edit_attendance")).tenant_id
     await _school_student(db, student_id, tenant_id)
     await sync_profile(db, student_id=student_id, tenant_id=tenant_id, data=data)
     return await _read(db, student_id, tenant_id)

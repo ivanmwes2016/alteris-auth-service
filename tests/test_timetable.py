@@ -248,3 +248,100 @@ def test_a_lesson_must_fit_before_the_next_break() -> None:
         with pytest.raises(HTTPException) as err:
             timetable._check_place(table, day=day, period_id=period.id, length=length)  # type: ignore[arg-type]
         assert err.value.status_code == 422
+
+
+# ---------------------------------------------------------------------------
+# Class teachers
+# ---------------------------------------------------------------------------
+@pytest.mark.parametrize(
+    ("class_assigned", "name", "stream", "matches"),
+    [
+        ("Grade 9A", "Grade 9", "A", True),
+        ("grade 9 a", "Grade 9", "A", True),
+        ("Grade 9-A", "Grade 9", "A", True),
+        ("Primary 3", "Primary 3", None, True),
+        ("Grade 9A", "Grade 9", "B", False),
+        ("Grade 9", "Grade 9", "A", False),  # a whole year group isn't one class
+        ("Grade 19A", "Grade 9", "A", False),
+        ("", "Grade 9", "A", False),
+        (None, "Grade 9", "A", False),
+        (" - ", "", None, False),
+    ],
+)
+def test_a_class_teacher_is_matched_to_their_class_by_name_and_stream(
+    class_assigned: str | None, name: str, stream: str | None, matches: bool
+) -> None:
+    assert timetable.is_class_teacher_of(class_assigned, name=name, stream=stream) is matches
+
+
+OWN_CLASS, OTHER_CLASS = uuid.uuid4(), uuid.uuid4()
+THIS_TERM = SimpleNamespace(term="Term II", year=2026)
+LAST_TERM = SimpleNamespace(term="Term I", year=2026)
+
+
+def _class_teacher() -> timetable.Viewer:
+    return timetable.Viewer(
+        actor=Actor(
+            user_id=uuid.uuid4(), tenant_id=uuid.uuid4(), role_name="teacher", is_owner=False
+        ),
+        can_manage=False,
+        labels=LABELS,
+        current_label="Term II",
+        current_year=2026,
+        own_class_ids=frozenset({OWN_CLASS}),
+    )
+
+
+def test_a_class_teacher_can_change_their_own_class_only() -> None:
+    viewer = _class_teacher()
+    timetable._require_class_editable(viewer, THIS_TERM, OWN_CLASS)  # type: ignore[arg-type]
+    for class_ids in [(OTHER_CLASS,), (OWN_CLASS, OTHER_CLASS)]:  # a swap needs both
+        with pytest.raises(HTTPException) as err:
+            timetable._require_class_editable(viewer, THIS_TERM, *class_ids)  # type: ignore[arg-type]
+        assert err.value.status_code == 403
+
+
+def test_a_class_teacher_still_cant_change_the_bell_schedule() -> None:
+    with pytest.raises(HTTPException) as err:
+        timetable._require_editable(_class_teacher(), THIS_TERM)  # type: ignore[arg-type]
+    assert err.value.status_code == 403
+
+
+def test_a_class_teacher_cant_change_past_terms() -> None:
+    with pytest.raises(HTTPException) as err:
+        timetable._require_class_editable(_class_teacher(), LAST_TERM, OWN_CLASS)  # type: ignore[arg-type]
+    assert err.value.status_code == 409
+
+
+def test_other_teachers_cant_change_any_lessons() -> None:
+    with pytest.raises(HTTPException) as err:
+        timetable._require_class_editable(_viewer(can_manage=False), THIS_TERM, OWN_CLASS)  # type: ignore[arg-type]
+    assert err.value.status_code == 403
+
+
+def test_managers_can_change_any_class() -> None:
+    timetable._require_class_editable(_viewer(can_manage=True), THIS_TERM, OTHER_CLASS)  # type: ignore[arg-type]
+
+
+def test_the_read_lists_the_classes_the_caller_may_edit() -> None:
+    table = SimpleNamespace(
+        id=uuid.uuid4(), term="Term II", year=2026, days=[0], periods=[], lessons=[],
+        options_periods=[],
+    )  # fmt: skip
+    staff_id = uuid.uuid4()
+    viewer = timetable.Viewer(
+        actor=_class_teacher().actor,
+        can_manage=False,
+        labels=LABELS,
+        current_label="Term II",
+        current_year=2026,
+        staff_id=staff_id,
+        own_class_ids=frozenset({OWN_CLASS}),
+    )
+    body = timetable._read(viewer, table).model_dump(by_alias=True)  # type: ignore[arg-type]
+    assert body["editable"] is False
+    assert body["editableClassIds"] == [OWN_CLASS]
+    assert body["staffId"] == staff_id
+
+    past = timetable._read(viewer, SimpleNamespace(**{**vars(table), "term": "Term I"}))  # type: ignore[arg-type]
+    assert past.editable_class_ids == []

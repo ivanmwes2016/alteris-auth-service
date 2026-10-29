@@ -34,6 +34,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud import team
 from app.crud.academic_term import get_settings as get_term_settings
+from app.crud.student_access import student_access
 from app.db.models.academic_term import AcademicTermDates
 from app.db.models.academics import SchoolClass, Subject
 from app.db.models.attendance import (
@@ -223,6 +224,7 @@ class Viewer:
     now: datetime
     today: date
     approver: bool
+    takes_registers: bool
     staff_id: uuid.UUID | None
     terms: list[TermSpan]
 
@@ -272,9 +274,15 @@ async def load_terms(db: AsyncSession, tenant_id: uuid.UUID) -> list[TermSpan]:
     return [TermSpan(r.label, r.year, r.starts_on, r.ends_on) for r in rows]
 
 
-async def get_viewer(db: AsyncSession, user: User) -> Viewer:
+async def get_viewer(db: AsyncSession, user: User, *, reader: bool = False) -> Viewer:
+    """
+    The caller, if their role takes registers. A `reader` also lets in roles that
+    only view student records (the Nurse), for read-only endpoints.
+    """
     actor = await team.get_actor(db, user)
-    if not can_take_registers(is_owner=actor.is_owner, role_name=actor.role_name):
+    takes = can_take_registers(is_owner=actor.is_owner, role_name=actor.role_name)
+    views = student_access(is_owner=actor.is_owner, role_name=actor.role_name).view_records
+    if not (takes or (reader and views)):
         raise _forbidden("Your role can't take attendance")
     tenant = await db.get(Tenant, actor.tenant_id)
     explicit = tenant.timezone if tenant else None
@@ -290,6 +298,7 @@ async def get_viewer(db: AsyncSession, user: User) -> Viewer:
         now=now,
         today=school_today(tz, now),
         approver=is_approver(is_owner=actor.is_owner, role_name=actor.role_name),
+        takes_registers=takes,
         staff_id=await linked_staff_id(db, tenant_id=actor.tenant_id, user=user),
         terms=await load_terms(db, actor.tenant_id),
     )

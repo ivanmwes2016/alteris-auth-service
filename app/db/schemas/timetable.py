@@ -62,8 +62,14 @@ class TimetableRead(TimetableSummary):
     periods: list[PeriodRead]
     lessons: list[LessonRead]
     options_periods: list[OptionsPeriodRead]
+    # The whole timetable (bell schedule, options periods, every class's lessons).
     # False for past terms and for people without the Manage Timetable roles.
     editable: bool
+    # The classes whose lessons the caller may add, change, swap and remove: every
+    # class for managers, their own class for class teachers, none for past terms.
+    editable_class_ids: list[uuid.UUID] = []
+    # The caller's staff record, to pick out their own lessons. None if there isn't one.
+    staff_id: uuid.UUID | None = None
 
 
 # ---------------------------------------------------------------------------

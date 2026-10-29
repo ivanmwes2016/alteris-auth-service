@@ -11,6 +11,7 @@ from sqlalchemy.orm import selectinload
 
 from app.api.v1.routes.auth import get_current_member, get_current_tenant_id, get_current_user
 from app.core.db import get_db
+from app.crud import student_access
 from app.crud.attendance import DayRecord, daily_records
 from app.db.models.parent import Parent
 from app.db.models.student import Student
@@ -160,14 +161,12 @@ async def create_student(
     db: Annotated[AsyncSession, Depends(get_db)],
     current_user: Annotated[User, Depends(get_current_user)],
 ) -> dict[str, str]:
+    # Before the try: its blanket except would turn a 403 into a 400.
+    # The school is the caller's; the body's tenant_id is ignored.
+    tenant_id = (await student_access.require(db, current_user, "add_students")).tenant_id
     try:
-        member = await get_current_member(db, current_user)
-
-        if not member:
-            raise HTTPException(status_code=403, detail="User not found")
-
         student = Student(
-            tenant_id=payload.tenant_id,
+            tenant_id=tenant_id,
             school_id=payload.school_id or "",
             name=payload.name,
             status=payload.status,
@@ -188,7 +187,7 @@ async def create_student(
 
         parents_objs = [
             Parent(
-                tenant_id=payload.tenant_id,
+                tenant_id=tenant_id,
                 name=p.name,
                 email=p.email,
                 phone=p.phone,
@@ -339,16 +338,12 @@ async def update_student(
     db: Annotated[AsyncSession, Depends(get_db)],
     current_user: Annotated[User, Depends(get_current_user)],
 ) -> dict[str, str]:
+    tenant_id = (await student_access.require(db, current_user, "edit_details")).tenant_id
     try:
-        member = await get_current_member(db, current_user)
-
-        if not member:
-            raise HTTPException(status_code=403, detail="User does not belong to a school")
-
         student_result = await db.execute(
             select(Student).where(
                 Student.id == student_id,
-                Student.tenant_id == member.tenant_id,
+                Student.tenant_id == tenant_id,
             )
         )
 
@@ -425,7 +420,7 @@ async def update_student_parents(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> dict[str, str]:
-    tenant_id = await get_current_tenant_id(db, current_user)
+    tenant_id = (await student_access.require(db, current_user, "edit_details")).tenant_id
 
     student_result = await db.execute(
         select(Student)

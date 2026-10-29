@@ -5853,9 +5853,19 @@
             ],
             "title": "Country"
           },
+          "today": {
+            "type": "string",
+            "format": "date",
+            "title": "Today"
+          },
           "approver": {
             "type": "boolean",
             "title": "Approver",
+            "default": false
+          },
+          "takesRegisters": {
+            "type": "boolean",
+            "title": "Takesregisters",
             "default": false
           },
           "canChangeTimezone": {
@@ -5867,7 +5877,8 @@
         "type": "object",
         "required": [
           "timezone",
-          "source"
+          "source",
+          "today"
         ],
         "title": "AttendanceSettingsRead"
       },
@@ -8024,6 +8035,21 @@
               }
             ],
             "title": "Role"
+          },
+          "is_owner": {
+            "type": "boolean",
+            "title": "Is Owner",
+            "default": false
+          },
+          "student_access": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StudentAccessResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "subscription_active": {
             "type": "boolean",
@@ -11690,6 +11716,50 @@
         "type": "object",
         "title": "StaffUpdate"
       },
+      "StudentAccessResponse": {
+        "properties": {
+          "view_records": {
+            "type": "boolean",
+            "title": "View Records"
+          },
+          "add_students": {
+            "type": "boolean",
+            "title": "Add Students"
+          },
+          "edit_details": {
+            "type": "boolean",
+            "title": "Edit Details"
+          },
+          "edit_marks": {
+            "type": "boolean",
+            "title": "Edit Marks"
+          },
+          "edit_attendance": {
+            "type": "boolean",
+            "title": "Edit Attendance"
+          },
+          "edit_behaviour": {
+            "type": "boolean",
+            "title": "Edit Behaviour"
+          },
+          "edit_medical": {
+            "type": "boolean",
+            "title": "Edit Medical"
+          }
+        },
+        "type": "object",
+        "required": [
+          "view_records",
+          "add_students",
+          "edit_details",
+          "edit_marks",
+          "edit_attendance",
+          "edit_behaviour",
+          "edit_medical"
+        ],
+        "title": "StudentAccessResponse",
+        "description": "What the caller's role can do with students (app.crud.student_access)."
+      },
       "StudentCreate": {
         "properties": {
           "tenant_id": {
@@ -12629,7 +12699,8 @@
           "Admin",
           "Admissions Officer",
           "Teacher",
-          "Bursar"
+          "Bursar",
+          "Nurse"
         ],
         "title": "TeamRole",
         "description": "Roles that can be assigned. \"Owner\" is deliberately absent \u2014 it's never assignable."
@@ -13013,6 +13084,27 @@
           "editable": {
             "type": "boolean",
             "title": "Editable"
+          },
+          "editableClassIds": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "title": "Editableclassids",
+            "default": []
+          },
+          "staffId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Staffid"
           }
         },
         "type": "object",
