@@ -111,3 +111,15 @@ def school_timezone(*, explicit: str | None, country: str | None) -> ZoneInfo:
             except (ZoneInfoNotFoundError, ValueError):
                 continue
     return ZoneInfo(DEFAULT_TIMEZONE)
+
+
+def signup_timezone(device_timezone: object, country: str | None) -> str | None:
+    """
+    The zone to store for a new school: the registering device's, but only where
+    the country doesn't settle it (several zones, or a country we don't know).
+    """
+    if country_timezone(country) is not None:
+        return None
+    if isinstance(device_timezone, str) and is_valid_timezone(device_timezone):
+        return device_timezone
+    return None
