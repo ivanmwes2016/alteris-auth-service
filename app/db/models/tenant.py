@@ -25,6 +25,10 @@ class Tenant(Base):
     stripe_subscription_id: Mapped[str | None] = mapped_column(String, nullable=True)
     logo_path: Mapped[str | None] = mapped_column(String, nullable=True)
     country: Mapped[str | None] = mapped_column(String, nullable=True)
+    # IANA zone the school day is measured in, e.g. "Africa/Kampala". None: worked out
+    # from the country (app/helpers/timezones.py); set when someone overrides it, or at
+    # sign-up from the registering device in countries that span several zones.
+    timezone: Mapped[str | None] = mapped_column(String, nullable=True)
     # From the sign-up form, for the platform team to contact and understand the school.
     # Required for new schools; older schools don't have them.
     phone: Mapped[str | None] = mapped_column(String, nullable=True)

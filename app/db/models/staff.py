@@ -1,6 +1,16 @@
 import uuid
 
-from sqlalchemy import Date, DateTime, ForeignKey, Index, Integer, String, Text, func
+from sqlalchemy import (
+    Date,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
+    UniqueConstraint,
+    func,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -9,7 +19,10 @@ from app.core.db import Base
 
 class Staff(Base):
     __tablename__ = "staff"
-    __table_args__ = (Index("ix_staff_tenant_id", "tenant_id"),)
+    __table_args__ = (
+        Index("ix_staff_tenant_id", "tenant_id"),
+        UniqueConstraint("tenant_id", "user_id", name="uq_staff_tenant_user"),
+    )
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     tenant_id: Mapped[uuid.UUID] = mapped_column(
@@ -27,6 +40,11 @@ class Staff(Base):
     role: Mapped[str] = mapped_column(String, nullable=False)
     rank: Mapped[str] = mapped_column(String, nullable=False, default="Basic")
     class_assigned: Mapped[str | None] = mapped_column(String, nullable=True)
+    # The app account this staff member signs in with, when an admin has linked it.
+    # Otherwise they're matched by email (see app/crud/attendance.py).
+    user_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
+    )
 
     created_at: Mapped["DateTime"] = mapped_column(
         DateTime(timezone=True), server_default=func.now()

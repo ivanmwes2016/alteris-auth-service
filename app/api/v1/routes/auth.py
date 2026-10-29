@@ -41,6 +41,7 @@ from app.helpers.last_active import touch_last_active
 from app.helpers.phone import clean_phone
 from app.helpers.rate_limit import client_ip
 from app.helpers.stale_users import remove_if_stale
+from app.helpers.timezones import signup_timezone
 from app.helpers.user_context import get_user_context
 from app.services import account
 from app.services.auth_service import AuthService
@@ -362,7 +363,8 @@ async def signup(
 
     Expected payload:
     {
-      name, slug, workspace_id, country, phone (required), type, source
+      name, slug, workspace_id, country, phone (required), type, source,
+      timezone (the device's IANA zone; kept only where the country spans several)
     }
     """
     phone = clean_phone(payload.get("phone"))
@@ -391,6 +393,7 @@ async def signup(
         seat_limit=15,
         owner_id=current_user.id,
         country=payload.get("country"),
+        timezone=signup_timezone(payload.get("timezone"), payload.get("country")),
         phone=phone,
         school_type=_short_answer(payload.get("type")),
         referral_source=_short_answer(payload.get("source")),

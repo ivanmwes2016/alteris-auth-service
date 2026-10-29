@@ -24,6 +24,8 @@ class Settings(BaseModel):
     EMAIL_FROM: str | None = None  # e.g. "Skolarly <invites@skolarly.net>", verified in Resend
     # Comma-separated addresses told whenever a new school registers. Empty: no alerts.
     ADMIN_NOTIFY_EMAILS: str | None = None
+    # Only needed if "enhanced push security" is on for the Expo project.
+    EXPO_ACCESS_TOKEN: str | None = None
 
     # Stripe
     STRIPE_SECRET_KEY: str

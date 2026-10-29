@@ -152,6 +152,7 @@ def _member_read(
         role=display_role(role.name, is_owner=member.user_id == owner_id),
         lastActive=member.last_active_at,
         status=MEMBER_STATUS_LABEL.get(member.status, member.status.title()),
+        userId=member.user_id,
     )
 
 
