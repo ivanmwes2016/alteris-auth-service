@@ -340,7 +340,7 @@
           "auth"
         ],
         "summary": "Signup",
-        "description": "Called after the client has already created (or signed into) their Supabase\naccount \u2014 get_current_user has a local `users` row for them by this point.\nThis just creates their tenant and makes them its owner.\n\nExpected payload:\n{\n  name, slug, workspace_id, country, phone (required), type, source\n}",
+        "description": "Called after the client has already created (or signed into) their Supabase\naccount \u2014 get_current_user has a local `users` row for them by this point.\nThis just creates their tenant and makes them its owner.\n\nExpected payload:\n{\n  name, slug, workspace_id, country, phone (required), type, source,\n  timezone (the device's IANA zone; kept only where the country spans several)\n}",
         "operationId": "signup_auth_signup_post",
         "requestBody": {
           "required": true,
@@ -2569,6 +2569,556 @@
         }
       }
     },
+    "/timetables": {
+      "get": {
+        "tags": [
+          "timetables"
+        ],
+        "summary": "List Timetables",
+        "operationId": "list_timetables_timetables_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TimetableSummary"
+                  },
+                  "title": "Response List Timetables Timetables Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "timetables"
+        ],
+        "summary": "Create Timetable",
+        "operationId": "create_timetable_timetables_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TimetableCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimetableRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/timetables/term": {
+      "get": {
+        "tags": [
+          "timetables"
+        ],
+        "summary": "Get Term Timetable",
+        "description": "The timetable for one term, or 404 if the school hasn't made one yet.",
+        "operationId": "get_term_timetable_timetables_term_get",
+        "parameters": [
+          {
+            "name": "term",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "title": "Term"
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Year"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimetableRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/timetables/{timetable_id}/bell-schedule/preview": {
+      "post": {
+        "tags": [
+          "timetables"
+        ],
+        "summary": "Preview Bell Schedule",
+        "description": "How many lessons saving this bell schedule would remove or shorten. Changes nothing.",
+        "operationId": "preview_bell_schedule_timetables__timetable_id__bell_schedule_preview_post",
+        "parameters": [
+          {
+            "name": "timetable_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Timetable Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BellScheduleWrite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BellScheduleImpact"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/timetables/{timetable_id}/bell-schedule": {
+      "put": {
+        "tags": [
+          "timetables"
+        ],
+        "summary": "Save Bell Schedule",
+        "operationId": "save_bell_schedule_timetables__timetable_id__bell_schedule_put",
+        "parameters": [
+          {
+            "name": "timetable_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Timetable Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BellScheduleWrite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimetableRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/timetables/{timetable_id}/lessons": {
+      "post": {
+        "tags": [
+          "timetables"
+        ],
+        "summary": "Create Lesson",
+        "operationId": "create_lesson_timetables__timetable_id__lessons_post",
+        "parameters": [
+          {
+            "name": "timetable_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Timetable Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LessonCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LessonRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/timetables/{timetable_id}/lessons/swap": {
+      "post": {
+        "tags": [
+          "timetables"
+        ],
+        "summary": "Swap Lessons",
+        "operationId": "swap_lessons_timetables__timetable_id__lessons_swap_post",
+        "parameters": [
+          {
+            "name": "timetable_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Timetable Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LessonSwap"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LessonRead"
+                  },
+                  "title": "Response Swap Lessons Timetables  Timetable Id  Lessons Swap Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/timetables/{timetable_id}/lessons/{lesson_id}": {
+      "patch": {
+        "tags": [
+          "timetables"
+        ],
+        "summary": "Update Lesson",
+        "operationId": "update_lesson_timetables__timetable_id__lessons__lesson_id__patch",
+        "parameters": [
+          {
+            "name": "timetable_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Timetable Id"
+            }
+          },
+          {
+            "name": "lesson_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Lesson Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LessonUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LessonRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "timetables"
+        ],
+        "summary": "Delete Lesson",
+        "operationId": "delete_lesson_timetables__timetable_id__lessons__lesson_id__delete",
+        "parameters": [
+          {
+            "name": "timetable_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Timetable Id"
+            }
+          },
+          {
+            "name": "lesson_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Lesson Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/timetables/{timetable_id}/options-periods": {
+      "post": {
+        "tags": [
+          "timetables"
+        ],
+        "summary": "Create Options Period",
+        "operationId": "create_options_period_timetables__timetable_id__options_periods_post",
+        "parameters": [
+          {
+            "name": "timetable_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Timetable Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OptionsPeriodCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OptionsPeriodRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/timetables/{timetable_id}/options-periods/{option_id}": {
+      "delete": {
+        "tags": [
+          "timetables"
+        ],
+        "summary": "Delete Options Period",
+        "operationId": "delete_options_period_timetables__timetable_id__options_periods__option_id__delete",
+        "parameters": [
+          {
+            "name": "timetable_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Timetable Id"
+            }
+          },
+          {
+            "name": "option_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Option Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/performance": {
       "get": {
         "tags": [
@@ -3675,9 +4225,9 @@
         "tags": [
           "attendance"
         ],
-        "summary": "Sync Attendance Profile",
-        "description": "Send the profile's `notes` plus `records` if it changed.\nEach record's `id`: present+matching -> update, missing -> create.\nAny existing record whose id is left out of the list gets deleted.\nOmit `records` entirely to leave it untouched.",
-        "operationId": "sync_attendance_profile_students__student_id__attendance_patch",
+        "summary": "Update Attendance Notes",
+        "description": "Updates `notes` only. Sending `records` is refused: take attendance in registers.",
+        "operationId": "update_attendance_notes_students__student_id__attendance_patch",
         "parameters": [
           {
             "name": "student_id",
@@ -3710,6 +4260,1278 @@
                 }
               }
             }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/attendance/today": {
+      "get": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Get Today",
+        "description": "The day's registers: mine, the daily ones, every timetabled lesson and ad-hoc ones.",
+        "operationId": "get_today_attendance_today_get",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodayRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/attendance/register": {
+      "get": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Get Register",
+        "description": "One register's students and marks. `q` searches names and admission numbers.",
+        "operationId": "get_register_attendance_register_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "enum": [
+                "daily",
+                "lesson"
+              ],
+              "type": "string",
+              "title": "Kind"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Date"
+            }
+          },
+          {
+            "name": "className",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Classname"
+            }
+          },
+          {
+            "name": "stream",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Stream"
+            }
+          },
+          {
+            "name": "lessonId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Lessonid"
+            }
+          },
+          {
+            "name": "subjectId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Subjectid"
+            }
+          },
+          {
+            "name": "startsAt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Startsat"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/attendance/register/marks": {
+      "put": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Save Marks",
+        "description": "Saves marks taken today, or offline on the register's day within 72 hours.\nThe latest tap wins: older marks come back in `skipped`. 409 once a register\nhas closed: send a correction instead.",
+        "operationId": "save_marks_attendance_register_marks_put",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterSave"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterSaveResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/attendance/registers/{register_id}/students/{student_id}/history": {
+      "get": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Get Mark History",
+        "operationId": "get_mark_history_attendance_registers__register_id__students__student_id__history_get",
+        "parameters": [
+          {
+            "name": "register_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Register Id"
+            }
+          },
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Student Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MarkChangeRead"
+                  },
+                  "title": "Response Get Mark History Attendance Registers  Register Id  Students  Student Id  History Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/attendance/corrections": {
+      "post": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Create Correction",
+        "description": "Approvers' corrections apply at once; anyone else's becomes a request.",
+        "operationId": "create_correction_attendance_corrections_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CorrectionCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CorrectionResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "List Corrections",
+        "operationId": "list_corrections_attendance_corrections_get",
+        "parameters": [
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "mine",
+                "review"
+              ],
+              "type": "string",
+              "default": "mine",
+              "title": "Scope"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "pending",
+                    "accepted",
+                    "rejected"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CorrectionRequestRead"
+                  },
+                  "title": "Response List Corrections Attendance Corrections Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/attendance/corrections/{request_id}": {
+      "get": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Get Correction",
+        "operationId": "get_correction_attendance_corrections__request_id__get",
+        "parameters": [
+          {
+            "name": "request_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Request Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CorrectionRequestRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/attendance/corrections/{request_id}/accept": {
+      "post": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Accept Correction",
+        "operationId": "accept_correction_attendance_corrections__request_id__accept_post",
+        "parameters": [
+          {
+            "name": "request_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Request Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CorrectionDecision"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CorrectionRequestRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/attendance/corrections/{request_id}/reject": {
+      "post": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Reject Correction",
+        "operationId": "reject_correction_attendance_corrections__request_id__reject_post",
+        "parameters": [
+          {
+            "name": "request_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Request Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CorrectionDecision"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CorrectionRequestRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/attendance/reports/overview": {
+      "get": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Get Overview",
+        "operationId": "get_overview_attendance_reports_overview_get",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Start"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "End"
+            }
+          },
+          {
+            "name": "className",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Classname"
+            }
+          },
+          {
+            "name": "stream",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Stream"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OverviewRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/attendance/reports/students/{student_id}": {
+      "get": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Get Student Report",
+        "operationId": "get_student_report_attendance_reports_students__student_id__get",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Student Id"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Start"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "End"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentReportRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/attendance/reports/gaps": {
+      "get": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Get Gaps",
+        "description": "Approvers see every gap; teachers see their own.",
+        "operationId": "get_gaps_attendance_reports_gaps_get",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Start"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "End"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GapsRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/attendance/settings": {
+      "get": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Get Settings",
+        "operationId": "get_settings_attendance_settings_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttendanceSettingsRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Update Settings",
+        "description": "Owner and Admins. A null timezone goes back to the country's.",
+        "operationId": "update_settings_attendance_settings_patch",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AttendanceSettingsUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttendanceSettingsRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/attendance/term-dates": {
+      "get": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Get Term Dates",
+        "operationId": "get_term_dates_attendance_term_dates_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TermDates"
+                  },
+                  "title": "Response Get Term Dates Attendance Term Dates Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Replace Term Dates",
+        "description": "Approvers. Replaces every term's dates; terms can't overlap.",
+        "operationId": "replace_term_dates_attendance_term_dates_put",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TermDatesWrite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TermDates"
+                  },
+                  "title": "Response Replace Term Dates Attendance Term Dates Put"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/attendance/no-school-days": {
+      "get": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Get No School Days",
+        "operationId": "get_no_school_days_attendance_no_school_days_get",
+        "parameters": [
+          {
+            "name": "year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Year"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NoSchoolDayRead"
+                  },
+                  "title": "Response Get No School Days Attendance No School Days Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Add No School Day",
+        "operationId": "add_no_school_day_attendance_no_school_days_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NoSchoolDayCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoSchoolDayRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/attendance/no-school-days/{day_id}": {
+      "delete": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Remove No School Day",
+        "operationId": "remove_no_school_day_attendance_no_school_days__day_id__delete",
+        "parameters": [
+          {
+            "name": "day_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Day Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/attendance/students/{student_id}/subjects": {
+      "get": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Get Student Subjects",
+        "description": "An empty list means the student takes every subject their class takes.",
+        "operationId": "get_student_subjects_attendance_students__student_id__subjects_get",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Student Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentSubjectsRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Set Student Subjects",
+        "operationId": "set_student_subjects_attendance_students__student_id__subjects_put",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Student Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudentSubjectsWrite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentSubjectsRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/attendance/staff/{staff_id}/account": {
+      "put": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Set Staff Account",
+        "description": "Approvers. Links the app account a staff member signs in with (null unlinks).",
+        "operationId": "set_staff_account_attendance_staff__staff_id__account_put",
+        "parameters": [
+          {
+            "name": "staff_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Staff Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StaffAccountWrite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffAccountRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/push-tokens": {
+      "put": {
+        "tags": [
+          "notifications"
+        ],
+        "summary": "Register Push Token",
+        "description": "Notify this phone about attendance corrections. Calling it again is harmless.",
+        "operationId": "register_push_token_push_tokens_put",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PushTokenRegistration"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/push-tokens/{token}": {
+      "delete": {
+        "tags": [
+          "notifications"
+        ],
+        "summary": "Unregister Push Token",
+        "description": "Stop notifying this phone (signing out). Unknown tokens are ignored.",
+        "operationId": "unregister_push_token_push_tokens__token__delete",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Token"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
           },
           "422": {
             "description": "Validation Error",
@@ -4005,6 +5827,59 @@
         ],
         "title": "AttendanceResponse"
       },
+      "AttendanceSettingsRead": {
+        "properties": {
+          "timezone": {
+            "type": "string",
+            "title": "Timezone"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "school",
+              "country",
+              "default"
+            ],
+            "title": "Source"
+          },
+          "country": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Country"
+          }
+        },
+        "type": "object",
+        "required": [
+          "timezone",
+          "source"
+        ],
+        "title": "AttendanceSettingsRead"
+      },
+      "AttendanceSettingsUpdate": {
+        "properties": {
+          "timezone": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timezone"
+          }
+        },
+        "type": "object",
+        "title": "AttendanceSettingsUpdate",
+        "description": "None clears the override, going back to the country's zone."
+      },
       "AttendanceStatus": {
         "type": "string",
         "enum": [
@@ -4167,6 +6042,52 @@
         ],
         "title": "BehaviourProfileRead"
       },
+      "BellScheduleImpact": {
+        "properties": {
+          "removedLessons": {
+            "type": "integer",
+            "title": "Removedlessons"
+          },
+          "shortenedLessons": {
+            "type": "integer",
+            "title": "Shortenedlessons"
+          }
+        },
+        "type": "object",
+        "required": [
+          "removedLessons",
+          "shortenedLessons"
+        ],
+        "title": "BellScheduleImpact",
+        "description": "What saving a bell schedule would do to existing lessons."
+      },
+      "BellScheduleWrite": {
+        "properties": {
+          "days": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "maxItems": 7,
+            "title": "Days"
+          },
+          "periods": {
+            "items": {
+              "$ref": "#/components/schemas/PeriodWrite"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Periods"
+          }
+        },
+        "type": "object",
+        "required": [
+          "days",
+          "periods"
+        ],
+        "title": "BellScheduleWrite",
+        "description": "The whole bell schedule, in order, plus the school days."
+      },
       "Body_upload_workspace_logo_workspaces__workspace_id__logo_post": {
         "properties": {
           "logo": {
@@ -4247,6 +6168,38 @@
           "name"
         ],
         "title": "ClassCreate"
+      },
+      "ClassRates": {
+        "properties": {
+          "className": {
+            "type": "string",
+            "title": "Classname"
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          },
+          "daily": {
+            "$ref": "#/components/schemas/RateRead"
+          },
+          "lessons": {
+            "$ref": "#/components/schemas/RateRead"
+          }
+        },
+        "type": "object",
+        "required": [
+          "className",
+          "daily",
+          "lessons"
+        ],
+        "title": "ClassRates"
       },
       "ClassResponse": {
         "properties": {
@@ -4458,6 +6411,260 @@
         },
         "type": "object",
         "title": "Contact"
+      },
+      "CorrectionChange": {
+        "properties": {
+          "studentId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Studentid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Present",
+              "Late",
+              "Excused",
+              "Unexcused"
+            ],
+            "title": "Status"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "studentId",
+          "status"
+        ],
+        "title": "CorrectionChange"
+      },
+      "CorrectionCreate": {
+        "properties": {
+          "register": {
+            "$ref": "#/components/schemas/RegisterKey"
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 3,
+            "title": "Reason"
+          },
+          "changes": {
+            "items": {
+              "$ref": "#/components/schemas/CorrectionChange"
+            },
+            "type": "array",
+            "maxItems": 1000,
+            "minItems": 1,
+            "title": "Changes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "register",
+          "reason",
+          "changes"
+        ],
+        "title": "CorrectionCreate"
+      },
+      "CorrectionDecision": {
+        "properties": {
+          "note": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "title": "CorrectionDecision"
+      },
+      "CorrectionItemRead": {
+        "properties": {
+          "studentId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Studentid"
+          },
+          "studentName": {
+            "type": "string",
+            "title": "Studentname"
+          },
+          "fromStatus": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "Present",
+                  "Late",
+                  "Excused",
+                  "Unexcused"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fromstatus"
+          },
+          "toStatus": {
+            "type": "string",
+            "enum": [
+              "Present",
+              "Late",
+              "Excused",
+              "Unexcused"
+            ],
+            "title": "Tostatus"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "studentId",
+          "studentName",
+          "toStatus"
+        ],
+        "title": "CorrectionItemRead"
+      },
+      "CorrectionRequestRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "accepted",
+              "rejected"
+            ],
+            "title": "Status"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "register": {
+            "$ref": "#/components/schemas/RegisterSummary"
+          },
+          "requestedBy": {
+            "$ref": "#/components/schemas/PersonRead"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "decidedBy": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PersonRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "decidedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decidedat"
+          },
+          "decisionNote": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decisionnote"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CorrectionItemRead"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "reason",
+          "register",
+          "requestedBy",
+          "createdAt",
+          "items"
+        ],
+        "title": "CorrectionRequestRead"
+      },
+      "CorrectionResult": {
+        "properties": {
+          "applied": {
+            "type": "boolean",
+            "title": "Applied"
+          },
+          "request": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CorrectionRequestRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "register": {
+            "$ref": "#/components/schemas/RegisterRead"
+          }
+        },
+        "type": "object",
+        "required": [
+          "applied",
+          "register"
+        ],
+        "title": "CorrectionResult",
+        "description": "An approver's correction is applied at once; anyone else's becomes a request."
       },
       "CurrentTenantResponse": {
         "properties": {
@@ -4931,6 +7138,125 @@
         ],
         "title": "GalleryOrderUpdate"
       },
+      "GapRead": {
+        "properties": {
+          "key": {
+            "$ref": "#/components/schemas/RegisterKey"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "daily",
+              "lesson"
+            ],
+            "title": "Kind"
+          },
+          "className": {
+            "type": "string",
+            "title": "Classname"
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          },
+          "subjectName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subjectname"
+          },
+          "startsAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Startsat"
+          },
+          "teacher": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PersonRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "unmarked": {
+            "type": "integer",
+            "title": "Unmarked"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "date",
+          "kind",
+          "className",
+          "unmarked",
+          "total"
+        ],
+        "title": "GapRead"
+      },
+      "GapsRead": {
+        "properties": {
+          "start": {
+            "type": "string",
+            "format": "date",
+            "title": "Start"
+          },
+          "end": {
+            "type": "string",
+            "format": "date",
+            "title": "End"
+          },
+          "needsTermDates": {
+            "type": "boolean",
+            "title": "Needstermdates"
+          },
+          "gaps": {
+            "items": {
+              "$ref": "#/components/schemas/GapRead"
+            },
+            "type": "array",
+            "title": "Gaps"
+          }
+        },
+        "type": "object",
+        "required": [
+          "start",
+          "end",
+          "needsTermDates",
+          "gaps"
+        ],
+        "title": "GapsRead"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -5202,6 +7528,202 @@
         "title": "InviteToken",
         "description": "The token travels in a body, not the URL path, so it stays out of access logs."
       },
+      "LessonCreate": {
+        "properties": {
+          "classId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Classid"
+          },
+          "subjectId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Subjectid"
+          },
+          "staffId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Staffid"
+          },
+          "day": {
+            "type": "integer",
+            "maximum": 6.0,
+            "minimum": 0.0,
+            "title": "Day"
+          },
+          "periodId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Periodid"
+          },
+          "length": {
+            "type": "integer",
+            "maximum": 10.0,
+            "minimum": 1.0,
+            "title": "Length",
+            "default": 1
+          }
+        },
+        "type": "object",
+        "required": [
+          "classId",
+          "subjectId",
+          "day",
+          "periodId"
+        ],
+        "title": "LessonCreate"
+      },
+      "LessonRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "classId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Classid"
+          },
+          "subjectId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Subjectid"
+          },
+          "staffId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Staffid"
+          },
+          "day": {
+            "type": "integer",
+            "title": "Day"
+          },
+          "periodId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Periodid"
+          },
+          "length": {
+            "type": "integer",
+            "title": "Length"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "classId",
+          "subjectId",
+          "day",
+          "periodId",
+          "length"
+        ],
+        "title": "LessonRead"
+      },
+      "LessonSwap": {
+        "properties": {
+          "firstId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Firstid"
+          },
+          "secondId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Secondid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "firstId",
+          "secondId"
+        ],
+        "title": "LessonSwap",
+        "description": "Two lessons trade places (day and first period); each keeps its length."
+      },
+      "LessonUpdate": {
+        "properties": {
+          "subjectId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subjectid"
+          },
+          "staffId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Staffid"
+          },
+          "day": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 6.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Day"
+          },
+          "periodId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Periodid"
+          },
+          "length": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 10.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Length"
+          }
+        },
+        "type": "object",
+        "title": "LessonUpdate",
+        "description": "Edit or move a lesson. `staffId: null` unassigns the teacher."
+      },
       "Location": {
         "properties": {
           "address": {
@@ -5273,6 +7795,199 @@
           "password"
         ],
         "title": "LoginRequest"
+      },
+      "MarkChangeRead": {
+        "properties": {
+          "fromStatus": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "Present",
+                  "Late",
+                  "Excused",
+                  "Unexcused"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fromstatus"
+          },
+          "toStatus": {
+            "type": "string",
+            "enum": [
+              "Present",
+              "Late",
+              "Excused",
+              "Unexcused"
+            ],
+            "title": "Tostatus"
+          },
+          "fromNote": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fromnote"
+          },
+          "toNote": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tonote"
+          },
+          "changedBy": {
+            "$ref": "#/components/schemas/PersonRead"
+          },
+          "changedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Changedat"
+          },
+          "tappedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Tappedat"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "correctionRequestId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Correctionrequestid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "toStatus",
+          "changedBy",
+          "changedAt",
+          "tappedAt"
+        ],
+        "title": "MarkChangeRead"
+      },
+      "MarkIn": {
+        "properties": {
+          "studentId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Studentid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Present",
+              "Late",
+              "Excused",
+              "Unexcused"
+            ],
+            "title": "Status"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "tappedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tappedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "studentId",
+          "status"
+        ],
+        "title": "MarkIn"
+      },
+      "MarkRead": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "Present",
+              "Late",
+              "Excused",
+              "Unexcused"
+            ],
+            "title": "Status"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "markedByName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Markedbyname"
+          },
+          "tappedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Tappedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "tappedAt"
+        ],
+        "title": "MarkRead"
       },
       "MeResponse": {
         "properties": {
@@ -5696,6 +8411,63 @@
         ],
         "title": "MedicationRead"
       },
+      "NoSchoolDayCreate": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date"
+        ],
+        "title": "NoSchoolDayCreate"
+      },
+      "NoSchoolDayRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "date"
+        ],
+        "title": "NoSchoolDayRead"
+      },
       "NoteIn": {
         "properties": {
           "name": {
@@ -5773,6 +8545,100 @@
           "created_at"
         ],
         "title": "NoteRead"
+      },
+      "OptionsPeriodCreate": {
+        "properties": {
+          "classId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Classid"
+          },
+          "day": {
+            "type": "integer",
+            "maximum": 6.0,
+            "minimum": 0.0,
+            "title": "Day"
+          },
+          "periodId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Periodid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "classId",
+          "day",
+          "periodId"
+        ],
+        "title": "OptionsPeriodCreate"
+      },
+      "OptionsPeriodRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "classId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Classid"
+          },
+          "day": {
+            "type": "integer",
+            "title": "Day"
+          },
+          "periodId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Periodid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "classId",
+          "day",
+          "periodId"
+        ],
+        "title": "OptionsPeriodRead"
+      },
+      "OverviewRead": {
+        "properties": {
+          "start": {
+            "type": "string",
+            "format": "date",
+            "title": "Start"
+          },
+          "end": {
+            "type": "string",
+            "format": "date",
+            "title": "End"
+          },
+          "daily": {
+            "$ref": "#/components/schemas/RateRead"
+          },
+          "lessons": {
+            "$ref": "#/components/schemas/RateRead"
+          },
+          "classes": {
+            "items": {
+              "$ref": "#/components/schemas/ClassRates"
+            },
+            "type": "array",
+            "title": "Classes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "start",
+          "end",
+          "daily",
+          "lessons",
+          "classes"
+        ],
+        "title": "OverviewRead"
       },
       "Page_ParentResponse_": {
         "properties": {
@@ -6396,6 +9262,134 @@
         ],
         "title": "PerformanceUpdate"
       },
+      "PeriodRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "time",
+            "title": "Startsat"
+          },
+          "endsAt": {
+            "type": "string",
+            "format": "time",
+            "title": "Endsat"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "lesson",
+              "break"
+            ],
+            "title": "Kind"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "startsAt",
+          "endsAt",
+          "kind"
+        ],
+        "title": "PeriodRead"
+      },
+      "PeriodWrite": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "time",
+            "title": "Startsat"
+          },
+          "endsAt": {
+            "type": "string",
+            "format": "time",
+            "title": "Endsat"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "lesson",
+              "break"
+            ],
+            "title": "Kind",
+            "default": "lesson"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 60
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          }
+        },
+        "type": "object",
+        "required": [
+          "startsAt",
+          "endsAt"
+        ],
+        "title": "PeriodWrite"
+      },
+      "PersonRead": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "title": "PersonRead"
+      },
       "ProfilePatch-Input": {
         "properties": {
           "tenant_id": {
@@ -6902,6 +9896,21 @@
         "type": "object",
         "title": "ProfilePatch"
       },
+      "PushTokenRegistration": {
+        "properties": {
+          "token": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "token"
+        ],
+        "title": "PushTokenRegistration"
+      },
       "QualificationIn": {
         "properties": {
           "name": {
@@ -7140,6 +10149,43 @@
         "title": "RankedMarks",
         "description": "One student's row: their scores keyed by subject, class rank and average."
       },
+      "RateRead": {
+        "properties": {
+          "present": {
+            "type": "integer",
+            "title": "Present",
+            "default": 0
+          },
+          "late": {
+            "type": "integer",
+            "title": "Late",
+            "default": 0
+          },
+          "unexcused": {
+            "type": "integer",
+            "title": "Unexcused",
+            "default": 0
+          },
+          "excused": {
+            "type": "integer",
+            "title": "Excused",
+            "default": 0
+          },
+          "rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rate"
+          }
+        },
+        "type": "object",
+        "title": "RateRead"
+      },
       "RecognitionIn": {
         "properties": {
           "name": {
@@ -7350,6 +10396,285 @@
         ],
         "title": "RecordRead"
       },
+      "RegisterCounts": {
+        "properties": {
+          "present": {
+            "type": "integer",
+            "title": "Present",
+            "default": 0
+          },
+          "late": {
+            "type": "integer",
+            "title": "Late",
+            "default": 0
+          },
+          "unexcused": {
+            "type": "integer",
+            "title": "Unexcused",
+            "default": 0
+          },
+          "excused": {
+            "type": "integer",
+            "title": "Excused",
+            "default": 0
+          },
+          "unmarked": {
+            "type": "integer",
+            "title": "Unmarked",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "title": "RegisterCounts"
+      },
+      "RegisterKey": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "daily",
+              "lesson"
+            ],
+            "title": "Kind"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "className": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Classname"
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          },
+          "lessonId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lessonid"
+          },
+          "subjectId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subjectid"
+          },
+          "startsAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Startsat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "date"
+        ],
+        "title": "RegisterKey",
+        "description": "A daily register: kind \"daily\", date, className (stream only narrows the list).\nA timetabled lesson: kind \"lesson\", date, lessonId.\nAn ad-hoc lesson: kind \"lesson\", date, className, optional stream, subjectId, startsAt."
+      },
+      "RegisterRead": {
+        "properties": {
+          "registerId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Registerid"
+          },
+          "key": {
+            "$ref": "#/components/schemas/RegisterKey"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "daily",
+              "lesson"
+            ],
+            "title": "Kind"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "className": {
+            "type": "string",
+            "title": "Classname"
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          },
+          "subjectId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subjectid"
+          },
+          "subjectName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subjectname"
+          },
+          "lessonId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lessonid"
+          },
+          "startsAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Startsat"
+          },
+          "endsAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Endsat"
+          },
+          "teacherName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Teachername"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "open",
+              "locked",
+              "future"
+            ],
+            "title": "State"
+          },
+          "canEdit": {
+            "type": "boolean",
+            "title": "Canedit"
+          },
+          "canCorrect": {
+            "type": "boolean",
+            "title": "Cancorrect"
+          },
+          "canRequestCorrection": {
+            "type": "boolean",
+            "title": "Canrequestcorrection"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/RegisterCounts"
+          },
+          "students": {
+            "items": {
+              "$ref": "#/components/schemas/RegisterStudent"
+            },
+            "type": "array",
+            "title": "Students"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "kind",
+          "date",
+          "className",
+          "state",
+          "canEdit",
+          "canCorrect",
+          "canRequestCorrection",
+          "counts",
+          "students"
+        ],
+        "title": "RegisterRead"
+      },
       "RegisterRequest": {
         "properties": {
           "first_name": {
@@ -7409,6 +10734,276 @@
           "password"
         ],
         "title": "RegisterRequest"
+      },
+      "RegisterSave": {
+        "properties": {
+          "register": {
+            "$ref": "#/components/schemas/RegisterKey"
+          },
+          "marks": {
+            "items": {
+              "$ref": "#/components/schemas/MarkIn"
+            },
+            "type": "array",
+            "maxItems": 1000,
+            "minItems": 1,
+            "title": "Marks"
+          }
+        },
+        "type": "object",
+        "required": [
+          "register",
+          "marks"
+        ],
+        "title": "RegisterSave"
+      },
+      "RegisterSaveResult": {
+        "properties": {
+          "register": {
+            "$ref": "#/components/schemas/RegisterRead"
+          },
+          "skipped": {
+            "items": {
+              "$ref": "#/components/schemas/SkippedMark"
+            },
+            "type": "array",
+            "title": "Skipped",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "register"
+        ],
+        "title": "RegisterSaveResult"
+      },
+      "RegisterSlot": {
+        "properties": {
+          "key": {
+            "$ref": "#/components/schemas/RegisterKey"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "daily",
+              "lesson"
+            ],
+            "title": "Kind"
+          },
+          "className": {
+            "type": "string",
+            "title": "Classname"
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          },
+          "subjectName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subjectname"
+          },
+          "startsAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Startsat"
+          },
+          "endsAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Endsat"
+          },
+          "teacherName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Teachername"
+          },
+          "marked": {
+            "type": "integer",
+            "title": "Marked"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "kind",
+          "className",
+          "marked",
+          "total"
+        ],
+        "title": "RegisterSlot"
+      },
+      "RegisterStudent": {
+        "properties": {
+          "studentId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Studentid"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "admissionNumber": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Admissionnumber"
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          },
+          "photo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Photo"
+          },
+          "mark": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MarkRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "pendingCorrection": {
+            "type": "boolean",
+            "title": "Pendingcorrection",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "studentId",
+          "name"
+        ],
+        "title": "RegisterStudent"
+      },
+      "RegisterSummary": {
+        "properties": {
+          "registerId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Registerid"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "daily",
+              "lesson"
+            ],
+            "title": "Kind"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "className": {
+            "type": "string",
+            "title": "Classname"
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          },
+          "subjectName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subjectname"
+          },
+          "startsAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Startsat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "registerId",
+          "kind",
+          "date",
+          "className"
+        ],
+        "title": "RegisterSummary"
       },
       "ReviewDecision": {
         "properties": {
@@ -7588,6 +11183,89 @@
           "Severe"
         ],
         "title": "Severity"
+      },
+      "SkippedMark": {
+        "properties": {
+          "studentId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Studentid"
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "newer_mark",
+              "not_on_register"
+            ],
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "studentId",
+          "reason"
+        ],
+        "title": "SkippedMark"
+      },
+      "StaffAccountRead": {
+        "properties": {
+          "staffId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Staffid"
+          },
+          "userId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Userid"
+          },
+          "linkedBy": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "admin",
+                  "email"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linkedby"
+          }
+        },
+        "type": "object",
+        "required": [
+          "staffId"
+        ],
+        "title": "StaffAccountRead"
+      },
+      "StaffAccountWrite": {
+        "properties": {
+          "userId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Userid"
+          }
+        },
+        "type": "object",
+        "title": "StaffAccountWrite",
+        "description": "None unlinks, going back to matching by email."
       },
       "StaffCreate": {
         "properties": {
@@ -8165,6 +11843,74 @@
         ],
         "title": "StudentCreate"
       },
+      "StudentMarkRead": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "daily",
+              "lesson"
+            ],
+            "title": "Kind"
+          },
+          "subjectName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subjectname"
+          },
+          "startsAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Startsat"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Present",
+              "Late",
+              "Excused",
+              "Unexcused"
+            ],
+            "title": "Status"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "kind",
+          "status"
+        ],
+        "title": "StudentMarkRead"
+      },
       "StudentParentLinkResponse": {
         "properties": {
           "relationship_type": {
@@ -8224,6 +11970,94 @@
           "parent"
         ],
         "title": "StudentParentResponse"
+      },
+      "StudentReportRead": {
+        "properties": {
+          "studentId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Studentid"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "admissionNumber": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Admissionnumber"
+          },
+          "className": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Classname"
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          },
+          "start": {
+            "type": "string",
+            "format": "date",
+            "title": "Start"
+          },
+          "end": {
+            "type": "string",
+            "format": "date",
+            "title": "End"
+          },
+          "daily": {
+            "$ref": "#/components/schemas/RateRead"
+          },
+          "lessons": {
+            "$ref": "#/components/schemas/RateRead"
+          },
+          "subjects": {
+            "items": {
+              "$ref": "#/components/schemas/SubjectRate"
+            },
+            "type": "array",
+            "title": "Subjects"
+          },
+          "recent": {
+            "items": {
+              "$ref": "#/components/schemas/StudentMarkRead"
+            },
+            "type": "array",
+            "title": "Recent"
+          }
+        },
+        "type": "object",
+        "required": [
+          "studentId",
+          "name",
+          "start",
+          "end",
+          "daily",
+          "lessons",
+          "subjects",
+          "recent"
+        ],
+        "title": "StudentReportRead"
       },
       "StudentResponse": {
         "properties": {
@@ -8417,6 +12251,49 @@
         ],
         "title": "StudentResponse"
       },
+      "StudentSubjectsRead": {
+        "properties": {
+          "subjects": {
+            "items": {
+              "$ref": "#/components/schemas/SubjectRef"
+            },
+            "type": "array",
+            "title": "Subjects"
+          },
+          "history": {
+            "items": {
+              "$ref": "#/components/schemas/SubjectChangeRead"
+            },
+            "type": "array",
+            "title": "History",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "subjects"
+        ],
+        "title": "StudentSubjectsRead",
+        "description": "An empty list means the student takes every subject their class takes."
+      },
+      "StudentSubjectsWrite": {
+        "properties": {
+          "subjectIds": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "title": "Subjectids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "subjectIds"
+        ],
+        "title": "StudentSubjectsWrite"
+      },
       "StudentSummary": {
         "properties": {
           "id": {
@@ -8435,6 +12312,38 @@
           "name"
         ],
         "title": "StudentSummary"
+      },
+      "SubjectChangeRead": {
+        "properties": {
+          "subjectName": {
+            "type": "string",
+            "title": "Subjectname"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "added",
+              "removed"
+            ],
+            "title": "Action"
+          },
+          "changedBy": {
+            "$ref": "#/components/schemas/PersonRead"
+          },
+          "changedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Changedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "subjectName",
+          "action",
+          "changedBy",
+          "changedAt"
+        ],
+        "title": "SubjectChangeRead"
       },
       "SubjectCreate": {
         "properties": {
@@ -8471,6 +12380,47 @@
           "code"
         ],
         "title": "SubjectCreate"
+      },
+      "SubjectRate": {
+        "properties": {
+          "subjectName": {
+            "type": "string",
+            "title": "Subjectname"
+          },
+          "rates": {
+            "$ref": "#/components/schemas/RateRead"
+          }
+        },
+        "type": "object",
+        "required": [
+          "subjectName",
+          "rates"
+        ],
+        "title": "SubjectRate"
+      },
+      "SubjectRef": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "code": {
+            "type": "string",
+            "title": "Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "code"
+        ],
+        "title": "SubjectRef"
       },
       "SubjectResponse": {
         "properties": {
@@ -8811,6 +12761,58 @@
         ],
         "title": "TenantProfileResponse"
       },
+      "TermDates": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Label"
+          },
+          "year": {
+            "type": "integer",
+            "maximum": 2100.0,
+            "minimum": 2000.0,
+            "title": "Year"
+          },
+          "startsOn": {
+            "type": "string",
+            "format": "date",
+            "title": "Startson"
+          },
+          "endsOn": {
+            "type": "string",
+            "format": "date",
+            "title": "Endson"
+          }
+        },
+        "type": "object",
+        "required": [
+          "label",
+          "year",
+          "startsOn",
+          "endsOn"
+        ],
+        "title": "TermDates"
+      },
+      "TermDatesWrite": {
+        "properties": {
+          "terms": {
+            "items": {
+              "$ref": "#/components/schemas/TermDates"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "title": "Terms"
+          }
+        },
+        "type": "object",
+        "required": [
+          "terms"
+        ],
+        "title": "TermDatesWrite",
+        "description": "Replaces all of the school's term dates."
+      },
       "TermSettingsRead": {
         "properties": {
           "labels": {
@@ -8880,6 +12882,192 @@
         },
         "type": "object",
         "title": "TermSettingsUpdate"
+      },
+      "TimetableCreate": {
+        "properties": {
+          "term": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Term"
+          },
+          "year": {
+            "type": "integer",
+            "maximum": 2100.0,
+            "minimum": 2000.0,
+            "title": "Year"
+          },
+          "copyFrom": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Copyfrom"
+          }
+        },
+        "type": "object",
+        "required": [
+          "term",
+          "year"
+        ],
+        "title": "TimetableCreate"
+      },
+      "TimetableRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "term": {
+            "type": "string",
+            "title": "Term"
+          },
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "days": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Days"
+          },
+          "periods": {
+            "items": {
+              "$ref": "#/components/schemas/PeriodRead"
+            },
+            "type": "array",
+            "title": "Periods"
+          },
+          "lessons": {
+            "items": {
+              "$ref": "#/components/schemas/LessonRead"
+            },
+            "type": "array",
+            "title": "Lessons"
+          },
+          "optionsPeriods": {
+            "items": {
+              "$ref": "#/components/schemas/OptionsPeriodRead"
+            },
+            "type": "array",
+            "title": "Optionsperiods"
+          },
+          "editable": {
+            "type": "boolean",
+            "title": "Editable"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "term",
+          "year",
+          "days",
+          "periods",
+          "lessons",
+          "optionsPeriods",
+          "editable"
+        ],
+        "title": "TimetableRead"
+      },
+      "TimetableSummary": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "term": {
+            "type": "string",
+            "title": "Term"
+          },
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "term",
+          "year"
+        ],
+        "title": "TimetableSummary"
+      },
+      "TodayRead": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "today": {
+            "type": "string",
+            "format": "date",
+            "title": "Today"
+          },
+          "timezone": {
+            "type": "string",
+            "title": "Timezone"
+          },
+          "noSchool": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NoSchoolDayRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "myLessons": {
+            "items": {
+              "$ref": "#/components/schemas/RegisterSlot"
+            },
+            "type": "array",
+            "title": "Mylessons"
+          },
+          "daily": {
+            "items": {
+              "$ref": "#/components/schemas/RegisterSlot"
+            },
+            "type": "array",
+            "title": "Daily"
+          },
+          "lessons": {
+            "items": {
+              "$ref": "#/components/schemas/RegisterSlot"
+            },
+            "type": "array",
+            "title": "Lessons"
+          },
+          "adhoc": {
+            "items": {
+              "$ref": "#/components/schemas/RegisterSlot"
+            },
+            "type": "array",
+            "title": "Adhoc"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "today",
+          "timezone",
+          "myLessons",
+          "daily",
+          "lessons",
+          "adhoc"
+        ],
+        "title": "TodayRead"
       },
       "TokenResponse": {
         "properties": {

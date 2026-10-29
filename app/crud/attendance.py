@@ -1260,3 +1260,41 @@ async def get_today(db: AsyncSession, viewer: Viewer, day: date | None) -> Today
         lessons=lessons,
         adhoc=adhoc,
     )
+
+
+# ---------------------------------------------------------------------------
+# Whole-day records, in the shape the old per-student attendance used
+# ---------------------------------------------------------------------------
+@dataclass(frozen=True)
+class DayRecord:
+    id: uuid.UUID
+    date: date
+    status: str
+    note: str | None
+    created_at: datetime
+
+
+async def daily_records(
+    db: AsyncSession, tenant_id: uuid.UUID, student_ids: Sequence[uuid.UUID]
+) -> dict[uuid.UUID, list[DayRecord]]:
+    """Each student's daily-register marks, oldest first."""
+    records: dict[uuid.UUID, list[DayRecord]] = defaultdict(list)
+    if not student_ids:
+        return records
+    rows = await db.execute(
+        select(AttendanceMark, AttendanceRegister.date)
+        .join(AttendanceRegister, AttendanceRegister.id == AttendanceMark.register_id)
+        .where(
+            AttendanceMark.tenant_id == tenant_id,
+            AttendanceMark.student_id.in_(student_ids),
+            AttendanceRegister.kind == "daily",
+        )
+        .order_by(AttendanceRegister.date)
+    )
+    for mark, day in rows.tuples():
+        records[mark.student_id].append(
+            DayRecord(
+                id=mark.id, date=day, status=mark.status, note=mark.note, created_at=mark.tapped_at
+            )
+        )
+    return records

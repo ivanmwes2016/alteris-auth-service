@@ -11,7 +11,7 @@ from sqlalchemy.orm import selectinload
 
 from app.api.v1.routes.auth import get_current_member, get_current_tenant_id, get_current_user
 from app.core.db import get_db
-from app.db.models.attendance import StudentAttendanceProfile
+from app.crud.attendance import DayRecord, daily_records
 from app.db.models.parent import Parent
 from app.db.models.student import Student
 from app.db.models.student_parent import StudentParent
@@ -227,15 +227,10 @@ async def create_student(
         ) from exc
 
 
-def _student_response(student: Student) -> StudentResponse:
+def _student_response(student: Student, records: list[DayRecord]) -> StudentResponse:
+    """`attendanceRecords` are the student's daily-register marks."""
     return StudentResponse.model_validate(
-        {
-            **student.__dict__,
-            "attendanceRecords": student.attendance_profile.records
-            if student.attendance_profile
-            else [],
-            "dob": student.date_of_birth,
-        }
+        {**student.__dict__, "attendanceRecords": records, "dob": student.date_of_birth}
     )
 
 
@@ -259,7 +254,6 @@ async def get_students(
         .where(Student.tenant_id == tenant_id)
         .options(
             selectinload(Student.parents).selectinload(StudentParent.parent),
-            selectinload(Student.attendance_profile).selectinload(StudentAttendanceProfile.records),
         )
         .order_by(Student.name, Student.id)
     )
@@ -272,11 +266,13 @@ async def get_students(
         query = query.where(Student.gender == gender)
 
     if params.page is None:
-        result = await db.execute(query)
-        return [_student_response(student) for student in result.scalars().all()]
+        everyone = list((await db.execute(query)).scalars().all())
+        records = await daily_records(db, tenant_id, [s.id for s in everyone])
+        return [_student_response(s, records.get(s.id, [])) for s in everyone]
 
     students, total = await fetch_page(db, query, params)
-    return make_page([_student_response(student) for student in students], total, params)
+    records = await daily_records(db, tenant_id, [s.id for s in students])
+    return make_page([_student_response(s, records.get(s.id, [])) for s in students], total, params)
 
 
 @router.get("/classes", response_model=list[str], status_code=status.HTTP_200_OK)
@@ -321,7 +317,6 @@ async def get_student_by_id(
         )
         .options(
             selectinload(Student.parents).selectinload(StudentParent.parent),
-            selectinload(Student.attendance_profile).selectinload(StudentAttendanceProfile.records),
         )
     )
 
@@ -333,15 +328,8 @@ async def get_student_by_id(
             detail="Student not found",
         )
 
-    return StudentResponse.model_validate(
-        {
-            **student.__dict__,
-            "attendanceRecords": student.attendance_profile.records
-            if student.attendance_profile
-            else [],
-            "dob": student.date_of_birth,
-        }
-    )
+    records = await daily_records(db, member.tenant_id, [student.id])
+    return _student_response(student, records.get(student.id, []))
 
 
 @router.patch("/{student_id}", status_code=status.HTTP_201_CREATED)
