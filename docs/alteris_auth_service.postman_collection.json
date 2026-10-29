@@ -5,7 +5,7 @@
       "description": "",
       "item": [
         {
-          "id": "7da22574-9871-48ec-9427-7bfd3160bc9b",
+          "id": "bfd5c4d5-0e1d-48c6-8032-a6391e0e66ac",
           "name": "Root",
           "request": {
             "name": "Root",
@@ -34,7 +34,7 @@
           },
           "response": [
             {
-              "id": "d88e1a83-bdb3-46b4-896e-ee8d8760307a",
+              "id": "02c0afe5-c88c-4027-be03-b3c6043e65fd",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -72,7 +72,7 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"key_0\": \"<string>\",\n  \"key_1\": \"<string>\",\n  \"key_2\": \"<string>\",\n  \"key_3\": \"<string>\"\n}",
+              "body": "{\n  \"key_0\": \"<string>\"\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             }
@@ -83,7 +83,7 @@
           }
         },
         {
-          "id": "22aeb94e-2de0-4ec1-9439-c24af47e9022",
+          "id": "b572f8e2-3bb9-4522-9885-8c4d0fa95de8",
           "name": "Health",
           "request": {
             "name": "Health",
@@ -112,7 +112,7 @@
           },
           "response": [
             {
-              "id": "147291ec-9177-4c61-b497-a804790379ba",
+              "id": "4e396d8b-034f-42f4-8b73-68127f31c3db",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -150,7 +150,7 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"key_0\": \"<string>\",\n  \"key_1\": \"<string>\"\n}",
+              "body": "{\n  \"key_0\": \"<string>\",\n  \"key_1\": \"<string>\",\n  \"key_2\": \"<string>\"\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             }
@@ -167,7 +167,7 @@
       "description": "",
       "item": [
         {
-          "id": "9d3cb5c3-f651-4814-9dc9-47a84fa24d3a",
+          "id": "f3fd391d-ae0c-47ff-8ed4-454d98267bc8",
           "name": "Login",
           "request": {
             "name": "Login",
@@ -213,7 +213,7 @@
           },
           "response": [
             {
-              "id": "534e14bd-393d-4757-af16-206dae729e2e",
+              "id": "f1460880-af06-4074-a4cf-8a9c18d986c1",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -270,7 +270,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "53f16a31-5d7e-42f4-8ddf-af242cde5cb3",
+              "id": "c7635482-19e9-4261-9080-6d62eb73e21d",
               "name": "Invalid email or password",
               "originalRequest": {
                 "url": {
@@ -317,7 +317,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "e57a6d8b-c45d-4061-b0b2-fe2887a59d82",
+              "id": "476b3dd7-9139-437d-b499-bdb689f12227",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -374,7 +374,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "a1de72d8-ffdb-4b2e-befd-89585866561e",
+              "id": "8ee34806-b5cd-4cda-9076-06f7d55639d5",
               "name": "Too many attempts",
               "originalRequest": {
                 "url": {
@@ -421,7 +421,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "da07f845-d18e-487f-9a43-04d3a18531a6",
+              "id": "09b468be-bf0d-448f-af6a-becee49b1d1e",
               "name": "Authentication unavailable",
               "originalRequest": {
                 "url": {
@@ -487,7 +487,7 @@
           }
         },
         {
-          "id": "799780f8-308c-477f-bdab-674780583bad",
+          "id": "bc0b26a6-9e9f-4841-8792-3d78d0804706",
           "name": "Register",
           "request": {
             "name": "Register",
@@ -533,7 +533,7 @@
           },
           "response": [
             {
-              "id": "9f8f4cf6-1083-441b-8ca0-6ea230dc7c80",
+              "id": "7bd3f217-c7ae-459f-99e4-f20ea399a297",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -590,7 +590,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "2bdd72ad-5b6b-45c5-91f6-ee469229c895",
+              "id": "6afae698-0c22-44e6-99cb-4b463da49775",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -653,7 +653,7 @@
           }
         },
         {
-          "id": "3b626f4a-18ae-4192-99ad-1ec14a5027f7",
+          "id": "8e7c45c0-a695-4046-ae38-3c123dd9881c",
           "name": "Resend Verification",
           "request": {
             "name": "Resend Verification",
@@ -697,7 +697,7 @@
           },
           "response": [
             {
-              "id": "ac12aad3-0743-440d-9479-19208a130d0e",
+              "id": "23ab0fdf-96be-4769-bcc3-46dc97ec896d",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -755,7 +755,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "7c01b3da-add1-4e9f-8abc-7097b2c14b6f",
+              "id": "5bab5020-10c4-4b77-a3e1-99a0deac3cdd",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -819,7 +819,7 @@
           }
         },
         {
-          "id": "0b66e6f5-fea1-44bb-9f06-1d05f90a92c8",
+          "id": "aafada67-1522-4fcf-b2f0-98cd00ad7243",
           "name": "Forgot Password",
           "request": {
             "name": "Forgot Password",
@@ -863,7 +863,7 @@
           },
           "response": [
             {
-              "id": "66eb6668-b43b-4e25-88eb-2d0d0ce2857a",
+              "id": "64b8a853-8e89-4dfa-bd93-859e6b35fff3",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -921,7 +921,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "cceaf686-de11-4b2f-8174-aaa72c19f5e7",
+              "id": "c5a8baff-7818-49f1-a228-48aa533f585f",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -985,7 +985,7 @@
           }
         },
         {
-          "id": "b24efc45-a33f-4755-88ef-d8b6ee50703a",
+          "id": "d769dbdd-cd4e-4c95-bcd4-843a705faa2f",
           "name": "Me",
           "request": {
             "name": "Me",
@@ -1013,7 +1013,7 @@
           },
           "response": [
             {
-              "id": "1349e676-a701-476b-a658-293172084691",
+              "id": "1ddf17ed-13a4-45a0-a905-cf637940451f",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -1057,7 +1057,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "1c2f350b-ee13-4743-affe-bc51f4636056",
+              "id": "5b7ac558-9bdf-4101-8640-01496dad3609",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -1107,7 +1107,7 @@
           }
         },
         {
-          "id": "e9801fbb-66ce-4cf3-b548-aac67bde6b96",
+          "id": "f9b60a97-1b6f-4e10-9900-6b371e05d73e",
           "name": "Create Session",
           "request": {
             "name": "Create Session",
@@ -1135,7 +1135,7 @@
           },
           "response": [
             {
-              "id": "98ab812f-f903-4541-b77a-0d5675493516",
+              "id": "118cf1c6-4e7a-46c4-a766-7dc26cbd8c94",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -1179,7 +1179,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "8d9cd0bc-182c-43b1-b325-b060b6ada29e",
+              "id": "9d5ce9d6-8969-4373-a7c2-f42a3196c411",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -1229,7 +1229,7 @@
           }
         },
         {
-          "id": "166b568b-491a-4082-8e69-e1ab88a5bf21",
+          "id": "b1602066-df96-4972-8df2-9a4616c92e0d",
           "name": "Change Password",
           "request": {
             "name": "Change Password",
@@ -1273,7 +1273,7 @@
           },
           "response": [
             {
-              "id": "feb5f318-a132-406d-b521-198f225f2c3f",
+              "id": "ec2d5e06-915c-4475-800d-074e3cedf649",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -1320,7 +1320,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "5b91ea02-8622-4c9e-b3fc-464859d2f907",
+              "id": "5319f071-f4f5-4fcf-bc8a-3d1711ae7f3a",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -1383,7 +1383,7 @@
           }
         },
         {
-          "id": "c4d2918a-9642-4e50-9453-32a4cc3fec57",
+          "id": "72cbee7e-a214-4c93-9695-85c59c7a5027",
           "name": "Signup",
           "request": {
             "name": "Signup",
@@ -1427,7 +1427,7 @@
           },
           "response": [
             {
-              "id": "078116f2-eae9-406d-a83c-e14f8e2bba3a",
+              "id": "52ede2b6-5062-45d2-9f2e-5daa180735dd",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -1484,7 +1484,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "f4be8c95-3906-416e-9eac-1162eaa00f02",
+              "id": "b3422287-5d8b-4a14-a2c9-901d84ffcd1f",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -1553,7 +1553,7 @@
       "description": "",
       "item": [
         {
-          "id": "bc99cf34-2c69-4bc2-b2cb-16fcc85bcb09",
+          "id": "a30e7c01-df2b-4f81-bf42-f9328ab43399",
           "name": "Preview School",
           "request": {
             "name": "Preview School",
@@ -1598,7 +1598,7 @@
           },
           "response": [
             {
-              "id": "2621f1e1-4a6c-4064-a43c-8f6826aaedef",
+              "id": "9ff62bc4-b2ec-41ea-9a8b-401dc28ced00",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -1657,7 +1657,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "20e7eac1-dc6a-46d4-8595-a94fe997b2ec",
+              "id": "698a21cd-db0e-4d4a-b5dc-39cb48c6b348",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -1722,7 +1722,7 @@
           }
         },
         {
-          "id": "f541c8ca-794e-43f2-83bd-b2b0bc8656ea",
+          "id": "9e72f428-a82e-466c-ad7b-9496efaaca29",
           "name": "Approve School",
           "request": {
             "name": "Approve School",
@@ -1767,7 +1767,7 @@
           },
           "response": [
             {
-              "id": "0afd0c3b-7a01-4a3f-99ad-7b0cce92bf7b",
+              "id": "662cf06b-6680-48ad-bcec-49a3df907baa",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -1826,7 +1826,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "07c23360-54d6-4149-a2f5-942053377a62",
+              "id": "ebbac59c-d144-4bdd-99bf-a50a12b0279c",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -1891,7 +1891,7 @@
           }
         },
         {
-          "id": "be93b148-eafe-4a88-a896-a4e317394492",
+          "id": "6e6fa537-cadf-4315-83b5-b68cff3fcac1",
           "name": "Reject School",
           "request": {
             "name": "Reject School",
@@ -1936,7 +1936,7 @@
           },
           "response": [
             {
-              "id": "430b8b00-61ba-461f-a9fa-fb777dda9c5d",
+              "id": "20f9ef34-e807-40f0-b3f2-28031f463d25",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -1995,7 +1995,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "c238d34a-877b-4ab2-abee-e2a06cff0be5",
+              "id": "63030e8c-c387-454d-bda8-933d93012c22",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -2066,7 +2066,7 @@
       "description": "",
       "item": [
         {
-          "id": "2623e4ee-d4ba-4ef7-a0ff-0d12c7dccdd0",
+          "id": "477088aa-24af-4a8c-96cf-9f8a9f3d9904",
           "name": "Upload Workspace Logo",
           "request": {
             "name": "Upload Workspace Logo",
@@ -2124,7 +2124,7 @@
           },
           "response": [
             {
-              "id": "cba84200-9df7-40c0-a864-23cffe5a3f99",
+              "id": "db23edad-3daf-4dac-9abc-93089cc8e5cf",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -2196,7 +2196,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "e81b181f-a26c-4873-96d2-ddc740b61214",
+              "id": "3d44416c-e718-427b-a334-e852ad46e92f",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -2280,7 +2280,7 @@
       "description": "",
       "item": [
         {
-          "id": "a9c09afa-ef34-4fa1-ad41-5ec9771e4884",
+          "id": "c49da56f-499d-427e-9b82-b09ef68c7986",
           "name": "Stripe Webhook",
           "request": {
             "name": "Stripe Webhook",
@@ -2319,7 +2319,7 @@
           },
           "response": [
             {
-              "id": "178958f2-1a0a-4b10-8e65-9ae6fa3ecad7",
+              "id": "2e6d74b4-b71a-4f05-9171-6b8459264c97",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -2367,12 +2367,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"key_0\": \"<boolean>\"\n}",
+              "body": "{\n  \"key_0\": \"<boolean>\",\n  \"key_1\": \"<boolean>\"\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "882c2f3d-f8f2-4137-9546-6941b3907f65",
+              "id": "a3bdb022-f40b-49bc-964e-5e5ae6ea2328",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -2437,7 +2437,7 @@
       "description": "",
       "item": [
         {
-          "id": "2e66c0ed-163f-4670-8cc6-7d0e4956a5d5",
+          "id": "9419f7b5-9c38-4e67-a562-3bc63dca51c3",
           "name": "Create Checkout",
           "request": {
             "name": "Create Checkout",
@@ -2478,7 +2478,7 @@
           },
           "response": [
             {
-              "id": "66179199-ddf2-4766-9d22-d5b8de81734b",
+              "id": "5b13568f-e4ab-45e9-a4ac-c9dac5fc5044",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -2535,7 +2535,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "daa4c813-84db-44da-8174-81b7d6baa78f",
+              "id": "f4b3fd4d-6570-4108-ab70-d5f6d5e9dd33",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -2604,7 +2604,7 @@
       "description": "",
       "item": [
         {
-          "id": "6cfffe77-4e6d-40fd-b4a2-59a667c83fb2",
+          "id": "7b1d1168-6c38-4841-a6d1-10e4ffcc042e",
           "name": "Create Enquiry",
           "request": {
             "name": "Create Enquiry",
@@ -2646,7 +2646,7 @@
           },
           "response": [
             {
-              "id": "51b8d409-9e98-4c92-8667-c317bec97027",
+              "id": "21f43865-f4e5-434e-95bb-9673ddbb65f2",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -2697,12 +2697,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"key_0\": \"<string>\",\n  \"key_1\": \"<string>\",\n  \"key_2\": \"<string>\"\n}",
+              "body": "{\n  \"key_0\": \"<string>\"\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "af70e636-ff00-47f3-9592-7327a927748a",
+              "id": "66d49de8-2c48-49c5-8d54-d956638e08bc",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -2764,7 +2764,7 @@
           }
         },
         {
-          "id": "2de50008-97b1-48df-8da4-801fb215e221",
+          "id": "9fb06e89-256a-4f8e-a6e6-912b1a9b2594",
           "name": "List Enquiries",
           "request": {
             "name": "List Enquiries",
@@ -2791,7 +2791,7 @@
           },
           "response": [
             {
-              "id": "88ca17fd-8bb8-4afc-8e67-40af9078c65d",
+              "id": "1871e2ba-25f3-4a38-8678-570f8a913992",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -2834,7 +2834,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "a4f13062-6446-4538-ad53-a6eb80122bb9",
+              "id": "0fe489fc-ef07-4fc2-9b8c-1dbda84dff13",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -2883,7 +2883,7 @@
           }
         },
         {
-          "id": "35294797-f1b3-43ee-9781-35a244667ce7",
+          "id": "9294d25b-441c-4c11-9842-ed49f083aa0c",
           "name": "Patch Inquiry",
           "request": {
             "name": "Patch Inquiry",
@@ -2935,7 +2935,7 @@
           },
           "response": [
             {
-              "id": "2943a7dc-c9ad-4c02-b73d-bd772f91dcf4",
+              "id": "5e1aff11-f42e-4a7c-8e3a-e72d802f4d27",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -2998,12 +2998,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"key_0\": \"<string>\"\n}",
+              "body": "{\n  \"key_0\": \"<string>\",\n  \"key_1\": \"<string>\",\n  \"key_2\": \"<string>\",\n  \"key_3\": \"<string>\"\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "04b90faf-4702-4f1d-a97a-5fcde5e598c3",
+              "id": "0a8e8499-76e8-484d-9ea3-392b76e7f10d",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -3083,7 +3083,7 @@
       "description": "",
       "item": [
         {
-          "id": "d7749043-abfb-4bc5-8b2d-c35ca0514623",
+          "id": "f2b524fd-d5db-4044-96e1-fd13b5c43424",
           "name": "Get School Profile",
           "request": {
             "name": "Get School Profile",
@@ -3110,7 +3110,7 @@
           },
           "response": [
             {
-              "id": "dfb5c5b1-af71-435e-909c-f99cd65ca7e5",
+              "id": "c6a1f007-144b-4403-81a6-d431f7ee2bc3",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -3153,7 +3153,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "c245893c-b405-442c-acd2-b64455359017",
+              "id": "2d9fff85-5796-43f9-aef1-b83cf75e7734",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -3202,7 +3202,7 @@
           }
         },
         {
-          "id": "be3e0f86-5f30-43b0-bb6f-265a657255fa",
+          "id": "85ba12ad-662a-416b-944b-ccec4f602cb6",
           "name": "Patch School Profile",
           "request": {
             "name": "Patch School Profile",
@@ -3242,7 +3242,7 @@
           },
           "response": [
             {
-              "id": "5597c713-385a-41e5-af5c-60b3cd0bcb3a",
+              "id": "b8cc78b1-d06e-4ef0-8eb0-8a2c342f3a97",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -3298,7 +3298,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "ed2cce40-3bd7-40ba-8f4c-9905b269301c",
+              "id": "c481219a-3092-45d5-90ff-b92e00101a66",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -3360,7 +3360,7 @@
           }
         },
         {
-          "id": "1787797f-6d03-4bc7-bfd2-1b429ccfb993",
+          "id": "e6c68808-7d09-42c6-8749-6caddfb7930e",
           "name": "Patch School Fees",
           "request": {
             "name": "Patch School Fees",
@@ -3402,7 +3402,7 @@
           },
           "response": [
             {
-              "id": "87cb74a2-a1ba-43b9-a55c-e6c3637bb6b0",
+              "id": "e1b4ed92-e280-432a-a80e-675b7519c135",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -3460,7 +3460,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "7ecb2280-5b44-41ce-bb92-ef89532bce01",
+              "id": "609ab1e4-5869-4448-98e0-e9384b0d3ad3",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -3524,7 +3524,7 @@
           }
         },
         {
-          "id": "3a3b8e4f-6fa6-4b54-8e44-36be1e228851",
+          "id": "9ad3b15c-5663-4190-b5a5-2fae5b1830f9",
           "name": "Get School Profile",
           "request": {
             "name": "Get School Profile",
@@ -3552,7 +3552,7 @@
           },
           "response": [
             {
-              "id": "9a109f66-346f-4afa-b4c1-e87710534cec",
+              "id": "45ee05d4-eedf-41c8-b2ab-541c2555dbc0",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -3596,7 +3596,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "1cd102bb-229b-4087-8bdb-dd8d0440e931",
+              "id": "975abe52-877c-4ef9-a325-d5c726f59cc8",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -3646,7 +3646,7 @@
           }
         },
         {
-          "id": "a9dfff8f-61fe-42ee-a4d6-61301fde8179",
+          "id": "e23cf5f4-8da0-4828-abcc-9addba24a720",
           "name": "Patch School Profile",
           "request": {
             "name": "Patch School Profile",
@@ -3687,7 +3687,7 @@
           },
           "response": [
             {
-              "id": "99102fe1-5285-4e0f-baf7-709fd684fca1",
+              "id": "ac24d374-b798-455c-8368-56a132ed2961",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -3744,7 +3744,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "34c00c7e-a526-4cd8-a7c2-32a54c070bbf",
+              "id": "fcfc120a-e3f2-478f-b025-ff406bf9981d",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -3807,7 +3807,7 @@
           }
         },
         {
-          "id": "4c77bdbf-44ab-4c1f-b9d6-bf131ad6ff39",
+          "id": "0b8f7807-15c8-43da-ada1-b003fdbc9642",
           "name": "Patch School Fees",
           "request": {
             "name": "Patch School Fees",
@@ -3850,7 +3850,7 @@
           },
           "response": [
             {
-              "id": "894218d1-b94d-4209-9e4c-edac09774d76",
+              "id": "d523ddb2-1080-46c1-bf95-e2578e737fbe",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -3909,7 +3909,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "3efffc50-863f-4a1b-8b23-198474f60710",
+              "id": "9f78ece8-5108-4930-a03e-c0de241425f0",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -3980,7 +3980,7 @@
       "description": "",
       "item": [
         {
-          "id": "52f6e2e4-14a0-4f54-911a-f81a70603ca0",
+          "id": "8526ec86-3aba-4a7a-ab1f-e0a8fd162111",
           "name": "Create Student",
           "request": {
             "name": "Create Student",
@@ -4020,7 +4020,7 @@
           },
           "response": [
             {
-              "id": "d737f3c9-43d3-472d-8105-0a9a8d5cd844",
+              "id": "d981cdb1-8212-419f-a2e7-a0a2de75b73b",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -4071,12 +4071,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"key_0\": \"<string>\"\n}",
+              "body": "{\n  \"key_0\": \"<string>\",\n  \"key_1\": \"<string>\"\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "d9c45724-585a-4413-b0c0-7eca5856ae9c",
+              "id": "4c51d241-5c61-4ba9-91a1-2951b693c533",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -4138,7 +4138,7 @@
           }
         },
         {
-          "id": "e1d9945f-e60b-44f5-9452-4f87ff1dbbdc",
+          "id": "54d5b4ff-869b-41d0-b7de-3eb9addf24fe",
           "name": "Get Students",
           "request": {
             "name": "Get Students",
@@ -4214,7 +4214,7 @@
           },
           "response": [
             {
-              "id": "4a9ea0c7-48f5-498b-9384-514b6b7fc555",
+              "id": "fed34495-63b7-40ef-80ff-d7a49af80f2e",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -4303,7 +4303,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "d160c65c-7d56-4dec-bc6c-d7ff454b236f",
+              "id": "04502dcb-d7aa-44c8-aa37-cd9cbe9bb411",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -4398,7 +4398,7 @@
           }
         },
         {
-          "id": "94501da3-6d83-47d8-8c4f-7bc07648ac3a",
+          "id": "6fa77956-e361-4fcb-9a49-c8f8ed72868b",
           "name": "Get Student Classes",
           "request": {
             "name": "Get Student Classes",
@@ -4429,7 +4429,7 @@
           },
           "response": [
             {
-              "id": "e923a097-007f-48ec-bd3b-1c0e6a8ed02a",
+              "id": "94b9b160-9d33-4190-8d6f-63e92e7f344d",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -4473,7 +4473,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "2fb01e5f-36f2-4de0-89ae-f5b1e6822464",
+              "id": "e42cde41-9e47-4bed-8215-2b8304d276c7",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -4523,7 +4523,7 @@
           }
         },
         {
-          "id": "32abffd8-cc19-4d0f-a0cf-1f67eca89a04",
+          "id": "17f7b075-2e89-4cc7-a5a3-734b34d47a47",
           "name": "Get Student By Id",
           "request": {
             "name": "Get Student By Id",
@@ -4562,7 +4562,7 @@
           },
           "response": [
             {
-              "id": "1fe943c4-3eb9-4eeb-b1ea-a9b0d665f14d",
+              "id": "c2277c22-0f7a-4ada-b9d9-d5877bb7db4b",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -4617,7 +4617,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "1fc14469-e0a1-4bf4-a589-b79bb9704119",
+              "id": "08bf9b5b-d6ff-439a-bed6-1be40f8a56d8",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -4678,7 +4678,7 @@
           }
         },
         {
-          "id": "71ae8b6b-f672-4d90-b485-8c2c082847e3",
+          "id": "6bdb9945-9512-41b7-85ae-d92f835dc2e9",
           "name": "Update Student",
           "request": {
             "name": "Update Student",
@@ -4730,7 +4730,7 @@
           },
           "response": [
             {
-              "id": "64b7d488-aa0f-49d5-8092-c84d13b9016b",
+              "id": "e8230ae0-3100-47e0-aebd-d389aa5646d1",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -4793,12 +4793,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"key_0\": \"<string>\",\n  \"key_1\": \"<string>\",\n  \"key_2\": \"<string>\"\n}",
+              "body": "{\n  \"key_0\": \"<string>\",\n  \"key_1\": \"<string>\"\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "c6381421-93de-42c4-be11-01670a75cfe1",
+              "id": "eedbaa3f-b5a9-4523-90da-68c008ae199b",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -4872,7 +4872,7 @@
           }
         },
         {
-          "id": "0ca4b638-340d-4cb0-add5-41e064fb7cec",
+          "id": "9ac3f4e3-fe5f-4a3b-abaa-f1ce0d546d64",
           "name": "Get Parents By Student Id",
           "request": {
             "name": "Get Parents By Student Id",
@@ -4912,7 +4912,7 @@
           },
           "response": [
             {
-              "id": "996e6206-dcb7-46d5-a02a-856f14d7062b",
+              "id": "affa501b-8e6e-497b-aa09-92a83406938d",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -4968,7 +4968,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "83e6abdb-6604-406a-bc4a-0d25f5779d6e",
+              "id": "e141d80c-c791-4d2e-87c3-ec4cf5c65780",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -5030,7 +5030,7 @@
           }
         },
         {
-          "id": "603eeda5-c5be-4b75-80fb-0537569a3fa3",
+          "id": "124aa7ad-7d37-4e3d-a9c4-e637dfe727b9",
           "name": "Update Student Parents",
           "request": {
             "name": "Update Student Parents",
@@ -5083,7 +5083,7 @@
           },
           "response": [
             {
-              "id": "0da07360-acc6-4633-ae12-891c3bfd974f",
+              "id": "48dd5e4e-63a5-4b92-8b99-bc0c7b4b579a",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -5152,7 +5152,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "eb189d89-74e9-42cd-a1c3-5de8d62ba62c",
+              "id": "a21cab15-0376-4f1e-b716-50fdca69e306",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -5233,7 +5233,7 @@
       "description": "",
       "item": [
         {
-          "id": "9321aa1b-806f-4f36-a53f-c32c3a0a2803",
+          "id": "ab4f9ef2-4ff7-4cb8-8d9d-455a4be16887",
           "name": "Get Parents",
           "request": {
             "name": "Get Parents",
@@ -5291,7 +5291,7 @@
           },
           "response": [
             {
-              "id": "a7dd5355-99bd-448d-93d8-fecd0e5763f7",
+              "id": "8341621d-6426-4227-8102-33de30ae822a",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -5362,7 +5362,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "be6b173d-7a89-4d11-b7ab-e1becd3c181c",
+              "id": "1e797d67-dcfe-46a2-9075-9ce9cda5e2af",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -5439,7 +5439,7 @@
           }
         },
         {
-          "id": "4a43a5a6-6c28-475d-adaf-1ce4f39db4c3",
+          "id": "56b8fd49-4c80-429e-865f-f6d842791404",
           "name": "Get Parent",
           "request": {
             "name": "Get Parent",
@@ -5478,7 +5478,7 @@
           },
           "response": [
             {
-              "id": "85f24f6a-d1db-4e13-a64b-4fb08aaafb73",
+              "id": "3e6d0a18-ea4d-4232-abad-f06d1b4016b1",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -5533,7 +5533,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "e6e5f304-446a-4f0e-9acb-b6965e0201da",
+              "id": "ef02a670-ac92-4440-8b0c-0690fdb58fad",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -5594,7 +5594,7 @@
           }
         },
         {
-          "id": "d0d5c2e5-1b83-4973-9c31-a3c7352b4f9a",
+          "id": "730a97d4-4714-4961-a7a4-ef58011c0005",
           "name": "Update Parent",
           "request": {
             "name": "Update Parent",
@@ -5646,7 +5646,7 @@
           },
           "response": [
             {
-              "id": "1b9f7862-2c90-47db-b9e3-c66807c9f248",
+              "id": "282e86f4-cd30-4c85-8421-2aba09ff9ab0",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -5714,7 +5714,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "b2c007a8-9d74-4eed-92d5-f4995fcf15a0",
+              "id": "c6a81752-7944-4c61-bc22-0999cec074b2",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -5788,7 +5788,7 @@
           }
         },
         {
-          "id": "e9142841-167f-48b3-8cef-e4d3f46e73ec",
+          "id": "a16252ea-2609-47cb-8a64-82e901b4169c",
           "name": "Update Parent Student Relationship",
           "request": {
             "name": "Update Parent Student Relationship",
@@ -5852,7 +5852,7 @@
           },
           "response": [
             {
-              "id": "db0b3322-a981-4d9d-afa4-f30b37d73db8",
+              "id": "7908a13e-05cc-47bd-9d0e-3a64cd0ad122",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -5932,7 +5932,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "acc67257-6ad5-4ac5-8268-b0f0d266719c",
+              "id": "ad6b9959-980c-4d33-97cc-e4441ac16037",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -6018,7 +6018,7 @@
           }
         },
         {
-          "id": "64aa72f8-e6d3-4d85-8c87-5f28779a43ce",
+          "id": "71d78110-f35d-469b-8db6-317ba44ac0f2",
           "name": "Remove Student From Parent",
           "request": {
             "name": "Remove Student From Parent",
@@ -6069,7 +6069,7 @@
           },
           "response": [
             {
-              "id": "8545ec1e-fb9e-4904-b6be-2fd073e62835",
+              "id": "87b71017-b13c-4d00-97aa-5d7b27ea1fba",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -6126,7 +6126,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "f5ef662b-39db-415e-9338-66dfff338e94",
+              "id": "548f7a56-529a-41a1-9f2b-4f77cf150513",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -6205,7 +6205,7 @@
       "description": "",
       "item": [
         {
-          "id": "bf1b8ee9-fdd8-476e-a7a6-3e74045f7c16",
+          "id": "9c4554fb-bd65-4d02-b798-ed0bbf35f114",
           "name": "Get Classes",
           "request": {
             "name": "Get Classes",
@@ -6232,7 +6232,7 @@
           },
           "response": [
             {
-              "id": "5b2c59ac-e512-485d-ad19-c89f0224a7a6",
+              "id": "45b2be60-7562-4cd3-a669-5b98e3e7522d",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -6275,7 +6275,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "c5094282-ca43-4300-9858-494e5fec5acc",
+              "id": "33f764db-1e52-44a0-a61d-e4154c0233be",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -6324,7 +6324,7 @@
           }
         },
         {
-          "id": "2e6ee5db-fb1e-4453-beea-4b2f2b67c754",
+          "id": "8cb1a262-c311-44b5-bd34-90a762d89d50",
           "name": "Create Class",
           "request": {
             "name": "Create Class",
@@ -6364,7 +6364,7 @@
           },
           "response": [
             {
-              "id": "3232adf3-d111-4b17-9a44-627f97f2a38f",
+              "id": "ea6ff70a-fb66-47fc-a031-9d2629c94c4a",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -6420,7 +6420,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "c3b58675-3606-4f9f-b213-a26d598551c2",
+              "id": "adb8e23e-f26f-410b-8bf3-e2e779998144",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -6482,7 +6482,7 @@
           }
         },
         {
-          "id": "50a47740-7f5f-4375-8bb3-c69816f42440",
+          "id": "ea0e8acb-3944-4cce-9566-991efbf839d2",
           "name": "Get Class",
           "request": {
             "name": "Get Class",
@@ -6521,7 +6521,7 @@
           },
           "response": [
             {
-              "id": "8ff27165-0a09-4ddc-8582-4b7d2ce80288",
+              "id": "b3c5df13-014a-4d91-953b-a7d56552d753",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -6576,7 +6576,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "78e80a96-a8a2-4f80-b5fe-2aaa1f1a4976",
+              "id": "e0fa28f1-98d9-49c6-b8e1-4fba52ca16a4",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -6637,7 +6637,7 @@
           }
         },
         {
-          "id": "0ecbec4f-3435-49dd-80c8-f88c4d3569cf",
+          "id": "3a1a2d20-d293-4cca-abc2-071ce4fb4c25",
           "name": "Update Class",
           "request": {
             "name": "Update Class",
@@ -6689,7 +6689,7 @@
           },
           "response": [
             {
-              "id": "17e49ea1-b660-4b15-a6ed-077ada8362be",
+              "id": "9c533546-5a05-4c8b-a7a2-1c75e124ae67",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -6757,7 +6757,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "3bef5a4a-8934-4103-b72f-98f1034ff039",
+              "id": "1ed56243-7f6a-427b-986d-ff9547192bae",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -6831,7 +6831,7 @@
           }
         },
         {
-          "id": "3793f3c9-fd91-489e-87a4-6e1758d752ba",
+          "id": "3ae92ee7-18f6-4082-a01b-5e531761bf92",
           "name": "Delete Class",
           "request": {
             "name": "Delete Class",
@@ -6870,7 +6870,7 @@
           },
           "response": [
             {
-              "id": "3911f0b8-e86b-4e08-b9ff-6ba928c581b0",
+              "id": "d0ab9742-def9-48c4-ae2a-45eff3dddd89",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -6915,7 +6915,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "d0ffdc29-e75b-49a2-b474-ffcb90b18773",
+              "id": "cd02d65f-2a06-4000-b1f1-ccc6d5b04189",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -6982,7 +6982,7 @@
       "description": "",
       "item": [
         {
-          "id": "537487b3-d8ed-4b22-ac96-aa66b71fee91",
+          "id": "9bc8f8b8-a72a-4b58-8f0b-fcedd678c213",
           "name": "Get Subjects",
           "request": {
             "name": "Get Subjects",
@@ -7009,7 +7009,7 @@
           },
           "response": [
             {
-              "id": "241b4f87-0264-4449-8ec6-6c5b06e86662",
+              "id": "fb935311-7f77-42a3-8635-996c334652dc",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -7052,7 +7052,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "573de6ff-87e5-40cd-a48e-71b7a6aabcb4",
+              "id": "6d0c54f6-9132-42ab-81d3-cf71d43f3a29",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -7101,7 +7101,7 @@
           }
         },
         {
-          "id": "53943236-cabe-4f1b-a071-a85e98d83b81",
+          "id": "a0e59499-3862-4855-b5bf-80159a8f2c7f",
           "name": "Create Subject",
           "request": {
             "name": "Create Subject",
@@ -7141,7 +7141,7 @@
           },
           "response": [
             {
-              "id": "5b527c7a-6a1a-432f-9097-b0671a1ca9cb",
+              "id": "9a55b182-49f2-49ca-b1a0-5fe66aed0842",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -7197,7 +7197,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "ccfcafef-e289-4c43-bfec-f4525bfe22a9",
+              "id": "243dadcc-7b20-432d-86bc-f9ac132d7c58",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -7259,7 +7259,7 @@
           }
         },
         {
-          "id": "1273abf6-bbaf-4d7b-ab48-0228b1cafae4",
+          "id": "5e1a27ff-05f9-4f95-87ba-3c61ef8bc770",
           "name": "Get Subject",
           "request": {
             "name": "Get Subject",
@@ -7298,7 +7298,7 @@
           },
           "response": [
             {
-              "id": "a73d0ff4-128e-46d4-8b3f-04fdb7b9c898",
+              "id": "d8b82ec0-60fc-490b-bf80-1c8435d04ee2",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -7353,7 +7353,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "e45dc4ab-26c9-44a1-bcfe-c75184d3fd69",
+              "id": "dc743be1-986a-4021-a434-6ddf82e66dee",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -7414,7 +7414,7 @@
           }
         },
         {
-          "id": "c78a3e15-7bcc-4c44-9c66-91c1a12dc7a5",
+          "id": "5bd70b42-f38a-4f88-8549-5ecc46757f56",
           "name": "Update Subject",
           "request": {
             "name": "Update Subject",
@@ -7466,7 +7466,7 @@
           },
           "response": [
             {
-              "id": "b79d28d8-a23c-40a3-941e-cffe3579da5b",
+              "id": "f34dac60-5c76-42de-af44-f3affbe31b3e",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -7534,7 +7534,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "a0afbda1-f84f-4f36-a7d5-0b532e1f7677",
+              "id": "1b837f0b-f985-4af9-91a1-84aaf4994328",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -7608,7 +7608,7 @@
           }
         },
         {
-          "id": "9a641351-8475-4e99-a0ba-52fa26918304",
+          "id": "c53b7b21-1620-441f-90e4-13b73014be7d",
           "name": "Delete Subject",
           "request": {
             "name": "Delete Subject",
@@ -7647,7 +7647,7 @@
           },
           "response": [
             {
-              "id": "2399ac5c-25e9-4ef4-8c02-59ae69cf7bce",
+              "id": "c628f5d5-f7fd-4401-b81f-d9c12b57e8b7",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -7692,7 +7692,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "1934ec42-9182-4a2e-8ae4-0c48729ddd39",
+              "id": "b6b071dd-6536-4be7-863c-a28d6b080702",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -7759,7 +7759,7 @@
       "description": "",
       "item": [
         {
-          "id": "73de0250-1ef8-47ee-8abe-744863ca6605",
+          "id": "284605a1-4a48-4d02-a12b-06cf638f52b9",
           "name": "Get Staff Members",
           "request": {
             "name": "Get Staff Members",
@@ -7826,7 +7826,7 @@
           },
           "response": [
             {
-              "id": "162f54c8-6c2e-4be7-9b34-9e977df741d1",
+              "id": "e9dd7774-773f-4a2c-9217-bff0e88b0caf",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -7901,12 +7901,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "[\n  {\n    \"id\": \"<uuid>\",\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"status\": \"On Leave\",\n    \"role\": \"Cleaner\",\n    \"rank\": \"Class Teacher\",\n    \"title\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"<string>\",\n    \"gender\": \"<string>\",\n    \"dateJoined\": \"<date>\",\n    \"classAssigned\": \"<string>\",\n    \"subjects\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  {\n    \"id\": \"<uuid>\",\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"status\": \"Inactive\",\n    \"role\": \"Librarian\",\n    \"rank\": \"Entry\",\n    \"title\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"<string>\",\n    \"gender\": \"<string>\",\n    \"dateJoined\": \"<date>\",\n    \"classAssigned\": \"<string>\",\n    \"subjects\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n]",
+              "body": "[\n  {\n    \"id\": \"<uuid>\",\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"status\": \"Inactive\",\n    \"role\": \"Counselor\",\n    \"rank\": \"Class Teacher\",\n    \"title\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"<string>\",\n    \"gender\": \"<string>\",\n    \"dateJoined\": \"<date>\",\n    \"classAssigned\": \"<string>\",\n    \"subjects\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  {\n    \"id\": \"<uuid>\",\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"status\": \"Active\",\n    \"role\": \"Bus Driver\",\n    \"rank\": \"Class Teacher\",\n    \"title\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"<string>\",\n    \"gender\": \"<string>\",\n    \"dateJoined\": \"<date>\",\n    \"classAssigned\": \"<string>\",\n    \"subjects\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n]",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "21646aee-c664-4a1f-acc5-52388984f665",
+              "id": "ef955a7d-fc92-4db8-a3a8-74f7caf285f5",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -7992,7 +7992,7 @@
           }
         },
         {
-          "id": "1047da5d-4965-423d-8531-5a2a43d9ce0b",
+          "id": "2ee8851e-b258-45ed-b3c9-b034c91b9baf",
           "name": "Create Staff Member",
           "request": {
             "name": "Create Staff Member",
@@ -8020,7 +8020,7 @@
             "method": "POST",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"role\": \"Chef\",\n  \"title\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"date_joined\": \"<date>\",\n  \"status\": \"Inactive\",\n  \"rank\": \"Basic\",\n  \"class_assigned\": \"<string>\",\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "raw": "{\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"role\": \"Receptionist\",\n  \"title\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"date_joined\": \"<date>\",\n  \"status\": \"On Leave\",\n  \"rank\": \"Basic\",\n  \"class_assigned\": \"<string>\",\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -8032,7 +8032,7 @@
           },
           "response": [
             {
-              "id": "c0a5e617-e345-4489-9bce-584ce269e6f9",
+              "id": "195cbb03-dc41-4271-b2dc-6e02fc20105b",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -8066,7 +8066,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"role\": \"Chef\",\n  \"title\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"date_joined\": \"<date>\",\n  \"status\": \"Inactive\",\n  \"rank\": \"Basic\",\n  \"class_assigned\": \"<string>\",\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "raw": "{\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"role\": \"Receptionist\",\n  \"title\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"date_joined\": \"<date>\",\n  \"status\": \"On Leave\",\n  \"rank\": \"Basic\",\n  \"class_assigned\": \"<string>\",\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -8083,12 +8083,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"id\": \"<uuid>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"status\": \"Inactive\",\n  \"role\": \"Administrator\",\n  \"rank\": \"Entry\",\n  \"title\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"dateJoined\": \"<date>\",\n  \"classAssigned\": \"<string>\",\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "body": "{\n  \"id\": \"<uuid>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"status\": \"On Leave\",\n  \"role\": \"Bus Driver\",\n  \"rank\": \"Senior\",\n  \"title\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"dateJoined\": \"<date>\",\n  \"classAssigned\": \"<string>\",\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "341d4932-c1b8-4b6c-a813-0b583a77e25a",
+              "id": "a593f1e3-5f69-46b0-9e05-f2798880c972",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -8122,7 +8122,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"role\": \"Chef\",\n  \"title\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"date_joined\": \"<date>\",\n  \"status\": \"Inactive\",\n  \"rank\": \"Basic\",\n  \"class_assigned\": \"<string>\",\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "raw": "{\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"role\": \"Receptionist\",\n  \"title\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"date_joined\": \"<date>\",\n  \"status\": \"On Leave\",\n  \"rank\": \"Basic\",\n  \"class_assigned\": \"<string>\",\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -8150,7 +8150,7 @@
           }
         },
         {
-          "id": "b10daf2e-9537-45c8-9be1-e9108c296267",
+          "id": "4f1f229f-18f2-4a20-a3f9-2fa18d64c91a",
           "name": "Get Staff Member",
           "request": {
             "name": "Get Staff Member",
@@ -8189,7 +8189,7 @@
           },
           "response": [
             {
-              "id": "918f7af8-82b5-4df1-b3c3-a5cebbec1f35",
+              "id": "ed9c26a7-6c60-466d-a12e-717e3b36d0f9",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -8239,12 +8239,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"id\": \"<uuid>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"status\": \"Inactive\",\n  \"role\": \"Administrator\",\n  \"rank\": \"Entry\",\n  \"title\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"dateJoined\": \"<date>\",\n  \"classAssigned\": \"<string>\",\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "body": "{\n  \"id\": \"<uuid>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"status\": \"On Leave\",\n  \"role\": \"Bus Driver\",\n  \"rank\": \"Senior\",\n  \"title\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"dateJoined\": \"<date>\",\n  \"classAssigned\": \"<string>\",\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "fce517d1-d26e-4458-997e-e9e69b51509d",
+              "id": "035a9d4c-7eb9-426e-a619-6801781dfc1b",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -8305,7 +8305,7 @@
           }
         },
         {
-          "id": "db24c758-e14c-46fa-ae90-d82b56b90d0f",
+          "id": "9e3b7755-b640-47b9-8db1-2930d7360d14",
           "name": "Update Staff Member",
           "request": {
             "name": "Update Staff Member",
@@ -8345,7 +8345,7 @@
             "method": "PATCH",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"<string>\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"date_joined\": \"<date>\",\n  \"status\": \"Suspended\",\n  \"role\": \"Chef\",\n  \"rank\": \"Basic\",\n  \"class_assigned\": \"<string>\",\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "raw": "{\n  \"title\": \"<string>\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"date_joined\": \"<date>\",\n  \"status\": \"Inactive\",\n  \"role\": \"Nurse\",\n  \"rank\": \"Entry\",\n  \"class_assigned\": \"<string>\",\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -8357,7 +8357,7 @@
           },
           "response": [
             {
-              "id": "3597e27e-0ce3-4b55-88cb-515e516e6d0d",
+              "id": "14391813-3dd6-431b-89af-a59464e73fb5",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -8403,7 +8403,7 @@
                 "method": "PATCH",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"title\": \"<string>\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"date_joined\": \"<date>\",\n  \"status\": \"Suspended\",\n  \"role\": \"Chef\",\n  \"rank\": \"Basic\",\n  \"class_assigned\": \"<string>\",\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "raw": "{\n  \"title\": \"<string>\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"date_joined\": \"<date>\",\n  \"status\": \"Inactive\",\n  \"role\": \"Nurse\",\n  \"rank\": \"Entry\",\n  \"class_assigned\": \"<string>\",\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -8420,12 +8420,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"id\": \"<uuid>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"status\": \"Inactive\",\n  \"role\": \"Administrator\",\n  \"rank\": \"Entry\",\n  \"title\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"dateJoined\": \"<date>\",\n  \"classAssigned\": \"<string>\",\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "body": "{\n  \"id\": \"<uuid>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"status\": \"On Leave\",\n  \"role\": \"Bus Driver\",\n  \"rank\": \"Senior\",\n  \"title\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"dateJoined\": \"<date>\",\n  \"classAssigned\": \"<string>\",\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "fa21ff21-4cbf-457b-ad8f-800c7251feba",
+              "id": "55387294-d8c7-4147-92ea-f437d4f5544a",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -8471,7 +8471,7 @@
                 "method": "PATCH",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"title\": \"<string>\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"date_joined\": \"<date>\",\n  \"status\": \"Suspended\",\n  \"role\": \"Chef\",\n  \"rank\": \"Basic\",\n  \"class_assigned\": \"<string>\",\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "raw": "{\n  \"title\": \"<string>\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"date_joined\": \"<date>\",\n  \"status\": \"Inactive\",\n  \"role\": \"Nurse\",\n  \"rank\": \"Entry\",\n  \"class_assigned\": \"<string>\",\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -8499,7 +8499,7 @@
           }
         },
         {
-          "id": "0d67ae04-57df-438b-aa44-59ea46d3ebba",
+          "id": "2ebf7a52-f86a-4790-aa58-be8079441890",
           "name": "Delete Staff Member",
           "request": {
             "name": "Delete Staff Member",
@@ -8538,7 +8538,7 @@
           },
           "response": [
             {
-              "id": "97ea11aa-6748-4b8e-86e6-6d55938898c6",
+              "id": "6d0ae958-9f25-4b68-980e-1679012ded1b",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -8583,7 +8583,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "1fc02724-1adb-4f43-a4bf-b45212619ecb",
+              "id": "85d1b7d8-5e69-4ae7-9368-8f1aff40035e",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -8644,7 +8644,7 @@
           }
         },
         {
-          "id": "6fc9683e-262d-40cc-9d5c-ab9b4314a47f",
+          "id": "105e20f1-db6f-48fc-a724-0773d5d65ad0",
           "name": "Get Qualification Profile",
           "request": {
             "name": "Get Qualification Profile",
@@ -8684,7 +8684,7 @@
           },
           "response": [
             {
-              "id": "3bd0e713-8a45-438a-a356-97cbcdf3816f",
+              "id": "175c133a-ab7b-4edb-9571-3f8586cc99ea",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -8740,7 +8740,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "104c4e06-e81e-43ab-93f3-dc7da3b84d06",
+              "id": "d75aff2c-e9fc-477b-9496-3fc98a86292a",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -8802,7 +8802,7 @@
           }
         },
         {
-          "id": "44df8b26-32e5-4765-89b5-27db0e913d19",
+          "id": "a5e42fff-5aa5-4b4d-a16a-68a6ec587995",
           "name": "Sync Qualification Profile",
           "request": {
             "name": "Sync Qualification Profile",
@@ -8858,7 +8858,7 @@
           },
           "response": [
             {
-              "id": "d8ff8a27-6bb5-4eaf-a633-a3fa31612c77",
+              "id": "7e1338f1-3673-49fd-bef1-a71b52621016",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -8927,7 +8927,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "a2da5db7-699c-4834-89e9-2576e9f5d34e",
+              "id": "cd5f162f-8ed8-4ee0-ad56-0189c8c4c999",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -9008,7 +9008,7 @@
       "description": "",
       "item": [
         {
-          "id": "277f67f1-e78f-456c-8d26-b22ef93b7c59",
+          "id": "a301f526-a1a6-4f76-b230-ab2efa249171",
           "name": "Get Term Settings",
           "request": {
             "name": "Get Term Settings",
@@ -9035,7 +9035,7 @@
           },
           "response": [
             {
-              "id": "86e96020-7121-477a-9408-78300685275a",
+              "id": "398e630d-2280-4cfb-ac43-fc5d828c4832",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -9078,7 +9078,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "bb5dbfeb-cdfe-4b51-9e0f-b77928b6947e",
+              "id": "6e3773ea-c68c-4a19-ba06-088a7adadac8",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -9127,7 +9127,7 @@
           }
         },
         {
-          "id": "f4931fd2-6937-4fdf-bdbd-4a5fcfda5211",
+          "id": "581bcf7e-16f2-40e9-afa7-cc995a23fe88",
           "name": "Update Term Settings",
           "request": {
             "name": "Update Term Settings",
@@ -9167,7 +9167,7 @@
           },
           "response": [
             {
-              "id": "5054bbe7-183a-4c51-ab3d-35c2c0525344",
+              "id": "6c548384-0117-4e6a-becb-2cfa40f95c41",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -9223,7 +9223,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "5e0a72db-6e45-4b9b-acd7-f1073a792144",
+              "id": "51379072-81ef-4226-9907-376b5dea406e",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -9291,7 +9291,7 @@
       "description": "",
       "item": [
         {
-          "id": "82b16cef-79c4-4258-ae6f-bb491d5c153f",
+          "id": "4a92008c-d91c-4ffd-9f12-427d29217deb",
           "name": "List Timetables",
           "request": {
             "name": "List Timetables",
@@ -9318,7 +9318,7 @@
           },
           "response": [
             {
-              "id": "dcb29fcd-d09b-49b5-ad61-0d832486396f",
+              "id": "b1c19847-980d-46a3-be3e-3e028d51b64e",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -9361,7 +9361,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "fa01887c-f411-4c07-b3b3-602e2ea05907",
+              "id": "ed026c41-fca2-4d86-9583-6139c3605961",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -9410,7 +9410,7 @@
           }
         },
         {
-          "id": "fccc62e8-0918-476e-a72a-47ee3b5c619b",
+          "id": "95228e6b-9811-4f5b-b8ee-2801c3f34294",
           "name": "Create Timetable",
           "request": {
             "name": "Create Timetable",
@@ -9450,7 +9450,7 @@
           },
           "response": [
             {
-              "id": "1fe9f454-cfc3-45d4-a7e1-8306d799e3f5",
+              "id": "da0799c5-c7fa-4e50-812b-e81dcc10e42a",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -9506,7 +9506,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "c6d54e65-1ce2-4c17-b4a6-3702bc38f6cf",
+              "id": "d6045047-c3f0-4134-a46f-d6f1bed5cc97",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -9568,7 +9568,7 @@
           }
         },
         {
-          "id": "a840c2b8-c3a1-4624-b538-d38ffcab5bbb",
+          "id": "45ce3967-adf4-4b64-aa36-55b7bb8a41d3",
           "name": "Get Term Timetable",
           "request": {
             "name": "Get Term Timetable",
@@ -9618,7 +9618,7 @@
           },
           "response": [
             {
-              "id": "9696f85b-ea08-4fdc-8cb2-62f66f49c674",
+              "id": "85952595-b6af-4d98-afe3-07d512e93904",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -9681,7 +9681,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "fe8d3b03-c585-4b1f-a893-8f0cde2a9f42",
+              "id": "077a89a1-8e54-4cb2-a2f9-0dae94013f61",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -9750,7 +9750,7 @@
           }
         },
         {
-          "id": "9af883be-9f35-46a3-b49a-a8d371adfc97",
+          "id": "18ab4d52-472f-48a9-ad4e-df77ad386af4",
           "name": "Preview Bell Schedule",
           "request": {
             "name": "Preview Bell Schedule",
@@ -9807,7 +9807,7 @@
           },
           "response": [
             {
-              "id": "aacf9f1b-3efa-4778-9c03-4ad732abe33f",
+              "id": "0e2006a9-0016-43d1-8a9d-b51bb189470f",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -9877,7 +9877,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "4939b521-52d0-4af8-8217-05a73f266549",
+              "id": "9758a4cf-3d9c-406b-9b03-f7879f377855",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -9953,7 +9953,7 @@
           }
         },
         {
-          "id": "8e9a64a8-b3ba-42b3-8988-9b0894ee6e58",
+          "id": "f92ea3b5-ac35-45c7-9508-7f8684cf9121",
           "name": "Save Bell Schedule",
           "request": {
             "name": "Save Bell Schedule",
@@ -10006,7 +10006,7 @@
           },
           "response": [
             {
-              "id": "144f1324-7407-4034-8b4d-d3e9653d21f0",
+              "id": "59f8aa5c-b857-4b08-afd7-3f676e82a830",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -10075,7 +10075,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "7b3a66ff-2d73-4a63-9ae0-cc6eb5adcdcd",
+              "id": "04400fa0-8c31-42bb-a363-f7ccb9c34eee",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -10150,7 +10150,7 @@
           }
         },
         {
-          "id": "64b19e15-26dd-4d95-b8a8-f5c36f5d2cdb",
+          "id": "05ac9385-de8f-4d00-ab98-1b4df165ae02",
           "name": "Create Lesson",
           "request": {
             "name": "Create Lesson",
@@ -10203,7 +10203,7 @@
           },
           "response": [
             {
-              "id": "6a7a7310-63eb-4025-b846-eb1aa6bcf813",
+              "id": "83a72991-1989-426d-a2b6-477df91efdfe",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -10272,7 +10272,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "80c4bbb8-ec0a-4539-af16-7d219f1b851d",
+              "id": "beb813c4-3937-4483-824b-b29c5dc6b264",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -10347,7 +10347,7 @@
           }
         },
         {
-          "id": "1a3e3fd9-79c8-4d04-995a-09acd3cbbad0",
+          "id": "9e3a23bd-7bd3-484b-91b7-4e345097dcaa",
           "name": "Swap Lessons",
           "request": {
             "name": "Swap Lessons",
@@ -10401,7 +10401,7 @@
           },
           "response": [
             {
-              "id": "5b71c9cc-0d7e-41ff-8783-ba48566d7aa0",
+              "id": "7c641e30-4f84-469e-8c79-ef1220d798d0",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -10471,7 +10471,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "36814468-c6f5-4ffe-9d83-ab1c57b1b578",
+              "id": "b02a0b9b-1f33-4841-8ee5-cc56eed0c263",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -10547,7 +10547,7 @@
           }
         },
         {
-          "id": "23b8961a-0a2f-4f77-98ce-e4cd29e16776",
+          "id": "5f5c5a3b-360d-4798-a929-b2933a41295a",
           "name": "Update Lesson",
           "request": {
             "name": "Update Lesson",
@@ -10611,7 +10611,7 @@
           },
           "response": [
             {
-              "id": "4a8462a2-7fa3-45ef-bf85-d9c6b85210e7",
+              "id": "401f0c32-78d8-4d08-832a-9ab79b094fda",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -10691,7 +10691,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "bad14c76-7019-48e9-ac6f-09e71d4646ef",
+              "id": "532171ca-dc01-466d-a9d0-8be227be6b26",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -10777,7 +10777,7 @@
           }
         },
         {
-          "id": "0adc8905-7bf0-4145-afb0-1b4b8c2eb4c1",
+          "id": "7a745f41-0790-4b02-817e-fe057185b33c",
           "name": "Delete Lesson",
           "request": {
             "name": "Delete Lesson",
@@ -10828,7 +10828,7 @@
           },
           "response": [
             {
-              "id": "da3073ad-df55-4d7e-8c18-134970e84f72",
+              "id": "0807622f-faf6-422e-a377-b34693b34dcc",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -10885,7 +10885,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "1996380a-4c06-421e-90cb-2d87f10bcc2d",
+              "id": "8fee68f0-d819-4250-a8b1-110b643c66a9",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -10958,7 +10958,7 @@
           }
         },
         {
-          "id": "5a1ae4d0-dbf6-4a5f-a1a2-9fd0f1cb82c1",
+          "id": "3fe354f1-dca5-4d53-b684-d4abee66404a",
           "name": "Create Options Period",
           "request": {
             "name": "Create Options Period",
@@ -11011,7 +11011,7 @@
           },
           "response": [
             {
-              "id": "4e02f54a-b77d-47bd-ba5a-bed87ee84472",
+              "id": "52e0149b-a68c-4642-9a65-10c3f1672713",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -11080,7 +11080,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "7db31383-656a-4061-ad6e-612f3343aba6",
+              "id": "76a422e7-5bbb-4982-94e4-433fc9113624",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -11155,7 +11155,7 @@
           }
         },
         {
-          "id": "d5ece1d2-824d-431d-988d-91b8d383bbb9",
+          "id": "fcee5596-cb1f-4aa3-a3fd-e66d3d832f91",
           "name": "Delete Options Period",
           "request": {
             "name": "Delete Options Period",
@@ -11206,7 +11206,7 @@
           },
           "response": [
             {
-              "id": "4d8e966c-8214-4a17-bdff-4d1a64261153",
+              "id": "d6db8898-22cb-4d29-8a00-91d4d13fff1c",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -11263,7 +11263,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "e4f1d6ca-3689-49f5-91d4-06f4c28bd0af",
+              "id": "763760f7-60af-4b2e-a7e9-a857d2305334",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -11342,7 +11342,7 @@
       "description": "",
       "item": [
         {
-          "id": "08e1401d-ccff-4aad-a1c5-dc9f11b7a840",
+          "id": "2dd2446f-42a5-47ce-8118-72783a65a84d",
           "name": "Get Class Performance",
           "request": {
             "name": "Get Class Performance",
@@ -11427,7 +11427,7 @@
           },
           "response": [
             {
-              "id": "1c6f1992-0d91-4932-8a47-baa69b860cf1",
+              "id": "e45a589b-049c-4777-9190-ab2e711f7e06",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -11520,12 +11520,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"marks\": [\n    {\n      \"key_0\": \"<string>\"\n    },\n    {\n      \"key_0\": \"<string>\"\n    }\n  ],\n  \"classAverage\": {\n    \"key_0\": \"<number>\"\n  },\n  \"trends\": [\n    {\n      \"term\": \"<string>\",\n      \"average\": \"<number>\"\n    },\n    {\n      \"term\": \"<string>\",\n      \"average\": \"<number>\"\n    }\n  ]\n}",
+              "body": "{\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"marks\": [\n    {\n      \"key_0\": \"<string>\",\n      \"key_1\": \"<string>\"\n    },\n    {\n      \"key_0\": \"<string>\"\n    }\n  ],\n  \"classAverage\": {\n    \"key_0\": \"<number>\",\n    \"key_1\": \"<number>\"\n  },\n  \"trends\": [\n    {\n      \"term\": \"<string>\",\n      \"average\": \"<number>\"\n    },\n    {\n      \"term\": \"<string>\",\n      \"average\": \"<number>\"\n    }\n  ]\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "d299c0fd-199d-4668-bf41-1ba0b1654b30",
+              "id": "421015d2-d0b3-41f7-a96c-78bc332e007f",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -11629,7 +11629,7 @@
           }
         },
         {
-          "id": "a1f24519-03d0-49d6-95d2-18a3257f2303",
+          "id": "50d74521-af12-4e77-b0d2-fc489397e155",
           "name": "Update Class Performance",
           "request": {
             "name": "Update Class Performance",
@@ -11660,7 +11660,7 @@
             "method": "PATCH",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"class\": \"<string>\",\n  \"term\": \"<string>\",\n  \"year\": \"<integer>\",\n  \"marks\": [\n    {\n      \"key_0\": \"<string>\",\n      \"key_1\": \"<string>\"\n    },\n    {\n      \"key_0\": \"<string>\"\n    }\n  ]\n}",
+              "raw": "{\n  \"class\": \"<string>\",\n  \"term\": \"<string>\",\n  \"year\": \"<integer>\",\n  \"marks\": [\n    {\n      \"key_0\": \"<string>\",\n      \"key_1\": \"<string>\",\n      \"key_2\": \"<string>\"\n    },\n    {\n      \"key_0\": \"<string>\"\n    }\n  ]\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -11672,7 +11672,7 @@
           },
           "response": [
             {
-              "id": "d788cacb-d1f6-4c2a-9652-1f592f0b5c71",
+              "id": "95931a56-b016-4112-a608-443e94e7e38e",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -11706,7 +11706,7 @@
                 "method": "PATCH",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"class\": \"<string>\",\n  \"term\": \"<string>\",\n  \"year\": \"<integer>\",\n  \"marks\": [\n    {\n      \"key_0\": \"<string>\",\n      \"key_1\": \"<string>\"\n    },\n    {\n      \"key_0\": \"<string>\"\n    }\n  ]\n}",
+                  "raw": "{\n  \"class\": \"<string>\",\n  \"term\": \"<string>\",\n  \"year\": \"<integer>\",\n  \"marks\": [\n    {\n      \"key_0\": \"<string>\",\n      \"key_1\": \"<string>\",\n      \"key_2\": \"<string>\"\n    },\n    {\n      \"key_0\": \"<string>\"\n    }\n  ]\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -11723,12 +11723,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"marks\": [\n    {\n      \"key_0\": \"<string>\"\n    },\n    {\n      \"key_0\": \"<string>\"\n    }\n  ],\n  \"classAverage\": {\n    \"key_0\": \"<number>\"\n  },\n  \"trends\": [\n    {\n      \"term\": \"<string>\",\n      \"average\": \"<number>\"\n    },\n    {\n      \"term\": \"<string>\",\n      \"average\": \"<number>\"\n    }\n  ]\n}",
+              "body": "{\n  \"subjects\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"marks\": [\n    {\n      \"key_0\": \"<string>\",\n      \"key_1\": \"<string>\"\n    },\n    {\n      \"key_0\": \"<string>\"\n    }\n  ],\n  \"classAverage\": {\n    \"key_0\": \"<number>\",\n    \"key_1\": \"<number>\"\n  },\n  \"trends\": [\n    {\n      \"term\": \"<string>\",\n      \"average\": \"<number>\"\n    },\n    {\n      \"term\": \"<string>\",\n      \"average\": \"<number>\"\n    }\n  ]\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "bc4f16e9-dee9-4caa-9894-5954e840b5b7",
+              "id": "2927a845-c994-4768-8c87-e2c35289817a",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -11762,7 +11762,7 @@
                 "method": "PATCH",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"class\": \"<string>\",\n  \"term\": \"<string>\",\n  \"year\": \"<integer>\",\n  \"marks\": [\n    {\n      \"key_0\": \"<string>\",\n      \"key_1\": \"<string>\"\n    },\n    {\n      \"key_0\": \"<string>\"\n    }\n  ]\n}",
+                  "raw": "{\n  \"class\": \"<string>\",\n  \"term\": \"<string>\",\n  \"year\": \"<integer>\",\n  \"marks\": [\n    {\n      \"key_0\": \"<string>\",\n      \"key_1\": \"<string>\",\n      \"key_2\": \"<string>\"\n    },\n    {\n      \"key_0\": \"<string>\"\n    }\n  ]\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -11796,7 +11796,7 @@
       "description": "",
       "item": [
         {
-          "id": "151cfd80-6a38-45c4-8dbf-8a6feef69ea6",
+          "id": "e5082808-ef3b-4080-a5c1-d7540dcb2b1b",
           "name": "List Team Members",
           "request": {
             "name": "List Team Members",
@@ -11823,7 +11823,7 @@
           },
           "response": [
             {
-              "id": "d4e36460-43c3-4c54-8b7e-f0a029758487",
+              "id": "040f557f-6693-4b38-8c7d-49ff5ee3c0a5",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -11866,7 +11866,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "4615034e-6b9d-4da8-81d8-1d478e1a7ae8",
+              "id": "0b42995f-fd62-4d34-8ace-21259f0b028a",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -11915,7 +11915,7 @@
           }
         },
         {
-          "id": "c04bb625-8cf7-4546-a927-b4c171a9cdbc",
+          "id": "b1e50a72-7118-4d5f-a36c-28800b05ea00",
           "name": "Invite Team Member",
           "request": {
             "name": "Invite Team Member",
@@ -11944,7 +11944,7 @@
             "method": "POST",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"<string>\",\n  \"role\": \"Bursar\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\"\n}",
+              "raw": "{\n  \"email\": \"<string>\",\n  \"role\": \"Head Teacher\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\"\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -11956,7 +11956,7 @@
           },
           "response": [
             {
-              "id": "fe52fc90-7350-4a25-98f5-64a2ce71f8ef",
+              "id": "d71e72df-1131-472a-8df3-1d14c372f4b2",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -11991,7 +11991,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"email\": \"<string>\",\n  \"role\": \"Bursar\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\"\n}",
+                  "raw": "{\n  \"email\": \"<string>\",\n  \"role\": \"Head Teacher\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -12013,7 +12013,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "ca076292-ce93-42ca-9902-e506720dabf0",
+              "id": "10dc2557-0814-42d7-9ce0-9eb66830f03c",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -12048,7 +12048,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"email\": \"<string>\",\n  \"role\": \"Bursar\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\"\n}",
+                  "raw": "{\n  \"email\": \"<string>\",\n  \"role\": \"Head Teacher\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -12076,7 +12076,7 @@
           }
         },
         {
-          "id": "4fd7f922-e1e8-4f72-b21f-a35598a240c5",
+          "id": "71f1ee12-5e1c-4d9f-9309-c7320e227441",
           "name": "Preview Team Invite",
           "request": {
             "name": "Preview Team Invite",
@@ -12123,7 +12123,7 @@
           },
           "response": [
             {
-              "id": "9521f4df-c876-48d8-af56-d35deb0abdd0",
+              "id": "a9e2f83f-de6e-4015-8052-5a84541863c6",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -12181,7 +12181,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "2a36dc5d-e26e-44d1-a19b-efe95ae35f42",
+              "id": "b49c311d-c6f9-48dd-9d5e-81f6d3104ce8",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -12245,7 +12245,7 @@
           }
         },
         {
-          "id": "761fbe44-742e-4a2d-8bd7-fc1bb649127e",
+          "id": "838a75f4-c234-47cf-acf8-0cf998ff2c35",
           "name": "Accept Team Invite",
           "request": {
             "name": "Accept Team Invite",
@@ -12290,7 +12290,7 @@
           },
           "response": [
             {
-              "id": "51baa0c8-bddd-4ed5-9fac-272c0f9741c5",
+              "id": "56481411-e31c-4753-b5b7-8a83a74fa2b2",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -12348,7 +12348,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "683fd331-c14b-4557-ae33-b490bc3b9b6b",
+              "id": "ec33847c-16b1-4400-921b-b437815dc6db",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -12412,7 +12412,7 @@
           }
         },
         {
-          "id": "f83eb8c9-1017-449a-8c6f-5beff3d5cdc5",
+          "id": "ae455a7d-1cc9-43fb-9131-8e240f3e7662",
           "name": "Update Team Member Role",
           "request": {
             "name": "Update Team Member Role",
@@ -12452,7 +12452,7 @@
             "method": "PATCH",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"role\": \"Admissions Officer\"\n}",
+              "raw": "{\n  \"role\": \"Admin\"\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -12464,7 +12464,7 @@
           },
           "response": [
             {
-              "id": "967dfbff-736c-4e8e-8681-d5514181af95",
+              "id": "71773805-5a30-49db-ac06-0aaa922611ec",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -12510,7 +12510,7 @@
                 "method": "PATCH",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"role\": \"Admissions Officer\"\n}",
+                  "raw": "{\n  \"role\": \"Admin\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -12532,7 +12532,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "03745c2a-1c19-44ba-aa74-593fd5202ec1",
+              "id": "17fa9ed7-11b7-4491-90b8-0e7bac7adf0e",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -12578,7 +12578,7 @@
                 "method": "PATCH",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"role\": \"Admissions Officer\"\n}",
+                  "raw": "{\n  \"role\": \"Admin\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -12606,7 +12606,7 @@
           }
         },
         {
-          "id": "ae7639eb-923d-4c7a-9b49-7c9c158f4f55",
+          "id": "fa944704-ecc5-4b27-880b-5db78b49a96f",
           "name": "Remove Team Member",
           "request": {
             "name": "Remove Team Member",
@@ -12645,7 +12645,7 @@
           },
           "response": [
             {
-              "id": "a6d25445-dfe8-4d82-af7c-9a54e18454e4",
+              "id": "5b8bc393-0e8b-437d-b52a-a7490e08d52d",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -12690,7 +12690,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "0e36dbd9-d3f1-48a6-a3c7-bdb47e8bf9f8",
+              "id": "d3a3b73b-6067-41d2-9315-e9595c9d1948",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -12751,7 +12751,7 @@
           }
         },
         {
-          "id": "887e9e95-a088-4039-99c6-9fc8fbb2a606",
+          "id": "6b3996c0-e68b-431d-9e2d-7bcbedfd424b",
           "name": "Resend Team Invite",
           "request": {
             "name": "Resend Team Invite",
@@ -12791,7 +12791,7 @@
           },
           "response": [
             {
-              "id": "379225e2-c871-4256-9e7f-f17868acaab8",
+              "id": "da85610e-610c-4894-8329-23d8ab444ce8",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -12847,7 +12847,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "dc75aa72-d04d-4d10-b68a-36e9cb5c3664",
+              "id": "408fcbb8-16aa-4d1b-ac0f-1084e9309eee",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -12915,7 +12915,7 @@
       "description": "",
       "item": [
         {
-          "id": "4c93f97d-226f-4fd9-98c0-013a8bbc12a1",
+          "id": "f9c3eda5-e8a8-456b-af0d-1cbf70da356d",
           "name": "Create Logo Upload Url",
           "request": {
             "name": "Create Logo Upload Url",
@@ -12965,7 +12965,7 @@
           },
           "response": [
             {
-              "id": "8cdcb4a0-aca5-4ede-95e8-e27eb717cbfc",
+              "id": "1ea76add-7b44-4982-884c-6e9670c3186b",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -13031,7 +13031,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "0df84ddc-ce24-44c1-a840-fd730c2d255e",
+              "id": "89636729-e491-4728-8711-c74396afdbe0",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -13103,7 +13103,7 @@
           }
         },
         {
-          "id": "684ed6f9-a583-40fd-87e4-199965e2577c",
+          "id": "a6c26bbf-fdf6-4100-8dcd-cc8d00aca23b",
           "name": "Create Cover Upload Url",
           "request": {
             "name": "Create Cover Upload Url",
@@ -13153,7 +13153,7 @@
           },
           "response": [
             {
-              "id": "e2b8fb97-ba89-4d93-8f75-99b05cac6ea9",
+              "id": "a765410c-7649-476e-8afc-72cc72963aa3",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -13219,7 +13219,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "0ae86b52-b2f7-4c24-9bc0-e86b33fc138c",
+              "id": "717ed39e-f9cc-4ae7-b0bb-20dc2e5d9ca4",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -13291,7 +13291,7 @@
           }
         },
         {
-          "id": "4b0be8ef-0e6d-404c-901c-fbd7805f7a27",
+          "id": "fce4bce4-d8db-4140-b799-104dc7323f14",
           "name": "Create Gallery Upload Url",
           "request": {
             "name": "Create Gallery Upload Url",
@@ -13341,7 +13341,7 @@
           },
           "response": [
             {
-              "id": "cd7b2be3-f707-4641-b2e5-2ef66a883b15",
+              "id": "57587e2b-3bb6-4e32-888d-0d232adcab32",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -13407,7 +13407,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "1bb79cea-dc7e-48df-8603-e1868e139ecb",
+              "id": "ff21b0c7-5711-4d54-90b5-83db9f171a3c",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -13479,7 +13479,7 @@
           }
         },
         {
-          "id": "a703d0e3-5730-48ab-b9cf-c6f67303f5d4",
+          "id": "f8ccf8f7-3edb-40b4-85f2-73617abfeec1",
           "name": "List Gallery",
           "request": {
             "name": "List Gallery",
@@ -13524,7 +13524,7 @@
           },
           "response": [
             {
-              "id": "32dfe2b4-3386-42b5-80da-0ba8f6c5b9b1",
+              "id": "bc938262-bb13-4226-8323-2a418a934cb0",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -13580,7 +13580,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "bd207844-5e4c-415e-90d4-280eccbb1281",
+              "id": "a9ff07fd-03ef-4efa-a7d4-d906ff9214b3",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -13642,7 +13642,7 @@
           }
         },
         {
-          "id": "8bdab062-8727-4bda-acd2-112974ccbb16",
+          "id": "532faf43-3404-4b3f-85c9-63f6a0bdb440",
           "name": "Add Gallery Image",
           "request": {
             "name": "Add Gallery Image",
@@ -13695,7 +13695,7 @@
           },
           "response": [
             {
-              "id": "9c9109e9-0101-4546-b3cd-79197a436419",
+              "id": "fcf8bd4d-0e47-4baa-9d75-847623d5d3cf",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -13764,7 +13764,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "2b2182f1-f1df-4a3c-aa30-f1bc3d89514c",
+              "id": "74508fbb-7170-4979-b99a-ab194cec95df",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -13839,7 +13839,7 @@
           }
         },
         {
-          "id": "b968e3da-5732-496b-bb0a-502c3709ce01",
+          "id": "ff8eb183-55bf-4d9e-a545-bd0afee5437d",
           "name": "Reorder Gallery",
           "request": {
             "name": "Reorder Gallery",
@@ -13893,7 +13893,7 @@
           },
           "response": [
             {
-              "id": "1b0ce3be-9d26-49de-92b8-eee09f572ab2",
+              "id": "fdcaad70-ca97-4596-8130-03836028c318",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -13963,7 +13963,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "8bb9283a-120d-4ffd-84d6-f86fbfe17d6b",
+              "id": "99a3fb6b-3c74-4045-83a1-344fb3235ce0",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -14039,7 +14039,7 @@
           }
         },
         {
-          "id": "7368d16d-3de2-419b-9e82-189807080776",
+          "id": "bdc17355-a73c-4e74-aef6-87cb064bee52",
           "name": "Update Gallery Caption",
           "request": {
             "name": "Update Gallery Caption",
@@ -14103,7 +14103,7 @@
           },
           "response": [
             {
-              "id": "6767057c-499a-4206-924d-db9d762f19c3",
+              "id": "b3263c12-f6ae-4599-b7ee-a2596722227f",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -14183,7 +14183,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "e21a8f2a-4bd1-426a-9b92-f37c75cfc961",
+              "id": "12b4850a-5738-475c-8cd6-64ea198fafb3",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -14269,7 +14269,7 @@
           }
         },
         {
-          "id": "1a5592c6-cc44-4771-92c5-04da93495546",
+          "id": "198eaaf2-f283-43de-a94c-42ab6533d06e",
           "name": "Delete Gallery Image",
           "request": {
             "name": "Delete Gallery Image",
@@ -14320,7 +14320,7 @@
           },
           "response": [
             {
-              "id": "ab0f737d-8553-4382-87f4-013e872c4617",
+              "id": "f1c50003-8d0e-425a-88a3-c0f692887544",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -14377,7 +14377,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "65b21c41-dde0-43f6-8940-f0abdafe090a",
+              "id": "f7826781-9d48-469d-9f85-65542130c3f7",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -14456,7 +14456,7 @@
       "description": "",
       "item": [
         {
-          "id": "fdd51b0f-9bb1-4815-8ac1-431fa5cc8389",
+          "id": "a0b7f66d-7b8e-4515-9e04-8eff2e74a539",
           "name": "Get Medical Profile",
           "request": {
             "name": "Get Medical Profile",
@@ -14496,7 +14496,7 @@
           },
           "response": [
             {
-              "id": "d04eb85e-5468-439a-9439-859050d3d217",
+              "id": "64a4d360-ec1c-45eb-89ce-dda2194c2660",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -14552,7 +14552,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "acdbff97-b67e-4e0d-b7a4-bbb54ff00f62",
+              "id": "7ca85a89-1434-4405-bb69-cfb7346beccf",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -14614,7 +14614,7 @@
           }
         },
         {
-          "id": "e622f79d-9286-4056-b2c5-de2c989a1627",
+          "id": "5bcd7a95-7275-4ac1-baab-77c48c92a48d",
           "name": "Sync Medical Profile",
           "request": {
             "name": "Sync Medical Profile",
@@ -14658,7 +14658,7 @@
             "method": "PATCH",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"blood_type\": \"<string>\",\n  \"emergency_notes\": \"<string>\",\n  \"doctor_name\": \"<string>\",\n  \"doctor_phone\": \"<string>\",\n  \"clinic_name\": \"<string>\",\n  \"allergies\": [\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Mild\",\n      \"reaction\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Mild\",\n      \"reaction\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"medications\": [\n    {\n      \"name\": \"<string>\",\n      \"dosage\": \"<string>\",\n      \"frequency\": \"<string>\",\n      \"time\": \"<string>\",\n      \"prescribed_by\": \"<string>\",\n      \"is_active\": true,\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"dosage\": \"<string>\",\n      \"frequency\": \"<string>\",\n      \"time\": \"<string>\",\n      \"prescribed_by\": \"<string>\",\n      \"is_active\": true,\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"conditions\": [\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ]\n}",
+              "raw": "{\n  \"blood_type\": \"<string>\",\n  \"emergency_notes\": \"<string>\",\n  \"doctor_name\": \"<string>\",\n  \"doctor_phone\": \"<string>\",\n  \"clinic_name\": \"<string>\",\n  \"allergies\": [\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Moderate\",\n      \"reaction\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Severe\",\n      \"reaction\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"medications\": [\n    {\n      \"name\": \"<string>\",\n      \"dosage\": \"<string>\",\n      \"frequency\": \"<string>\",\n      \"time\": \"<string>\",\n      \"prescribed_by\": \"<string>\",\n      \"is_active\": true,\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"dosage\": \"<string>\",\n      \"frequency\": \"<string>\",\n      \"time\": \"<string>\",\n      \"prescribed_by\": \"<string>\",\n      \"is_active\": true,\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"conditions\": [\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ]\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -14670,7 +14670,7 @@
           },
           "response": [
             {
-              "id": "4a813fb9-28c4-4d2f-9f58-0831a01c3760",
+              "id": "cde0dc14-5b29-499c-8a15-4cd418af128e",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -14717,7 +14717,7 @@
                 "method": "PATCH",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"blood_type\": \"<string>\",\n  \"emergency_notes\": \"<string>\",\n  \"doctor_name\": \"<string>\",\n  \"doctor_phone\": \"<string>\",\n  \"clinic_name\": \"<string>\",\n  \"allergies\": [\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Mild\",\n      \"reaction\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Mild\",\n      \"reaction\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"medications\": [\n    {\n      \"name\": \"<string>\",\n      \"dosage\": \"<string>\",\n      \"frequency\": \"<string>\",\n      \"time\": \"<string>\",\n      \"prescribed_by\": \"<string>\",\n      \"is_active\": true,\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"dosage\": \"<string>\",\n      \"frequency\": \"<string>\",\n      \"time\": \"<string>\",\n      \"prescribed_by\": \"<string>\",\n      \"is_active\": true,\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"conditions\": [\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ]\n}",
+                  "raw": "{\n  \"blood_type\": \"<string>\",\n  \"emergency_notes\": \"<string>\",\n  \"doctor_name\": \"<string>\",\n  \"doctor_phone\": \"<string>\",\n  \"clinic_name\": \"<string>\",\n  \"allergies\": [\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Moderate\",\n      \"reaction\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Severe\",\n      \"reaction\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"medications\": [\n    {\n      \"name\": \"<string>\",\n      \"dosage\": \"<string>\",\n      \"frequency\": \"<string>\",\n      \"time\": \"<string>\",\n      \"prescribed_by\": \"<string>\",\n      \"is_active\": true,\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"dosage\": \"<string>\",\n      \"frequency\": \"<string>\",\n      \"time\": \"<string>\",\n      \"prescribed_by\": \"<string>\",\n      \"is_active\": true,\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"conditions\": [\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ]\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -14739,7 +14739,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "71c71e25-1500-4927-b812-992436a7d03e",
+              "id": "625022b8-723c-4d00-be96-5019e9ecd6c5",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -14786,7 +14786,7 @@
                 "method": "PATCH",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"blood_type\": \"<string>\",\n  \"emergency_notes\": \"<string>\",\n  \"doctor_name\": \"<string>\",\n  \"doctor_phone\": \"<string>\",\n  \"clinic_name\": \"<string>\",\n  \"allergies\": [\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Mild\",\n      \"reaction\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Mild\",\n      \"reaction\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"medications\": [\n    {\n      \"name\": \"<string>\",\n      \"dosage\": \"<string>\",\n      \"frequency\": \"<string>\",\n      \"time\": \"<string>\",\n      \"prescribed_by\": \"<string>\",\n      \"is_active\": true,\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"dosage\": \"<string>\",\n      \"frequency\": \"<string>\",\n      \"time\": \"<string>\",\n      \"prescribed_by\": \"<string>\",\n      \"is_active\": true,\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"conditions\": [\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ]\n}",
+                  "raw": "{\n  \"blood_type\": \"<string>\",\n  \"emergency_notes\": \"<string>\",\n  \"doctor_name\": \"<string>\",\n  \"doctor_phone\": \"<string>\",\n  \"clinic_name\": \"<string>\",\n  \"allergies\": [\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Moderate\",\n      \"reaction\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Severe\",\n      \"reaction\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"medications\": [\n    {\n      \"name\": \"<string>\",\n      \"dosage\": \"<string>\",\n      \"frequency\": \"<string>\",\n      \"time\": \"<string>\",\n      \"prescribed_by\": \"<string>\",\n      \"is_active\": true,\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"dosage\": \"<string>\",\n      \"frequency\": \"<string>\",\n      \"time\": \"<string>\",\n      \"prescribed_by\": \"<string>\",\n      \"is_active\": true,\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"conditions\": [\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ]\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -14820,7 +14820,7 @@
       "description": "",
       "item": [
         {
-          "id": "36f1813c-2858-4574-b375-1663b2f3c644",
+          "id": "52f34c21-816e-42d7-8cc9-1e5a4ef1bec7",
           "name": "Get Behaviour Profile",
           "request": {
             "name": "Get Behaviour Profile",
@@ -14860,7 +14860,7 @@
           },
           "response": [
             {
-              "id": "188d2764-7a78-49a6-80a5-ca01fc6bdbd5",
+              "id": "a3a49e40-0cab-4d13-8b96-5636e4136f0d",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -14916,7 +14916,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "a6c3a907-dc54-4123-b28c-22b9caa05fcc",
+              "id": "81416159-538f-4574-b0bb-5e2a757e3402",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -14978,7 +14978,7 @@
           }
         },
         {
-          "id": "560ae4a9-8a40-443c-8db0-6f7b45daae38",
+          "id": "2833dc5d-8f3c-41d9-ab2c-bbfdb9ccbae8",
           "name": "Sync Behaviour Profile",
           "request": {
             "name": "Sync Behaviour Profile",
@@ -15022,7 +15022,7 @@
             "method": "PATCH",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"rating\": \"<string>\",\n  \"summary\": \"<string>\",\n  \"incidents\": [\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Mild\",\n      \"reporter\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Severe\",\n      \"reporter\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"recognitions\": [\n    {\n      \"name\": \"<string>\",\n      \"awarder\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"awarder\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"notes\": [\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ]\n}",
+              "raw": "{\n  \"rating\": \"<string>\",\n  \"summary\": \"<string>\",\n  \"incidents\": [\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Severe\",\n      \"reporter\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Mild\",\n      \"reporter\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"recognitions\": [\n    {\n      \"name\": \"<string>\",\n      \"awarder\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"awarder\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"notes\": [\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ]\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -15034,7 +15034,7 @@
           },
           "response": [
             {
-              "id": "d9f01061-a1a1-4052-b3cd-75432d1426ef",
+              "id": "02c2760f-98ab-4e70-a80a-828fed13013e",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -15081,7 +15081,7 @@
                 "method": "PATCH",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"rating\": \"<string>\",\n  \"summary\": \"<string>\",\n  \"incidents\": [\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Mild\",\n      \"reporter\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Severe\",\n      \"reporter\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"recognitions\": [\n    {\n      \"name\": \"<string>\",\n      \"awarder\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"awarder\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"notes\": [\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ]\n}",
+                  "raw": "{\n  \"rating\": \"<string>\",\n  \"summary\": \"<string>\",\n  \"incidents\": [\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Severe\",\n      \"reporter\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Mild\",\n      \"reporter\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"recognitions\": [\n    {\n      \"name\": \"<string>\",\n      \"awarder\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"awarder\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"notes\": [\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ]\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -15103,7 +15103,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "bc8dea72-3a1b-4437-ba72-23c72c7eee4f",
+              "id": "053e3469-4bbb-4048-9647-559639479aa8",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -15150,7 +15150,7 @@
                 "method": "PATCH",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"rating\": \"<string>\",\n  \"summary\": \"<string>\",\n  \"incidents\": [\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Mild\",\n      \"reporter\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Severe\",\n      \"reporter\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"recognitions\": [\n    {\n      \"name\": \"<string>\",\n      \"awarder\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"awarder\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"notes\": [\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ]\n}",
+                  "raw": "{\n  \"rating\": \"<string>\",\n  \"summary\": \"<string>\",\n  \"incidents\": [\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Severe\",\n      \"reporter\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"severity\": \"Mild\",\n      \"reporter\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"recognitions\": [\n    {\n      \"name\": \"<string>\",\n      \"awarder\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"awarder\": \"<string>\",\n      \"date\": \"<date>\",\n      \"detail\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ],\n  \"notes\": [\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"notes\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ]\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -15184,7 +15184,7 @@
       "description": "",
       "item": [
         {
-          "id": "a3990e8d-235d-4268-b0e7-20217415c32d",
+          "id": "5e27b238-67bb-4ed2-a2b9-4b4b39d72dd3",
           "name": "Get Attendance Profile",
           "request": {
             "name": "Get Attendance Profile",
@@ -15224,7 +15224,7 @@
           },
           "response": [
             {
-              "id": "fea010cb-ee7c-4f02-a562-42d748648f06",
+              "id": "40bdb48e-10fb-4fc0-9059-72a53e37315a",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -15280,7 +15280,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "6e297b6f-92c7-4a9e-8f42-90046edae3cd",
+              "id": "86ff2542-3c87-4676-ad41-99aafb6757c4",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -15342,7 +15342,7 @@
           }
         },
         {
-          "id": "90a0b260-1599-4e12-86b5-fbe66af7d2a7",
+          "id": "7be4d4e7-bf80-400a-a598-82e247f3a611",
           "name": "Update Attendance Notes",
           "request": {
             "name": "Update Attendance Notes",
@@ -15386,7 +15386,7 @@
             "method": "PATCH",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"notes\": \"<string>\",\n  \"records\": [\n    {\n      \"date\": \"<date>\",\n      \"status\": \"Late\",\n      \"note\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"date\": \"<date>\",\n      \"status\": \"Late\",\n      \"note\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ]\n}",
+              "raw": "{\n  \"notes\": \"<string>\",\n  \"records\": [\n    {\n      \"date\": \"<date>\",\n      \"status\": \"Excused\",\n      \"note\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"date\": \"<date>\",\n      \"status\": \"Unexcused\",\n      \"note\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ]\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -15398,7 +15398,7 @@
           },
           "response": [
             {
-              "id": "328716aa-cfbf-4c63-a1a8-5d4d0496c93e",
+              "id": "afb56927-96c1-46a1-a140-ee7543b4b9be",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -15445,7 +15445,7 @@
                 "method": "PATCH",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"notes\": \"<string>\",\n  \"records\": [\n    {\n      \"date\": \"<date>\",\n      \"status\": \"Late\",\n      \"note\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"date\": \"<date>\",\n      \"status\": \"Late\",\n      \"note\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ]\n}",
+                  "raw": "{\n  \"notes\": \"<string>\",\n  \"records\": [\n    {\n      \"date\": \"<date>\",\n      \"status\": \"Excused\",\n      \"note\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"date\": \"<date>\",\n      \"status\": \"Unexcused\",\n      \"note\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ]\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -15467,7 +15467,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "3a364e57-6ffa-49e1-9cf2-c90276264371",
+              "id": "aec68411-1010-496b-8656-9d6193877f25",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -15514,7 +15514,7 @@
                 "method": "PATCH",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"notes\": \"<string>\",\n  \"records\": [\n    {\n      \"date\": \"<date>\",\n      \"status\": \"Late\",\n      \"note\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"date\": \"<date>\",\n      \"status\": \"Late\",\n      \"note\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ]\n}",
+                  "raw": "{\n  \"notes\": \"<string>\",\n  \"records\": [\n    {\n      \"date\": \"<date>\",\n      \"status\": \"Excused\",\n      \"note\": \"<string>\",\n      \"id\": \"<uuid>\"\n    },\n    {\n      \"date\": \"<date>\",\n      \"status\": \"Unexcused\",\n      \"note\": \"<string>\",\n      \"id\": \"<uuid>\"\n    }\n  ]\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -15542,7 +15542,7 @@
           }
         },
         {
-          "id": "ad468b2a-f67c-4248-8da2-fa8651cdb225",
+          "id": "419f5f75-db1e-4847-a15b-9ac8419c1348",
           "name": "Get Today",
           "request": {
             "name": "Get Today",
@@ -15583,7 +15583,7 @@
           },
           "response": [
             {
-              "id": "6d6e2f78-7b1e-45ee-9ed6-47abf836ec4d",
+              "id": "18086871-8e17-4b76-a0d0-6e2bd504c8c2",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -15632,12 +15632,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"date\": \"<date>\",\n  \"today\": \"<date>\",\n  \"timezone\": \"<string>\",\n  \"myLessons\": [\n    {\n      \"key\": {\n        \"kind\": \"daily\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"kind\": \"lesson\",\n      \"className\": \"<string>\",\n      \"marked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"endsAt\": \"<time>\",\n      \"teacherName\": \"<string>\"\n    },\n    {\n      \"key\": {\n        \"kind\": \"daily\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"kind\": \"lesson\",\n      \"className\": \"<string>\",\n      \"marked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"endsAt\": \"<time>\",\n      \"teacherName\": \"<string>\"\n    }\n  ],\n  \"daily\": [\n    {\n      \"key\": {\n        \"kind\": \"daily\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"kind\": \"lesson\",\n      \"className\": \"<string>\",\n      \"marked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"endsAt\": \"<time>\",\n      \"teacherName\": \"<string>\"\n    },\n    {\n      \"key\": {\n        \"kind\": \"daily\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"kind\": \"daily\",\n      \"className\": \"<string>\",\n      \"marked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"endsAt\": \"<time>\",\n      \"teacherName\": \"<string>\"\n    }\n  ],\n  \"lessons\": [\n    {\n      \"key\": {\n        \"kind\": \"lesson\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"kind\": \"daily\",\n      \"className\": \"<string>\",\n      \"marked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"endsAt\": \"<time>\",\n      \"teacherName\": \"<string>\"\n    },\n    {\n      \"key\": {\n        \"kind\": \"lesson\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"kind\": \"lesson\",\n      \"className\": \"<string>\",\n      \"marked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"endsAt\": \"<time>\",\n      \"teacherName\": \"<string>\"\n    }\n  ],\n  \"adhoc\": [\n    {\n      \"key\": {\n        \"kind\": \"lesson\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"kind\": \"daily\",\n      \"className\": \"<string>\",\n      \"marked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"endsAt\": \"<time>\",\n      \"teacherName\": \"<string>\"\n    },\n    {\n      \"key\": {\n        \"kind\": \"lesson\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"kind\": \"lesson\",\n      \"className\": \"<string>\",\n      \"marked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"endsAt\": \"<time>\",\n      \"teacherName\": \"<string>\"\n    }\n  ],\n  \"noSchool\": {\n    \"id\": \"<uuid>\",\n    \"date\": \"<date>\",\n    \"reason\": \"<string>\"\n  }\n}",
+              "body": "{\n  \"date\": \"<date>\",\n  \"today\": \"<date>\",\n  \"timezone\": \"<string>\",\n  \"myLessons\": [\n    {\n      \"key\": {\n        \"kind\": \"daily\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"kind\": \"daily\",\n      \"className\": \"<string>\",\n      \"marked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"endsAt\": \"<time>\",\n      \"teacherName\": \"<string>\"\n    },\n    {\n      \"key\": {\n        \"kind\": \"daily\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"kind\": \"daily\",\n      \"className\": \"<string>\",\n      \"marked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"endsAt\": \"<time>\",\n      \"teacherName\": \"<string>\"\n    }\n  ],\n  \"daily\": [\n    {\n      \"key\": {\n        \"kind\": \"lesson\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"kind\": \"daily\",\n      \"className\": \"<string>\",\n      \"marked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"endsAt\": \"<time>\",\n      \"teacherName\": \"<string>\"\n    },\n    {\n      \"key\": {\n        \"kind\": \"lesson\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"kind\": \"daily\",\n      \"className\": \"<string>\",\n      \"marked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"endsAt\": \"<time>\",\n      \"teacherName\": \"<string>\"\n    }\n  ],\n  \"lessons\": [\n    {\n      \"key\": {\n        \"kind\": \"daily\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"kind\": \"daily\",\n      \"className\": \"<string>\",\n      \"marked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"endsAt\": \"<time>\",\n      \"teacherName\": \"<string>\"\n    },\n    {\n      \"key\": {\n        \"kind\": \"lesson\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"kind\": \"daily\",\n      \"className\": \"<string>\",\n      \"marked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"endsAt\": \"<time>\",\n      \"teacherName\": \"<string>\"\n    }\n  ],\n  \"adhoc\": [\n    {\n      \"key\": {\n        \"kind\": \"lesson\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"kind\": \"lesson\",\n      \"className\": \"<string>\",\n      \"marked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"endsAt\": \"<time>\",\n      \"teacherName\": \"<string>\"\n    },\n    {\n      \"key\": {\n        \"kind\": \"lesson\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"kind\": \"daily\",\n      \"className\": \"<string>\",\n      \"marked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"endsAt\": \"<time>\",\n      \"teacherName\": \"<string>\"\n    }\n  ],\n  \"noSchool\": {\n    \"id\": \"<uuid>\",\n    \"date\": \"<date>\",\n    \"reason\": \"<string>\"\n  }\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "55b4c304-b1ad-4dff-a8d7-176468d4ca92",
+              "id": "13763bc8-e987-47e3-bf42-ccb663ad3a46",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -15697,7 +15697,7 @@
           }
         },
         {
-          "id": "7c9885c2-fb17-43ff-9cca-cb3f6eb975ca",
+          "id": "27d5a698-b753-4e66-aaaa-ee1bb90169cc",
           "name": "Get Register",
           "request": {
             "name": "Get Register",
@@ -15730,7 +15730,7 @@
                     "type": "text/plain"
                   },
                   "key": "kind",
-                  "value": "lesson"
+                  "value": "daily"
                 },
                 {
                   "disabled": false,
@@ -15801,7 +15801,7 @@
           },
           "response": [
             {
-              "id": "80070788-01ac-49cb-8a3c-ff47cfe40249",
+              "id": "9dd723ea-1c8f-409c-b6ab-4f516b0945ce",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -15829,7 +15829,7 @@
                         "type": "text/plain"
                       },
                       "key": "kind",
-                      "value": "lesson"
+                      "value": "daily"
                     },
                     {
                       "disabled": false,
@@ -15913,12 +15913,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"key\": {\n    \"kind\": \"lesson\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"lessonId\": \"<uuid>\",\n    \"subjectId\": \"<uuid>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"kind\": \"lesson\",\n  \"date\": \"<date>\",\n  \"className\": \"<string>\",\n  \"state\": \"locked\",\n  \"canEdit\": \"<boolean>\",\n  \"canCorrect\": \"<boolean>\",\n  \"canRequestCorrection\": \"<boolean>\",\n  \"counts\": {\n    \"present\": 0,\n    \"late\": 0,\n    \"unexcused\": 0,\n    \"excused\": 0,\n    \"unmarked\": 0\n  },\n  \"students\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"name\": \"<string>\",\n      \"admissionNumber\": \"<string>\",\n      \"stream\": \"<string>\",\n      \"photo\": \"<string>\",\n      \"mark\": {\n        \"status\": \"Unexcused\",\n        \"tappedAt\": \"<dateTime>\",\n        \"note\": \"<string>\",\n        \"markedByName\": \"<string>\"\n      },\n      \"pendingCorrection\": false\n    },\n    {\n      \"studentId\": \"<uuid>\",\n      \"name\": \"<string>\",\n      \"admissionNumber\": \"<string>\",\n      \"stream\": \"<string>\",\n      \"photo\": \"<string>\",\n      \"mark\": {\n        \"status\": \"Unexcused\",\n        \"tappedAt\": \"<dateTime>\",\n        \"note\": \"<string>\",\n        \"markedByName\": \"<string>\"\n      },\n      \"pendingCorrection\": false\n    }\n  ],\n  \"registerId\": \"<uuid>\",\n  \"stream\": \"<string>\",\n  \"subjectId\": \"<uuid>\",\n  \"subjectName\": \"<string>\",\n  \"lessonId\": \"<uuid>\",\n  \"startsAt\": \"<time>\",\n  \"endsAt\": \"<time>\",\n  \"teacherName\": \"<string>\"\n}",
+              "body": "{\n  \"key\": {\n    \"kind\": \"daily\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"lessonId\": \"<uuid>\",\n    \"subjectId\": \"<uuid>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"kind\": \"daily\",\n  \"date\": \"<date>\",\n  \"className\": \"<string>\",\n  \"state\": \"open\",\n  \"canEdit\": \"<boolean>\",\n  \"canCorrect\": \"<boolean>\",\n  \"canRequestCorrection\": \"<boolean>\",\n  \"counts\": {\n    \"present\": 0,\n    \"late\": 0,\n    \"unexcused\": 0,\n    \"excused\": 0,\n    \"unmarked\": 0\n  },\n  \"students\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"name\": \"<string>\",\n      \"admissionNumber\": \"<string>\",\n      \"stream\": \"<string>\",\n      \"photo\": \"<string>\",\n      \"mark\": {\n        \"status\": \"Excused\",\n        \"tappedAt\": \"<dateTime>\",\n        \"note\": \"<string>\",\n        \"markedByName\": \"<string>\"\n      },\n      \"pendingCorrection\": false\n    },\n    {\n      \"studentId\": \"<uuid>\",\n      \"name\": \"<string>\",\n      \"admissionNumber\": \"<string>\",\n      \"stream\": \"<string>\",\n      \"photo\": \"<string>\",\n      \"mark\": {\n        \"status\": \"Unexcused\",\n        \"tappedAt\": \"<dateTime>\",\n        \"note\": \"<string>\",\n        \"markedByName\": \"<string>\"\n      },\n      \"pendingCorrection\": false\n    }\n  ],\n  \"registerId\": \"<uuid>\",\n  \"stream\": \"<string>\",\n  \"subjectId\": \"<uuid>\",\n  \"subjectName\": \"<string>\",\n  \"lessonId\": \"<uuid>\",\n  \"startsAt\": \"<time>\",\n  \"endsAt\": \"<time>\",\n  \"teacherName\": \"<string>\"\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "7136d60e-0f86-4051-b0ea-7d07207c6d6d",
+              "id": "e61afafa-1a29-4597-a872-4731368dfaf4",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -15946,7 +15946,7 @@
                         "type": "text/plain"
                       },
                       "key": "kind",
-                      "value": "lesson"
+                      "value": "daily"
                     },
                     {
                       "disabled": false,
@@ -16041,7 +16041,7 @@
           }
         },
         {
-          "id": "8d38b1f5-2680-43d5-89a1-a018c7ec04f8",
+          "id": "5185e7a5-e586-4722-b711-da335acf857f",
           "name": "Save Marks",
           "request": {
             "name": "Save Marks",
@@ -16074,7 +16074,7 @@
             "method": "PUT",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"register\": {\n    \"kind\": \"daily\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"lessonId\": \"<uuid>\",\n    \"subjectId\": \"<uuid>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"marks\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"status\": \"Unexcused\",\n      \"note\": \"<string>\",\n      \"tappedAt\": \"<dateTime>\"\n    }\n  ]\n}",
+              "raw": "{\n  \"register\": {\n    \"kind\": \"daily\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"lessonId\": \"<uuid>\",\n    \"subjectId\": \"<uuid>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"marks\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"status\": \"Present\",\n      \"note\": \"<string>\",\n      \"tappedAt\": \"<dateTime>\"\n    }\n  ]\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -16086,7 +16086,7 @@
           },
           "response": [
             {
-              "id": "f2ccef6a-9267-44e7-9f70-a4dcc37a4ee4",
+              "id": "3a75855a-59a8-4834-abc4-f70699ec3d2a",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -16122,7 +16122,7 @@
                 "method": "PUT",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"register\": {\n    \"kind\": \"daily\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"lessonId\": \"<uuid>\",\n    \"subjectId\": \"<uuid>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"marks\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"status\": \"Unexcused\",\n      \"note\": \"<string>\",\n      \"tappedAt\": \"<dateTime>\"\n    }\n  ]\n}",
+                  "raw": "{\n  \"register\": {\n    \"kind\": \"daily\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"lessonId\": \"<uuid>\",\n    \"subjectId\": \"<uuid>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"marks\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"status\": \"Present\",\n      \"note\": \"<string>\",\n      \"tappedAt\": \"<dateTime>\"\n    }\n  ]\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -16139,12 +16139,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"register\": {\n    \"key\": {\n      \"kind\": \"daily\",\n      \"date\": \"<date>\",\n      \"className\": \"<string>\",\n      \"stream\": \"<string>\",\n      \"lessonId\": \"<uuid>\",\n      \"subjectId\": \"<uuid>\",\n      \"startsAt\": \"<time>\"\n    },\n    \"kind\": \"daily\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"state\": \"future\",\n    \"canEdit\": \"<boolean>\",\n    \"canCorrect\": \"<boolean>\",\n    \"canRequestCorrection\": \"<boolean>\",\n    \"counts\": {\n      \"present\": 0,\n      \"late\": 0,\n      \"unexcused\": 0,\n      \"excused\": 0,\n      \"unmarked\": 0\n    },\n    \"students\": [\n      {\n        \"studentId\": \"<uuid>\",\n        \"name\": \"<string>\",\n        \"admissionNumber\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"photo\": \"<string>\",\n        \"mark\": {\n          \"status\": \"Present\",\n          \"tappedAt\": \"<dateTime>\",\n          \"note\": \"<string>\",\n          \"markedByName\": \"<string>\"\n        },\n        \"pendingCorrection\": false\n      },\n      {\n        \"studentId\": \"<uuid>\",\n        \"name\": \"<string>\",\n        \"admissionNumber\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"photo\": \"<string>\",\n        \"mark\": {\n          \"status\": \"Unexcused\",\n          \"tappedAt\": \"<dateTime>\",\n          \"note\": \"<string>\",\n          \"markedByName\": \"<string>\"\n        },\n        \"pendingCorrection\": false\n      }\n    ],\n    \"registerId\": \"<uuid>\",\n    \"stream\": \"<string>\",\n    \"subjectId\": \"<uuid>\",\n    \"subjectName\": \"<string>\",\n    \"lessonId\": \"<uuid>\",\n    \"startsAt\": \"<time>\",\n    \"endsAt\": \"<time>\",\n    \"teacherName\": \"<string>\"\n  }\n}",
+              "body": "{\n  \"register\": {\n    \"key\": {\n      \"kind\": \"daily\",\n      \"date\": \"<date>\",\n      \"className\": \"<string>\",\n      \"stream\": \"<string>\",\n      \"lessonId\": \"<uuid>\",\n      \"subjectId\": \"<uuid>\",\n      \"startsAt\": \"<time>\"\n    },\n    \"kind\": \"lesson\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"state\": \"open\",\n    \"canEdit\": \"<boolean>\",\n    \"canCorrect\": \"<boolean>\",\n    \"canRequestCorrection\": \"<boolean>\",\n    \"counts\": {\n      \"present\": 0,\n      \"late\": 0,\n      \"unexcused\": 0,\n      \"excused\": 0,\n      \"unmarked\": 0\n    },\n    \"students\": [\n      {\n        \"studentId\": \"<uuid>\",\n        \"name\": \"<string>\",\n        \"admissionNumber\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"photo\": \"<string>\",\n        \"mark\": {\n          \"status\": \"Excused\",\n          \"tappedAt\": \"<dateTime>\",\n          \"note\": \"<string>\",\n          \"markedByName\": \"<string>\"\n        },\n        \"pendingCorrection\": false\n      },\n      {\n        \"studentId\": \"<uuid>\",\n        \"name\": \"<string>\",\n        \"admissionNumber\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"photo\": \"<string>\",\n        \"mark\": {\n          \"status\": \"Excused\",\n          \"tappedAt\": \"<dateTime>\",\n          \"note\": \"<string>\",\n          \"markedByName\": \"<string>\"\n        },\n        \"pendingCorrection\": false\n      }\n    ],\n    \"registerId\": \"<uuid>\",\n    \"stream\": \"<string>\",\n    \"subjectId\": \"<uuid>\",\n    \"subjectName\": \"<string>\",\n    \"lessonId\": \"<uuid>\",\n    \"startsAt\": \"<time>\",\n    \"endsAt\": \"<time>\",\n    \"teacherName\": \"<string>\"\n  }\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "4d55e629-b1e1-461c-a1bd-864ed660145d",
+              "id": "1b46f14e-86cc-4c32-bf98-516e4a66fd90",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -16180,7 +16180,7 @@
                 "method": "PUT",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"register\": {\n    \"kind\": \"daily\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"lessonId\": \"<uuid>\",\n    \"subjectId\": \"<uuid>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"marks\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"status\": \"Unexcused\",\n      \"note\": \"<string>\",\n      \"tappedAt\": \"<dateTime>\"\n    }\n  ]\n}",
+                  "raw": "{\n  \"register\": {\n    \"kind\": \"daily\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"lessonId\": \"<uuid>\",\n    \"subjectId\": \"<uuid>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"marks\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"status\": \"Present\",\n      \"note\": \"<string>\",\n      \"tappedAt\": \"<dateTime>\"\n    }\n  ]\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -16208,7 +16208,7 @@
           }
         },
         {
-          "id": "f831f3ed-657f-42ef-abd9-ac163ad93e7a",
+          "id": "0afee362-274f-43e3-88b0-6f8c7cc87499",
           "name": "Get Mark History",
           "request": {
             "name": "Get Mark History",
@@ -16261,7 +16261,7 @@
           },
           "response": [
             {
-              "id": "19f1eeb5-cfff-49a8-b1f3-9c26a0a1d107",
+              "id": "4c8a01b5-c30b-42da-90ed-a886307a9b72",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -16325,12 +16325,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "[\n  {\n    \"toStatus\": \"Present\",\n    \"changedBy\": {\n      \"id\": \"<uuid>\",\n      \"name\": \"<string>\"\n    },\n    \"changedAt\": \"<dateTime>\",\n    \"tappedAt\": \"<dateTime>\",\n    \"fromStatus\": \"Excused\",\n    \"fromNote\": \"<string>\",\n    \"toNote\": \"<string>\",\n    \"reason\": \"<string>\",\n    \"correctionRequestId\": \"<uuid>\"\n  },\n  {\n    \"toStatus\": \"Unexcused\",\n    \"changedBy\": {\n      \"id\": \"<uuid>\",\n      \"name\": \"<string>\"\n    },\n    \"changedAt\": \"<dateTime>\",\n    \"tappedAt\": \"<dateTime>\",\n    \"fromStatus\": \"Unexcused\",\n    \"fromNote\": \"<string>\",\n    \"toNote\": \"<string>\",\n    \"reason\": \"<string>\",\n    \"correctionRequestId\": \"<uuid>\"\n  }\n]",
+              "body": "[\n  {\n    \"toStatus\": \"Unexcused\",\n    \"changedBy\": {\n      \"id\": \"<uuid>\",\n      \"name\": \"<string>\"\n    },\n    \"changedAt\": \"<dateTime>\",\n    \"tappedAt\": \"<dateTime>\",\n    \"fromStatus\": \"Excused\",\n    \"fromNote\": \"<string>\",\n    \"toNote\": \"<string>\",\n    \"reason\": \"<string>\",\n    \"correctionRequestId\": \"<uuid>\"\n  },\n  {\n    \"toStatus\": \"Unexcused\",\n    \"changedBy\": {\n      \"id\": \"<uuid>\",\n      \"name\": \"<string>\"\n    },\n    \"changedAt\": \"<dateTime>\",\n    \"tappedAt\": \"<dateTime>\",\n    \"fromStatus\": \"Excused\",\n    \"fromNote\": \"<string>\",\n    \"toNote\": \"<string>\",\n    \"reason\": \"<string>\",\n    \"correctionRequestId\": \"<uuid>\"\n  }\n]",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "f9983fb7-36fd-4a45-ad09-b0dce24db3f5",
+              "id": "8bb9201a-2e74-4c03-8899-cf30f650c6d0",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -16405,7 +16405,7 @@
           }
         },
         {
-          "id": "732d11a3-734f-4e06-81fd-7ed7081b03b0",
+          "id": "73b67ce5-1e1b-4cf3-bd9a-aa2c18edacdc",
           "name": "Create Correction",
           "request": {
             "name": "Create Correction",
@@ -16437,7 +16437,7 @@
             "method": "POST",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"register\": {\n    \"kind\": \"lesson\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"lessonId\": \"<uuid>\",\n    \"subjectId\": \"<uuid>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"reason\": \"<string>\",\n  \"changes\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"status\": \"Excused\",\n      \"note\": \"<string>\"\n    }\n  ]\n}",
+              "raw": "{\n  \"register\": {\n    \"kind\": \"daily\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"lessonId\": \"<uuid>\",\n    \"subjectId\": \"<uuid>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"reason\": \"<string>\",\n  \"changes\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"status\": \"Late\",\n      \"note\": \"<string>\"\n    }\n  ]\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -16449,7 +16449,7 @@
           },
           "response": [
             {
-              "id": "de98cb9d-0981-4ddb-960c-cd673830da81",
+              "id": "d926fc36-aad1-4d8f-a171-65d23224341c",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -16484,7 +16484,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"register\": {\n    \"kind\": \"lesson\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"lessonId\": \"<uuid>\",\n    \"subjectId\": \"<uuid>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"reason\": \"<string>\",\n  \"changes\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"status\": \"Excused\",\n      \"note\": \"<string>\"\n    }\n  ]\n}",
+                  "raw": "{\n  \"register\": {\n    \"kind\": \"daily\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"lessonId\": \"<uuid>\",\n    \"subjectId\": \"<uuid>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"reason\": \"<string>\",\n  \"changes\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"status\": \"Late\",\n      \"note\": \"<string>\"\n    }\n  ]\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -16501,12 +16501,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"applied\": \"<boolean>\",\n  \"register\": {\n    \"key\": {\n      \"kind\": \"lesson\",\n      \"date\": \"<date>\",\n      \"className\": \"<string>\",\n      \"stream\": \"<string>\",\n      \"lessonId\": \"<uuid>\",\n      \"subjectId\": \"<uuid>\",\n      \"startsAt\": \"<time>\"\n    },\n    \"kind\": \"lesson\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"state\": \"locked\",\n    \"canEdit\": \"<boolean>\",\n    \"canCorrect\": \"<boolean>\",\n    \"canRequestCorrection\": \"<boolean>\",\n    \"counts\": {\n      \"present\": 0,\n      \"late\": 0,\n      \"unexcused\": 0,\n      \"excused\": 0,\n      \"unmarked\": 0\n    },\n    \"students\": [\n      {\n        \"studentId\": \"<uuid>\",\n        \"name\": \"<string>\",\n        \"admissionNumber\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"photo\": \"<string>\",\n        \"mark\": {\n          \"status\": \"Late\",\n          \"tappedAt\": \"<dateTime>\",\n          \"note\": \"<string>\",\n          \"markedByName\": \"<string>\"\n        },\n        \"pendingCorrection\": false\n      },\n      {\n        \"studentId\": \"<uuid>\",\n        \"name\": \"<string>\",\n        \"admissionNumber\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"photo\": \"<string>\",\n        \"mark\": {\n          \"status\": \"Excused\",\n          \"tappedAt\": \"<dateTime>\",\n          \"note\": \"<string>\",\n          \"markedByName\": \"<string>\"\n        },\n        \"pendingCorrection\": false\n      }\n    ],\n    \"registerId\": \"<uuid>\",\n    \"stream\": \"<string>\",\n    \"subjectId\": \"<uuid>\",\n    \"subjectName\": \"<string>\",\n    \"lessonId\": \"<uuid>\",\n    \"startsAt\": \"<time>\",\n    \"endsAt\": \"<time>\",\n    \"teacherName\": \"<string>\"\n  },\n  \"request\": {\n    \"id\": \"<uuid>\",\n    \"status\": \"pending\",\n    \"reason\": \"<string>\",\n    \"register\": {\n      \"registerId\": \"<uuid>\",\n      \"kind\": \"daily\",\n      \"date\": \"<date>\",\n      \"className\": \"<string>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\"\n    },\n    \"requestedBy\": {\n      \"id\": \"<uuid>\",\n      \"name\": \"<string>\"\n    },\n    \"createdAt\": \"<dateTime>\",\n    \"items\": [\n      {\n        \"studentId\": \"<uuid>\",\n        \"studentName\": \"<string>\",\n        \"toStatus\": \"Unexcused\",\n        \"fromStatus\": \"Unexcused\",\n        \"note\": \"<string>\"\n      },\n      {\n        \"studentId\": \"<uuid>\",\n        \"studentName\": \"<string>\",\n        \"toStatus\": \"Late\",\n        \"fromStatus\": \"Excused\",\n        \"note\": \"<string>\"\n      }\n    ],\n    \"decidedBy\": {\n      \"id\": \"<uuid>\",\n      \"name\": \"<string>\"\n    },\n    \"decidedAt\": \"<dateTime>\",\n    \"decisionNote\": \"<string>\"\n  }\n}",
+              "body": "{\n  \"applied\": \"<boolean>\",\n  \"register\": {\n    \"key\": {\n      \"kind\": \"daily\",\n      \"date\": \"<date>\",\n      \"className\": \"<string>\",\n      \"stream\": \"<string>\",\n      \"lessonId\": \"<uuid>\",\n      \"subjectId\": \"<uuid>\",\n      \"startsAt\": \"<time>\"\n    },\n    \"kind\": \"daily\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"state\": \"locked\",\n    \"canEdit\": \"<boolean>\",\n    \"canCorrect\": \"<boolean>\",\n    \"canRequestCorrection\": \"<boolean>\",\n    \"counts\": {\n      \"present\": 0,\n      \"late\": 0,\n      \"unexcused\": 0,\n      \"excused\": 0,\n      \"unmarked\": 0\n    },\n    \"students\": [\n      {\n        \"studentId\": \"<uuid>\",\n        \"name\": \"<string>\",\n        \"admissionNumber\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"photo\": \"<string>\",\n        \"mark\": {\n          \"status\": \"Excused\",\n          \"tappedAt\": \"<dateTime>\",\n          \"note\": \"<string>\",\n          \"markedByName\": \"<string>\"\n        },\n        \"pendingCorrection\": false\n      },\n      {\n        \"studentId\": \"<uuid>\",\n        \"name\": \"<string>\",\n        \"admissionNumber\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"photo\": \"<string>\",\n        \"mark\": {\n          \"status\": \"Present\",\n          \"tappedAt\": \"<dateTime>\",\n          \"note\": \"<string>\",\n          \"markedByName\": \"<string>\"\n        },\n        \"pendingCorrection\": false\n      }\n    ],\n    \"registerId\": \"<uuid>\",\n    \"stream\": \"<string>\",\n    \"subjectId\": \"<uuid>\",\n    \"subjectName\": \"<string>\",\n    \"lessonId\": \"<uuid>\",\n    \"startsAt\": \"<time>\",\n    \"endsAt\": \"<time>\",\n    \"teacherName\": \"<string>\"\n  },\n  \"request\": {\n    \"id\": \"<uuid>\",\n    \"status\": \"accepted\",\n    \"reason\": \"<string>\",\n    \"register\": {\n      \"registerId\": \"<uuid>\",\n      \"kind\": \"lesson\",\n      \"date\": \"<date>\",\n      \"className\": \"<string>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\"\n    },\n    \"requestedBy\": {\n      \"id\": \"<uuid>\",\n      \"name\": \"<string>\"\n    },\n    \"createdAt\": \"<dateTime>\",\n    \"items\": [\n      {\n        \"studentId\": \"<uuid>\",\n        \"studentName\": \"<string>\",\n        \"toStatus\": \"Unexcused\",\n        \"fromStatus\": \"Excused\",\n        \"note\": \"<string>\"\n      },\n      {\n        \"studentId\": \"<uuid>\",\n        \"studentName\": \"<string>\",\n        \"toStatus\": \"Excused\",\n        \"fromStatus\": \"Unexcused\",\n        \"note\": \"<string>\"\n      }\n    ],\n    \"decidedBy\": {\n      \"id\": \"<uuid>\",\n      \"name\": \"<string>\"\n    },\n    \"decidedAt\": \"<dateTime>\",\n    \"decisionNote\": \"<string>\"\n  }\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "4c3a22c7-fee6-4e4f-98d7-84ea44c1c35a",
+              "id": "72ea0ab5-055f-425e-b5c8-ac7be7d23ed2",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -16541,7 +16541,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"register\": {\n    \"kind\": \"lesson\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"lessonId\": \"<uuid>\",\n    \"subjectId\": \"<uuid>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"reason\": \"<string>\",\n  \"changes\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"status\": \"Excused\",\n      \"note\": \"<string>\"\n    }\n  ]\n}",
+                  "raw": "{\n  \"register\": {\n    \"kind\": \"daily\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"lessonId\": \"<uuid>\",\n    \"subjectId\": \"<uuid>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"reason\": \"<string>\",\n  \"changes\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"status\": \"Late\",\n      \"note\": \"<string>\"\n    }\n  ]\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -16569,7 +16569,7 @@
           }
         },
         {
-          "id": "75d1cfeb-6126-42e4-9aef-51a0d8d6ae9d",
+          "id": "c89d071b-4b4c-4540-886e-653cc87aa600",
           "name": "List Corrections",
           "request": {
             "name": "List Corrections",
@@ -16616,7 +16616,7 @@
           },
           "response": [
             {
-              "id": "cdca2f04-7500-470b-854d-e8a3573cc2d3",
+              "id": "2f280afe-b764-41b8-a085-9aa8d2d208a5",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -16674,12 +16674,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "[\n  {\n    \"id\": \"<uuid>\",\n    \"status\": \"rejected\",\n    \"reason\": \"<string>\",\n    \"register\": {\n      \"registerId\": \"<uuid>\",\n      \"kind\": \"daily\",\n      \"date\": \"<date>\",\n      \"className\": \"<string>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\"\n    },\n    \"requestedBy\": {\n      \"id\": \"<uuid>\",\n      \"name\": \"<string>\"\n    },\n    \"createdAt\": \"<dateTime>\",\n    \"items\": [\n      {\n        \"studentId\": \"<uuid>\",\n        \"studentName\": \"<string>\",\n        \"toStatus\": \"Unexcused\",\n        \"fromStatus\": \"Late\",\n        \"note\": \"<string>\"\n      },\n      {\n        \"studentId\": \"<uuid>\",\n        \"studentName\": \"<string>\",\n        \"toStatus\": \"Excused\",\n        \"fromStatus\": \"Present\",\n        \"note\": \"<string>\"\n      }\n    ],\n    \"decidedBy\": {\n      \"id\": \"<uuid>\",\n      \"name\": \"<string>\"\n    },\n    \"decidedAt\": \"<dateTime>\",\n    \"decisionNote\": \"<string>\"\n  },\n  {\n    \"id\": \"<uuid>\",\n    \"status\": \"accepted\",\n    \"reason\": \"<string>\",\n    \"register\": {\n      \"registerId\": \"<uuid>\",\n      \"kind\": \"daily\",\n      \"date\": \"<date>\",\n      \"className\": \"<string>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\"\n    },\n    \"requestedBy\": {\n      \"id\": \"<uuid>\",\n      \"name\": \"<string>\"\n    },\n    \"createdAt\": \"<dateTime>\",\n    \"items\": [\n      {\n        \"studentId\": \"<uuid>\",\n        \"studentName\": \"<string>\",\n        \"toStatus\": \"Late\",\n        \"fromStatus\": \"Unexcused\",\n        \"note\": \"<string>\"\n      },\n      {\n        \"studentId\": \"<uuid>\",\n        \"studentName\": \"<string>\",\n        \"toStatus\": \"Present\",\n        \"fromStatus\": \"Excused\",\n        \"note\": \"<string>\"\n      }\n    ],\n    \"decidedBy\": {\n      \"id\": \"<uuid>\",\n      \"name\": \"<string>\"\n    },\n    \"decidedAt\": \"<dateTime>\",\n    \"decisionNote\": \"<string>\"\n  }\n]",
+              "body": "[\n  {\n    \"id\": \"<uuid>\",\n    \"status\": \"accepted\",\n    \"reason\": \"<string>\",\n    \"register\": {\n      \"registerId\": \"<uuid>\",\n      \"kind\": \"daily\",\n      \"date\": \"<date>\",\n      \"className\": \"<string>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\"\n    },\n    \"requestedBy\": {\n      \"id\": \"<uuid>\",\n      \"name\": \"<string>\"\n    },\n    \"createdAt\": \"<dateTime>\",\n    \"items\": [\n      {\n        \"studentId\": \"<uuid>\",\n        \"studentName\": \"<string>\",\n        \"toStatus\": \"Late\",\n        \"fromStatus\": \"Present\",\n        \"note\": \"<string>\"\n      },\n      {\n        \"studentId\": \"<uuid>\",\n        \"studentName\": \"<string>\",\n        \"toStatus\": \"Present\",\n        \"fromStatus\": \"Excused\",\n        \"note\": \"<string>\"\n      }\n    ],\n    \"decidedBy\": {\n      \"id\": \"<uuid>\",\n      \"name\": \"<string>\"\n    },\n    \"decidedAt\": \"<dateTime>\",\n    \"decisionNote\": \"<string>\"\n  },\n  {\n    \"id\": \"<uuid>\",\n    \"status\": \"accepted\",\n    \"reason\": \"<string>\",\n    \"register\": {\n      \"registerId\": \"<uuid>\",\n      \"kind\": \"daily\",\n      \"date\": \"<date>\",\n      \"className\": \"<string>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\"\n    },\n    \"requestedBy\": {\n      \"id\": \"<uuid>\",\n      \"name\": \"<string>\"\n    },\n    \"createdAt\": \"<dateTime>\",\n    \"items\": [\n      {\n        \"studentId\": \"<uuid>\",\n        \"studentName\": \"<string>\",\n        \"toStatus\": \"Present\",\n        \"fromStatus\": \"Late\",\n        \"note\": \"<string>\"\n      },\n      {\n        \"studentId\": \"<uuid>\",\n        \"studentName\": \"<string>\",\n        \"toStatus\": \"Late\",\n        \"fromStatus\": \"Late\",\n        \"note\": \"<string>\"\n      }\n    ],\n    \"decidedBy\": {\n      \"id\": \"<uuid>\",\n      \"name\": \"<string>\"\n    },\n    \"decidedAt\": \"<dateTime>\",\n    \"decisionNote\": \"<string>\"\n  }\n]",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "c735d8f4-4579-4ab6-b259-423cdfe30e78",
+              "id": "36a698fc-7aac-46ab-b0bf-9147dc14bfa5",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -16748,7 +16748,7 @@
           }
         },
         {
-          "id": "9c9f25f4-fc1d-47eb-821a-1691748e096f",
+          "id": "bd41e0a1-be01-4fe3-9220-0dd4a0b02491",
           "name": "Get Correction",
           "request": {
             "name": "Get Correction",
@@ -16788,7 +16788,7 @@
           },
           "response": [
             {
-              "id": "f4e79e7c-65b5-48a4-9d35-5e3e286dc644",
+              "id": "a4c0b051-0bb9-4f7e-ba5f-65103b8c54c9",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -16839,12 +16839,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"id\": \"<uuid>\",\n  \"status\": \"pending\",\n  \"reason\": \"<string>\",\n  \"register\": {\n    \"registerId\": \"<uuid>\",\n    \"kind\": \"lesson\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"subjectName\": \"<string>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"requestedBy\": {\n    \"id\": \"<uuid>\",\n    \"name\": \"<string>\"\n  },\n  \"createdAt\": \"<dateTime>\",\n  \"items\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"studentName\": \"<string>\",\n      \"toStatus\": \"Unexcused\",\n      \"fromStatus\": \"Unexcused\",\n      \"note\": \"<string>\"\n    },\n    {\n      \"studentId\": \"<uuid>\",\n      \"studentName\": \"<string>\",\n      \"toStatus\": \"Late\",\n      \"fromStatus\": \"Excused\",\n      \"note\": \"<string>\"\n    }\n  ],\n  \"decidedBy\": {\n    \"id\": \"<uuid>\",\n    \"name\": \"<string>\"\n  },\n  \"decidedAt\": \"<dateTime>\",\n  \"decisionNote\": \"<string>\"\n}",
+              "body": "{\n  \"id\": \"<uuid>\",\n  \"status\": \"pending\",\n  \"reason\": \"<string>\",\n  \"register\": {\n    \"registerId\": \"<uuid>\",\n    \"kind\": \"daily\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"subjectName\": \"<string>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"requestedBy\": {\n    \"id\": \"<uuid>\",\n    \"name\": \"<string>\"\n  },\n  \"createdAt\": \"<dateTime>\",\n  \"items\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"studentName\": \"<string>\",\n      \"toStatus\": \"Excused\",\n      \"fromStatus\": \"Unexcused\",\n      \"note\": \"<string>\"\n    },\n    {\n      \"studentId\": \"<uuid>\",\n      \"studentName\": \"<string>\",\n      \"toStatus\": \"Late\",\n      \"fromStatus\": \"Present\",\n      \"note\": \"<string>\"\n    }\n  ],\n  \"decidedBy\": {\n    \"id\": \"<uuid>\",\n    \"name\": \"<string>\"\n  },\n  \"decidedAt\": \"<dateTime>\",\n  \"decisionNote\": \"<string>\"\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "af4546c2-fa51-4881-a181-74fa59084128",
+              "id": "317ac0d9-cc82-4aad-a575-f10cf8fca8a0",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -16906,7 +16906,7 @@
           }
         },
         {
-          "id": "e023a9cf-949c-41a8-8ad5-9e2293b56f77",
+          "id": "546f1dfe-5c59-4cb9-a8ce-6fb3c803cede",
           "name": "Accept Correction",
           "request": {
             "name": "Accept Correction",
@@ -16960,7 +16960,7 @@
           },
           "response": [
             {
-              "id": "5c3d4b8d-e2fb-4441-ac1d-347ed2e79138",
+              "id": "876b4ef9-428e-473e-8a46-3b6049cb3102",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -17025,12 +17025,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"id\": \"<uuid>\",\n  \"status\": \"pending\",\n  \"reason\": \"<string>\",\n  \"register\": {\n    \"registerId\": \"<uuid>\",\n    \"kind\": \"lesson\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"subjectName\": \"<string>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"requestedBy\": {\n    \"id\": \"<uuid>\",\n    \"name\": \"<string>\"\n  },\n  \"createdAt\": \"<dateTime>\",\n  \"items\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"studentName\": \"<string>\",\n      \"toStatus\": \"Unexcused\",\n      \"fromStatus\": \"Unexcused\",\n      \"note\": \"<string>\"\n    },\n    {\n      \"studentId\": \"<uuid>\",\n      \"studentName\": \"<string>\",\n      \"toStatus\": \"Late\",\n      \"fromStatus\": \"Excused\",\n      \"note\": \"<string>\"\n    }\n  ],\n  \"decidedBy\": {\n    \"id\": \"<uuid>\",\n    \"name\": \"<string>\"\n  },\n  \"decidedAt\": \"<dateTime>\",\n  \"decisionNote\": \"<string>\"\n}",
+              "body": "{\n  \"id\": \"<uuid>\",\n  \"status\": \"pending\",\n  \"reason\": \"<string>\",\n  \"register\": {\n    \"registerId\": \"<uuid>\",\n    \"kind\": \"daily\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"subjectName\": \"<string>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"requestedBy\": {\n    \"id\": \"<uuid>\",\n    \"name\": \"<string>\"\n  },\n  \"createdAt\": \"<dateTime>\",\n  \"items\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"studentName\": \"<string>\",\n      \"toStatus\": \"Excused\",\n      \"fromStatus\": \"Unexcused\",\n      \"note\": \"<string>\"\n    },\n    {\n      \"studentId\": \"<uuid>\",\n      \"studentName\": \"<string>\",\n      \"toStatus\": \"Late\",\n      \"fromStatus\": \"Present\",\n      \"note\": \"<string>\"\n    }\n  ],\n  \"decidedBy\": {\n    \"id\": \"<uuid>\",\n    \"name\": \"<string>\"\n  },\n  \"decidedAt\": \"<dateTime>\",\n  \"decisionNote\": \"<string>\"\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "04c24bf6-3b37-45fa-a53e-b822fab7e41f",
+              "id": "a259c559-646d-451f-9f25-89c94372e540",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -17106,7 +17106,7 @@
           }
         },
         {
-          "id": "0cf0f8f7-115f-44b1-9366-b7f37bfb09c0",
+          "id": "f7339106-42d7-4080-9a1a-88c6cc761fb6",
           "name": "Reject Correction",
           "request": {
             "name": "Reject Correction",
@@ -17160,7 +17160,7 @@
           },
           "response": [
             {
-              "id": "b545d599-5c69-4884-b185-eec69e0c8b69",
+              "id": "f5dd11d0-6850-449b-a552-9729a12a4893",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -17225,12 +17225,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"id\": \"<uuid>\",\n  \"status\": \"pending\",\n  \"reason\": \"<string>\",\n  \"register\": {\n    \"registerId\": \"<uuid>\",\n    \"kind\": \"lesson\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"subjectName\": \"<string>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"requestedBy\": {\n    \"id\": \"<uuid>\",\n    \"name\": \"<string>\"\n  },\n  \"createdAt\": \"<dateTime>\",\n  \"items\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"studentName\": \"<string>\",\n      \"toStatus\": \"Unexcused\",\n      \"fromStatus\": \"Unexcused\",\n      \"note\": \"<string>\"\n    },\n    {\n      \"studentId\": \"<uuid>\",\n      \"studentName\": \"<string>\",\n      \"toStatus\": \"Late\",\n      \"fromStatus\": \"Excused\",\n      \"note\": \"<string>\"\n    }\n  ],\n  \"decidedBy\": {\n    \"id\": \"<uuid>\",\n    \"name\": \"<string>\"\n  },\n  \"decidedAt\": \"<dateTime>\",\n  \"decisionNote\": \"<string>\"\n}",
+              "body": "{\n  \"id\": \"<uuid>\",\n  \"status\": \"pending\",\n  \"reason\": \"<string>\",\n  \"register\": {\n    \"registerId\": \"<uuid>\",\n    \"kind\": \"daily\",\n    \"date\": \"<date>\",\n    \"className\": \"<string>\",\n    \"stream\": \"<string>\",\n    \"subjectName\": \"<string>\",\n    \"startsAt\": \"<time>\"\n  },\n  \"requestedBy\": {\n    \"id\": \"<uuid>\",\n    \"name\": \"<string>\"\n  },\n  \"createdAt\": \"<dateTime>\",\n  \"items\": [\n    {\n      \"studentId\": \"<uuid>\",\n      \"studentName\": \"<string>\",\n      \"toStatus\": \"Excused\",\n      \"fromStatus\": \"Unexcused\",\n      \"note\": \"<string>\"\n    },\n    {\n      \"studentId\": \"<uuid>\",\n      \"studentName\": \"<string>\",\n      \"toStatus\": \"Late\",\n      \"fromStatus\": \"Present\",\n      \"note\": \"<string>\"\n    }\n  ],\n  \"decidedBy\": {\n    \"id\": \"<uuid>\",\n    \"name\": \"<string>\"\n  },\n  \"decidedAt\": \"<dateTime>\",\n  \"decisionNote\": \"<string>\"\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "3d848125-34e8-4a1a-a20b-b206f7229349",
+              "id": "1d1f2b78-2806-4c1c-b234-9e59fff52129",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -17306,7 +17306,7 @@
           }
         },
         {
-          "id": "861378b0-615a-4acf-be23-df04486f4240",
+          "id": "c3db5b42-101b-411d-aea9-33bb0e641d05",
           "name": "Get Overview",
           "request": {
             "name": "Get Overview",
@@ -17372,7 +17372,7 @@
           },
           "response": [
             {
-              "id": "9953fa4b-ff4a-4e36-9b54-01f0f0de4fc2",
+              "id": "3b2cc3c3-efae-440b-8d39-23915d08c77b",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -17454,7 +17454,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "2e43c7fa-ce20-4ce4-8bda-e4706dca8373",
+              "id": "de46eb1b-919d-4c8f-ad52-7074d2bd6767",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -17542,7 +17542,7 @@
           }
         },
         {
-          "id": "26058836-a95b-49b8-ba17-4ccacbf937a6",
+          "id": "478c1c0a-9781-4cdf-84e6-26b3e3ef1431",
           "name": "Get Student Report",
           "request": {
             "name": "Get Student Report",
@@ -17602,7 +17602,7 @@
           },
           "response": [
             {
-              "id": "e7a21fa3-86ec-4fec-a1bb-8ac67402c9e9",
+              "id": "f7fa9fb6-2cd2-4277-98e2-2e8da34bac86",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -17673,12 +17673,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"studentId\": \"<uuid>\",\n  \"name\": \"<string>\",\n  \"start\": \"<date>\",\n  \"end\": \"<date>\",\n  \"daily\": {\n    \"present\": 0,\n    \"late\": 0,\n    \"unexcused\": 0,\n    \"excused\": 0,\n    \"rate\": \"<number>\"\n  },\n  \"lessons\": {\n    \"present\": 0,\n    \"late\": 0,\n    \"unexcused\": 0,\n    \"excused\": 0,\n    \"rate\": \"<number>\"\n  },\n  \"subjects\": [\n    {\n      \"subjectName\": \"<string>\",\n      \"rates\": {\n        \"present\": 0,\n        \"late\": 0,\n        \"unexcused\": 0,\n        \"excused\": 0,\n        \"rate\": \"<number>\"\n      }\n    },\n    {\n      \"subjectName\": \"<string>\",\n      \"rates\": {\n        \"present\": 0,\n        \"late\": 0,\n        \"unexcused\": 0,\n        \"excused\": 0,\n        \"rate\": \"<number>\"\n      }\n    }\n  ],\n  \"recent\": [\n    {\n      \"date\": \"<date>\",\n      \"kind\": \"daily\",\n      \"status\": \"Unexcused\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"note\": \"<string>\"\n    },\n    {\n      \"date\": \"<date>\",\n      \"kind\": \"daily\",\n      \"status\": \"Unexcused\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"note\": \"<string>\"\n    }\n  ],\n  \"admissionNumber\": \"<string>\",\n  \"className\": \"<string>\",\n  \"stream\": \"<string>\"\n}",
+              "body": "{\n  \"studentId\": \"<uuid>\",\n  \"name\": \"<string>\",\n  \"start\": \"<date>\",\n  \"end\": \"<date>\",\n  \"daily\": {\n    \"present\": 0,\n    \"late\": 0,\n    \"unexcused\": 0,\n    \"excused\": 0,\n    \"rate\": \"<number>\"\n  },\n  \"lessons\": {\n    \"present\": 0,\n    \"late\": 0,\n    \"unexcused\": 0,\n    \"excused\": 0,\n    \"rate\": \"<number>\"\n  },\n  \"subjects\": [\n    {\n      \"subjectName\": \"<string>\",\n      \"rates\": {\n        \"present\": 0,\n        \"late\": 0,\n        \"unexcused\": 0,\n        \"excused\": 0,\n        \"rate\": \"<number>\"\n      }\n    },\n    {\n      \"subjectName\": \"<string>\",\n      \"rates\": {\n        \"present\": 0,\n        \"late\": 0,\n        \"unexcused\": 0,\n        \"excused\": 0,\n        \"rate\": \"<number>\"\n      }\n    }\n  ],\n  \"marks\": [\n    {\n      \"registerId\": \"<uuid>\",\n      \"date\": \"<date>\",\n      \"kind\": \"daily\",\n      \"status\": \"Unexcused\",\n      \"key\": {\n        \"kind\": \"lesson\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"note\": \"<string>\"\n    },\n    {\n      \"registerId\": \"<uuid>\",\n      \"date\": \"<date>\",\n      \"kind\": \"lesson\",\n      \"status\": \"Unexcused\",\n      \"key\": {\n        \"kind\": \"lesson\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"note\": \"<string>\"\n    }\n  ],\n  \"admissionNumber\": \"<string>\",\n  \"className\": \"<string>\",\n  \"stream\": \"<string>\"\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "4870d8a2-4360-4ef7-b158-a87e46bb41be",
+              "id": "e3a72727-2f4e-4633-b5ca-81eee1dcce56",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -17760,7 +17760,7 @@
           }
         },
         {
-          "id": "666fb2be-98a0-467d-98ec-7156842c033a",
+          "id": "b0962dd6-55b9-4207-9d5c-b0bac016fb8f",
           "name": "Get Gaps",
           "request": {
             "name": "Get Gaps",
@@ -17811,7 +17811,7 @@
           },
           "response": [
             {
-              "id": "c37e02dc-247f-4dd7-8ac5-d508e6edbfe1",
+              "id": "a831ad75-f7de-471a-b26f-b7400c5e2713",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -17870,12 +17870,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"start\": \"<date>\",\n  \"end\": \"<date>\",\n  \"needsTermDates\": \"<boolean>\",\n  \"gaps\": [\n    {\n      \"key\": {\n        \"kind\": \"lesson\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"date\": \"<date>\",\n      \"kind\": \"lesson\",\n      \"className\": \"<string>\",\n      \"unmarked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"teacher\": {\n        \"id\": \"<uuid>\",\n        \"name\": \"<string>\"\n      }\n    },\n    {\n      \"key\": {\n        \"kind\": \"daily\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"date\": \"<date>\",\n      \"kind\": \"lesson\",\n      \"className\": \"<string>\",\n      \"unmarked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"teacher\": {\n        \"id\": \"<uuid>\",\n        \"name\": \"<string>\"\n      }\n    }\n  ]\n}",
+              "body": "{\n  \"start\": \"<date>\",\n  \"end\": \"<date>\",\n  \"needsTermDates\": \"<boolean>\",\n  \"gaps\": [\n    {\n      \"key\": {\n        \"kind\": \"lesson\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"date\": \"<date>\",\n      \"kind\": \"lesson\",\n      \"className\": \"<string>\",\n      \"unmarked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"teacher\": {\n        \"id\": \"<uuid>\",\n        \"name\": \"<string>\"\n      }\n    },\n    {\n      \"key\": {\n        \"kind\": \"daily\",\n        \"date\": \"<date>\",\n        \"className\": \"<string>\",\n        \"stream\": \"<string>\",\n        \"lessonId\": \"<uuid>\",\n        \"subjectId\": \"<uuid>\",\n        \"startsAt\": \"<time>\"\n      },\n      \"date\": \"<date>\",\n      \"kind\": \"daily\",\n      \"className\": \"<string>\",\n      \"unmarked\": \"<integer>\",\n      \"total\": \"<integer>\",\n      \"stream\": \"<string>\",\n      \"subjectName\": \"<string>\",\n      \"startsAt\": \"<time>\",\n      \"teacher\": {\n        \"id\": \"<uuid>\",\n        \"name\": \"<string>\"\n      }\n    }\n  ]\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "accad706-dab5-4921-b21a-891b36bf1234",
+              "id": "58f8a0f5-f6eb-40dc-9954-be639a3fbf08",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -17945,7 +17945,7 @@
           }
         },
         {
-          "id": "6ccc414f-1070-4ae5-afea-80b5263fdbb3",
+          "id": "93685899-6ee2-4efe-90f0-c67ab53ca32f",
           "name": "Get Settings",
           "request": {
             "name": "Get Settings",
@@ -17973,7 +17973,7 @@
           },
           "response": [
             {
-              "id": "01479c1f-c079-40c4-b2d2-beaefc8b19af",
+              "id": "cf875ebe-4677-4edb-a1cd-6678047910f6",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -18012,12 +18012,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"timezone\": \"<string>\",\n  \"source\": \"country\",\n  \"country\": \"<string>\"\n}",
+              "body": "{\n  \"timezone\": \"<string>\",\n  \"source\": \"default\",\n  \"country\": \"<string>\"\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "e4b24d77-f0c3-4f20-9f02-031d7b147317",
+              "id": "9ce77e9f-f9be-41f2-b581-e766dcccf3d7",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -18067,7 +18067,7 @@
           }
         },
         {
-          "id": "63674ab3-cd94-418c-8073-9a8b9fbe9d17",
+          "id": "781a9ac4-cb9d-496a-b95b-ecd2453fb779",
           "name": "Update Settings",
           "request": {
             "name": "Update Settings",
@@ -18111,7 +18111,7 @@
           },
           "response": [
             {
-              "id": "b7323451-7839-44df-bba2-05c51b7f6da4",
+              "id": "6638cd5e-8a08-41d9-ad46-6517486b243e",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -18163,12 +18163,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"timezone\": \"<string>\",\n  \"source\": \"country\",\n  \"country\": \"<string>\"\n}",
+              "body": "{\n  \"timezone\": \"<string>\",\n  \"source\": \"default\",\n  \"country\": \"<string>\"\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "825a9bef-f5f3-450a-87d8-8f0789a114d3",
+              "id": "24fe740c-096d-4a2b-86fc-b88cd26a583a",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -18231,7 +18231,7 @@
           }
         },
         {
-          "id": "04384496-b1dd-4e9a-9061-97ef67733044",
+          "id": "3dd68b25-2b1d-4ea2-a429-28fb3261bfb0",
           "name": "Get Term Dates",
           "request": {
             "name": "Get Term Dates",
@@ -18259,7 +18259,7 @@
           },
           "response": [
             {
-              "id": "efcebe3f-d699-49af-aaca-7f346485d0ca",
+              "id": "9ed94609-6d56-4fa6-9791-bc563c9b1a30",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -18303,7 +18303,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "a0b76276-ce60-4413-a584-e29b07851c75",
+              "id": "6b40b041-e751-48ee-b7e5-d28cc4093b26",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -18353,7 +18353,7 @@
           }
         },
         {
-          "id": "636b44d9-fac0-44b8-8dfb-4b8608196c2a",
+          "id": "ab338c36-3383-4e29-8dcc-e5a5f1d3807a",
           "name": "Replace Term Dates",
           "request": {
             "name": "Replace Term Dates",
@@ -18397,7 +18397,7 @@
           },
           "response": [
             {
-              "id": "62eb64bd-7bea-4fff-b468-48e0b0b8e69e",
+              "id": "5d7da264-d325-4fd0-9be3-1c14afad03b6",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -18454,7 +18454,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "e512452d-4ed0-4c35-a45d-8e9b3abd85a8",
+              "id": "9907cb1c-78cc-41a0-817e-2cfc6a437923",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -18517,7 +18517,7 @@
           }
         },
         {
-          "id": "e561b49d-4946-4b85-94af-8304dfad9a25",
+          "id": "8316afd6-8349-48bd-bdf8-7f481769ab68",
           "name": "Get No School Days",
           "request": {
             "name": "Get No School Days",
@@ -18555,7 +18555,7 @@
           },
           "response": [
             {
-              "id": "1aff1317-dce2-4a3d-b70c-04f28d04b6bb",
+              "id": "97a67d6c-c1c5-4a08-a4a1-12e4cb1ec5b9",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -18609,7 +18609,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "ea300f4e-f371-4817-aa10-7c4b3a758e82",
+              "id": "a94470e4-1b18-4637-af0f-526005f6ea61",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -18669,7 +18669,7 @@
           }
         },
         {
-          "id": "332878ec-373e-443b-8a0a-a915cedc73c0",
+          "id": "9a965fa8-04ee-4342-9c28-2a9661af9c4d",
           "name": "Add No School Day",
           "request": {
             "name": "Add No School Day",
@@ -18710,7 +18710,7 @@
           },
           "response": [
             {
-              "id": "1c849ade-766c-49b0-99e6-564f8ad0aa72",
+              "id": "d4b655c4-7389-4889-9613-7ce574e5ea5e",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -18767,7 +18767,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "a6026546-69f4-4f26-9c85-c644dbe9b05b",
+              "id": "2c078421-bc2c-4dc3-a918-88d8e1ecfeb5",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -18830,7 +18830,7 @@
           }
         },
         {
-          "id": "9993ed6a-d956-4f45-bfc7-dc1e345f081a",
+          "id": "49effc84-a0bc-402a-a087-c2662916c96c",
           "name": "Remove No School Day",
           "request": {
             "name": "Remove No School Day",
@@ -18870,7 +18870,7 @@
           },
           "response": [
             {
-              "id": "0ee8975f-23b6-4398-90b5-cf140a7a33c4",
+              "id": "4f3be584-ceb3-462a-bb54-49eb410dbf02",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -18916,7 +18916,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "a65123db-1790-4ac8-b578-b41517e391c1",
+              "id": "abc218e0-227f-439e-9ea7-af9a77588dd6",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -18978,7 +18978,7 @@
           }
         },
         {
-          "id": "c7032027-3687-4f26-8ef5-8e042b0fc45f",
+          "id": "475cf34f-0b0c-496a-99c1-2680a9dd656b",
           "name": "Get Student Subjects",
           "request": {
             "name": "Get Student Subjects",
@@ -19022,7 +19022,7 @@
           },
           "response": [
             {
-              "id": "66792c7e-0254-40eb-9d6c-8e0e883659e9",
+              "id": "4e568aa2-359a-43fd-a005-74fc81d58bb4",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -19079,7 +19079,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "904aac69-f14a-4e3f-87e6-6c06cf56d855",
+              "id": "280d82c5-ffd5-4665-ac66-0b111e2482cf",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -19142,7 +19142,7 @@
           }
         },
         {
-          "id": "a73f034c-59d1-4195-bc26-fa2ed28a4770",
+          "id": "55ec999f-c8b9-4e41-b174-4b0530431915",
           "name": "Set Student Subjects",
           "request": {
             "name": "Set Student Subjects",
@@ -19196,7 +19196,7 @@
           },
           "response": [
             {
-              "id": "30f2d5a6-2e32-4a6b-ae56-496566643f4f",
+              "id": "f2249524-cf18-45c5-bf47-458a7d036243",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -19266,7 +19266,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "6059d906-d9f0-41ea-8487-7d0a15d0909f",
+              "id": "c5e3c046-781e-4051-9bc3-dc24e916a30e",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -19342,7 +19342,7 @@
           }
         },
         {
-          "id": "5f77bf7e-7867-4247-bd60-b9285bb67b15",
+          "id": "586a3f4e-2a96-4ef9-8b55-4183b0c79633",
           "name": "Set Staff Account",
           "request": {
             "name": "Set Staff Account",
@@ -19399,7 +19399,7 @@
           },
           "response": [
             {
-              "id": "fc724b17-f7eb-4d7d-ae41-9e8528013df9",
+              "id": "33fc60c5-e402-4d52-91ce-016c132f9b3c",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -19469,7 +19469,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "c7ad4180-e9b2-4079-b847-5d6db41128d4",
+              "id": "b4486f22-4dab-403e-949c-9eb7d8e5659b",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -19551,7 +19551,7 @@
       "description": "",
       "item": [
         {
-          "id": "3b5f85a7-69cb-41e4-8224-cea61e412a09",
+          "id": "d0f9d2f5-d2db-42e5-81e3-d8a697a2bfe4",
           "name": "Register Push Token",
           "request": {
             "name": "Register Push Token",
@@ -19594,7 +19594,7 @@
           },
           "response": [
             {
-              "id": "6a04306c-b735-44f3-9012-8f5699efc6d8",
+              "id": "64f4640c-94b3-4989-8554-45f60fbbc618",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -19640,7 +19640,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "352a640e-56c8-402a-915c-3c54e042e895",
+              "id": "a8d6db74-a5d0-4b6e-995f-33d82c685de5",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -19702,7 +19702,7 @@
           }
         },
         {
-          "id": "afe42bdc-01e0-4031-9ca9-8583b71eaaaf",
+          "id": "dac3c329-4965-4cff-9479-e8b5bc7d5c12",
           "name": "Unregister Push Token",
           "request": {
             "name": "Unregister Push Token",
@@ -19744,7 +19744,7 @@
           },
           "response": [
             {
-              "id": "42c35c92-966c-4986-849c-33a282164084",
+              "id": "75868277-10c2-4e43-9b0b-718571ceaf1c",
               "name": "Successful Response",
               "originalRequest": {
                 "url": {
@@ -19789,7 +19789,7 @@
               "_postman_previewlanguage": "text"
             },
             {
-              "id": "a6439558-478d-4698-93e0-a804a66f3fe7",
+              "id": "2c39c996-c234-44a2-b601-65c5cabda569",
               "name": "Validation Error",
               "originalRequest": {
                 "url": {
@@ -19875,7 +19875,7 @@
     }
   ],
   "info": {
-    "_postman_id": "8b62ccb3-a65f-4caa-bd44-3157df8b3c6a",
+    "_postman_id": "bce7625c-932d-4e4d-9054-d243c18c7851",
     "name": "Skolarly API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "description": "Set baseUrl to http://localhost:8001 (local) or https://alteris-auth-service.onrender.com (production). Send Auth \u2192 POST /auth/login first: it saves the access token for every other request (tokens last an hour)."

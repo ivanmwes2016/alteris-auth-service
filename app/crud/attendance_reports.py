@@ -29,6 +29,7 @@ from app.crud.attendance import (
     attendance_rate,
     counts_for_gaps,
     lesson_spec,
+    register_key,
     school_roster,
     staff_name,
     term_on,
@@ -51,7 +52,7 @@ from app.db.schemas.attendance import (
 )
 
 MAX_RANGE = timedelta(days=400)
-RECENT_LIMIT = 30
+MARKS_LIMIT = 500
 
 
 def check_range(start: date, end: date) -> None:
@@ -174,16 +175,18 @@ async def student_report(
     )
     daily, lessons = Tally(), Tally()
     subjects: dict[str, Tally] = defaultdict(Tally)
-    recent: list[StudentMarkRead] = []
+    marks: list[StudentMarkRead] = []
     for register, mark in rows.tuples():
         if register.kind == "daily":
             daily.add(mark.status)
         else:
             lessons.add(mark.status)
             subjects[register.subject_name or "Unknown subject"].add(mark.status)
-        if mark.status != "Present" and len(recent) < RECENT_LIMIT:
-            recent.append(
+        if len(marks) < MARKS_LIMIT:
+            marks.append(
                 StudentMarkRead(
+                    register_id=register.id,
+                    key=register_key(register),
                     date=register.date,
                     kind=register.kind,
                     subject_name=register.subject_name,
@@ -205,7 +208,7 @@ async def student_report(
         subjects=[
             SubjectRate(subject_name=name, rates=t.read()) for name, t in sorted(subjects.items())
         ],
-        recent=recent,
+        marks=marks,
     )
 
 

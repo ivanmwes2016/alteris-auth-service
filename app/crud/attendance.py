@@ -351,6 +351,24 @@ class Spec:
         )
 
 
+def register_key(register: AttendanceRegister) -> RegisterKey | None:
+    """
+    The key that finds this register again (a deleted lesson's becomes an ad-hoc
+    one). None once its subject is deleted too: it can't be opened or corrected.
+    """
+    if register.kind == "lesson" and register.lesson_id is None and register.subject_id is None:
+        return None
+    return Spec(
+        kind=register.kind,
+        date=register.date,
+        class_name=register.class_name,
+        stream=register.stream,
+        subject_id=register.subject_id,
+        lesson_id=register.lesson_id,
+        starts_at=register.starts_at,
+    ).key()
+
+
 async def _require_class(
     db: AsyncSession, tenant_id: uuid.UUID, name: str, stream: str | None
 ) -> None:

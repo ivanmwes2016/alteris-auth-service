@@ -11845,6 +11845,21 @@
       },
       "StudentMarkRead": {
         "properties": {
+          "registerId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Registerid"
+          },
+          "key": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RegisterKey"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "date": {
             "type": "string",
             "format": "date",
@@ -11905,6 +11920,7 @@
         },
         "type": "object",
         "required": [
+          "registerId",
           "date",
           "kind",
           "status"
@@ -12038,12 +12054,12 @@
             "type": "array",
             "title": "Subjects"
           },
-          "recent": {
+          "marks": {
             "items": {
               "$ref": "#/components/schemas/StudentMarkRead"
             },
             "type": "array",
-            "title": "Recent"
+            "title": "Marks"
           }
         },
         "type": "object",
@@ -12055,7 +12071,7 @@
           "daily",
           "lessons",
           "subjects",
-          "recent"
+          "marks"
         ],
         "title": "StudentReportRead"
       },

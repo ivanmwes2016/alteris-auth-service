@@ -359,6 +359,9 @@ class SubjectRate(_Camel):
 
 
 class StudentMarkRead(_Camel):
+    register_id: uuid.UUID
+    # For correcting it; None once its lesson and subject are both deleted.
+    key: RegisterKey | None = None
     date: CalendarDate
     kind: RegisterKind
     subject_name: str | None = None
@@ -378,7 +381,8 @@ class StudentReportRead(_Camel):
     daily: RateRead
     lessons: RateRead
     subjects: list[SubjectRate]
-    recent: list[StudentMarkRead]
+    # Every mark in the range, newest first (at most 500).
+    marks: list[StudentMarkRead]
 
 
 class GapRead(_Camel):
