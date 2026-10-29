@@ -13084,6 +13084,27 @@
           "editable": {
             "type": "boolean",
             "title": "Editable"
+          },
+          "editableClassIds": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "title": "Editableclassids",
+            "default": []
+          },
+          "staffId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Staffid"
           }
         },
         "type": "object",

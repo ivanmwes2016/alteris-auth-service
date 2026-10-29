@@ -2,9 +2,11 @@
 Service layer for the Timetable page.
 
 Anyone in the school can read timetables. Changing one needs the Manage
-Timetable roles (Owner, Head Teacher, Admin), and past terms can't be changed
-at all: a term is past when it comes before the school's current term, by
-year and then by its place in the school's term labels.
+Timetable roles (Owner, Head Teacher, Admin). A class teacher (a staff record
+with the Class Teacher rank, linked to the account) may also add, change,
+swap and remove their own class's lessons, but nothing else. Past terms can't
+be changed at all: a term is past when it comes before the school's current
+term, by year and then by its place in the school's term labels.
 
 Clashes aren't checked here. They are allowed (the page flags them), so the
 API only refuses lessons that can't exist: outside the school days, starting
@@ -13,8 +15,9 @@ in a break, or running past a break or the end of the day.
 Every query is scoped to the caller's tenant; ids from other tenants 404.
 """
 
+import re
 import uuid
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from typing import Protocol
 
@@ -25,6 +28,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud import team
 from app.crud.academic_term import get_settings
+from app.crud.attendance import linked_staff_id
 from app.db.models.academics import SchoolClass, Subject
 from app.db.models.staff import Staff
 from app.db.models.timetable import Lesson, OptionsPeriod, Timetable, TimetablePeriod
@@ -45,6 +49,7 @@ from app.db.schemas.timetable import (
 
 ALL_DAYS = [0, 1, 2, 3, 4, 5, 6]
 MANAGE_TIMETABLE_ROLES = {"head_teacher", "admin"}
+CLASS_TEACHER_RANK = "Class Teacher"
 
 
 # ---------------------------------------------------------------------------
@@ -75,6 +80,18 @@ class Placement:
 def can_manage_timetable(*, is_owner: bool, role_name: str) -> bool:
     """Matches the Users & Roles matrix: Owner, Head Teacher and Admin manage timetables."""
     return is_owner or role_name in MANAGE_TIMETABLE_ROLES
+
+
+def _squash(text: str) -> str:
+    return re.sub(r"[^0-9a-z]", "", text.lower())
+
+
+def is_class_teacher_of(class_assigned: str | None, *, name: str, stream: str | None) -> bool:
+    """Staff records name their class as free text ("Grade 9A", "grade 9 a"), so compare
+    ignoring case, spaces and punctuation against the class's name plus its stream."""
+    if not class_assigned or not _squash(class_assigned):
+        return False
+    return _squash(class_assigned) == _squash(name + (stream or ""))
 
 
 def is_past_term(
@@ -156,9 +173,14 @@ class Viewer:
     labels: list[str]
     current_label: str | None
     current_year: int | None
+    # The caller's staff record, and the classes they are class teacher of.
+    staff_id: uuid.UUID | None = None
+    own_class_ids: frozenset[uuid.UUID] = frozenset()
+    # Every class in the school; loaded for managers only, who may edit them all.
+    all_class_ids: frozenset[uuid.UUID] = frozenset()
 
-    def can_edit(self, timetable: Timetable) -> bool:
-        return self.can_manage and not is_past_term(
+    def is_past(self, timetable: Timetable) -> bool:
+        return is_past_term(
             labels=self.labels,
             current_label=self.current_label,
             current_year=self.current_year,
@@ -166,16 +188,46 @@ class Viewer:
             year=timetable.year,
         )
 
+    def can_edit(self, timetable: Timetable) -> bool:
+        """The whole timetable: bell schedule, options periods and every class's lessons."""
+        return self.can_manage and not self.is_past(timetable)
+
+    def lesson_class_ids(self, timetable: Timetable) -> frozenset[uuid.UUID]:
+        """The classes whose lessons the caller may change on this timetable."""
+        if self.is_past(timetable):
+            return frozenset()
+        return self.all_class_ids if self.can_manage else self.own_class_ids
+
 
 async def get_viewer(db: AsyncSession, user: User) -> Viewer:
     actor = await team.get_actor(db, user)
     settings = await get_settings(db, tenant_id=actor.tenant_id)
+    can_manage = can_manage_timetable(is_owner=actor.is_owner, role_name=actor.role_name)
+    staff_id = await linked_staff_id(db, tenant_id=actor.tenant_id, user=user)
+    staff = await db.get(Staff, staff_id) if staff_id else None
+    classes = (
+        await db.execute(
+            select(SchoolClass.id, SchoolClass.name, SchoolClass.stream).where(
+                SchoolClass.tenant_id == actor.tenant_id
+            )
+        )
+    ).all()
+    own: Iterable[uuid.UUID] = ()
+    if staff is not None and staff.rank == CLASS_TEACHER_RANK:
+        own = (
+            c.id
+            for c in classes
+            if is_class_teacher_of(staff.class_assigned, name=c.name, stream=c.stream)
+        )
     return Viewer(
         actor=actor,
-        can_manage=can_manage_timetable(is_owner=actor.is_owner, role_name=actor.role_name),
+        can_manage=can_manage,
         labels=list(settings.labels) if settings else [],
         current_label=settings.current_label if settings else None,
         current_year=settings.current_year if settings else None,
+        staff_id=staff_id,
+        own_class_ids=frozenset(own),
+        all_class_ids=frozenset(c.id for c in classes) if can_manage else frozenset(),
     )
 
 
@@ -187,13 +239,33 @@ def _require_manager(viewer: Viewer) -> None:
         )
 
 
+def _past_term() -> HTTPException:
+    return HTTPException(
+        status_code=status.HTTP_409_CONFLICT,
+        detail="Past terms' timetables can't be changed",
+    )
+
+
 def _require_editable(viewer: Viewer, timetable: Timetable) -> None:
     _require_manager(viewer)
     if not viewer.can_edit(timetable):
+        raise _past_term()
+
+
+def _require_class_editable(viewer: Viewer, timetable: Timetable, *class_ids: uuid.UUID) -> None:
+    """Managers may change any class's lessons; class teachers only their own class's."""
+    if viewer.can_manage:
+        _require_editable(viewer, timetable)
+        return
+    if not viewer.own_class_ids:
+        _require_manager(viewer)
+    if not all(c in viewer.own_class_ids for c in class_ids):
         raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Past terms' timetables can't be changed",
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You can only change your own class's lessons",
         )
+    if viewer.is_past(timetable):
+        raise _past_term()
 
 
 # ---------------------------------------------------------------------------
@@ -222,6 +294,8 @@ def _read(viewer: Viewer, timetable: Timetable) -> TimetableRead:
         lessons=timetable.lessons,
         options_periods=timetable.options_periods,
         editable=viewer.can_edit(timetable),
+        editable_class_ids=sorted(viewer.lesson_class_ids(timetable)),
+        staff_id=viewer.staff_id,
     )
 
 
@@ -431,7 +505,7 @@ async def create_lesson(
 ) -> LessonRead:
     tenant_id = viewer.actor.tenant_id
     timetable = await _load(db, tenant_id, timetable_id)
-    _require_editable(viewer, timetable)
+    _require_class_editable(viewer, timetable, payload.class_id)
     _check_place(timetable, day=payload.day, period_id=payload.period_id, length=payload.length)
     await _check_refs(
         db,
@@ -456,8 +530,8 @@ async def update_lesson(
 ) -> LessonRead:
     tenant_id = viewer.actor.tenant_id
     timetable = await _load(db, tenant_id, timetable_id)
-    _require_editable(viewer, timetable)
     lesson = _find_lesson(timetable, lesson_id)
+    _require_class_editable(viewer, timetable, lesson.class_id)
 
     # Only the teacher can be cleared; any other field sent as null is left as it is.
     changes = {
@@ -483,9 +557,9 @@ async def swap_lessons(
     db: AsyncSession, viewer: Viewer, timetable_id: uuid.UUID, payload: LessonSwap
 ) -> list[LessonRead]:
     timetable = await _load(db, viewer.actor.tenant_id, timetable_id)
-    _require_editable(viewer, timetable)
     first = _find_lesson(timetable, payload.first_id)
     second = _find_lesson(timetable, payload.second_id)
+    _require_class_editable(viewer, timetable, first.class_id, second.class_id)
 
     _check_place(timetable, day=second.day, period_id=second.period_id, length=first.length)
     _check_place(timetable, day=first.day, period_id=first.period_id, length=second.length)
@@ -499,8 +573,9 @@ async def delete_lesson(
     db: AsyncSession, viewer: Viewer, timetable_id: uuid.UUID, lesson_id: uuid.UUID
 ) -> None:
     timetable = await _load(db, viewer.actor.tenant_id, timetable_id)
-    _require_editable(viewer, timetable)
-    timetable.lessons.remove(_find_lesson(timetable, lesson_id))
+    lesson = _find_lesson(timetable, lesson_id)
+    _require_class_editable(viewer, timetable, lesson.class_id)
+    timetable.lessons.remove(lesson)
     await db.commit()
 
 
