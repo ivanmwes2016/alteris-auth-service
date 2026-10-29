@@ -5853,9 +5853,19 @@
             ],
             "title": "Country"
           },
+          "today": {
+            "type": "string",
+            "format": "date",
+            "title": "Today"
+          },
           "approver": {
             "type": "boolean",
             "title": "Approver",
+            "default": false
+          },
+          "takesRegisters": {
+            "type": "boolean",
+            "title": "Takesregisters",
             "default": false
           },
           "canChangeTimezone": {
@@ -5867,7 +5877,8 @@
         "type": "object",
         "required": [
           "timezone",
-          "source"
+          "source",
+          "today"
         ],
         "title": "AttendanceSettingsRead"
       },

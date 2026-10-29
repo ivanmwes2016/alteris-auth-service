@@ -58,6 +58,16 @@ async def _viewer(
 Viewer = Annotated[attendance.Viewer, Depends(_viewer)]
 
 
+async def _reader(
+    db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)
+) -> attendance.Viewer:
+    return await attendance.get_viewer(db, current_user, reader=True)
+
+
+# Read-only endpoints, open also to roles that only view student records.
+Reader = Annotated[attendance.Viewer, Depends(_reader)]
+
+
 def _register_key(
     kind: Literal["daily", "lesson"],
     day: Annotated[date, Query(alias="date")],
@@ -196,7 +206,7 @@ async def get_overview(
 
 @router.get("/reports/students/{student_id}", response_model=StudentReportRead)
 async def get_student_report(
-    student_id: uuid.UUID, db: Db, viewer: Viewer, start: date, end: date
+    student_id: uuid.UUID, db: Db, viewer: Reader, start: date, end: date
 ) -> StudentReportRead:
     return await attendance_reports.student_report(db, viewer, student_id, start=start, end=end)
 
@@ -211,7 +221,7 @@ async def get_gaps(db: Db, viewer: Viewer, start: date, end: date) -> GapsRead:
 # Settings
 # ---------------------------------------------------------------------------
 @router.get("/settings", response_model=AttendanceSettingsRead)
-async def get_settings(viewer: Viewer) -> AttendanceSettingsRead:
+async def get_settings(viewer: Reader) -> AttendanceSettingsRead:
     return attendance_settings.settings_read(viewer)
 
 
@@ -224,7 +234,7 @@ async def update_settings(
 
 
 @router.get("/term-dates", response_model=list[TermDates])
-async def get_term_dates(db: Db, viewer: Viewer) -> list[TermDates]:
+async def get_term_dates(db: Db, viewer: Reader) -> list[TermDates]:
     return await attendance_settings.list_term_dates(db, viewer.tenant_id)
 
 

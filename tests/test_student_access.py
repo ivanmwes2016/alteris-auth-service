@@ -75,3 +75,10 @@ def test_an_unknown_role_gets_nothing() -> None:
 def test_nurse_is_an_assignable_team_role() -> None:
     assert ROLE_DB_NAME[TeamRole("Nurse")] == "nurse"
     assert display_role("nurse", is_owner=False) == "Nurse"
+
+
+def test_nurses_read_attendance_but_dont_take_registers() -> None:
+    from app.crud import attendance
+
+    assert not attendance.can_take_registers(is_owner=False, role_name="nurse")
+    assert student_access(is_owner=False, role_name="nurse").view_records
