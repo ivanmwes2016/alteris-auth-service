@@ -252,6 +252,9 @@ class AttendanceSettingsRead(_Camel):
     timezone: str
     source: Literal["school", "country", "default"]
     country: str | None = None
+    # What the caller may do, so screens can show the right actions.
+    approver: bool = False
+    can_change_timezone: bool = False
 
 
 class AttendanceSettingsUpdate(_Camel):

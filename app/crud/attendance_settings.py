@@ -47,18 +47,24 @@ SUBJECT_HISTORY_LIMIT = 50
 # ---------------------------------------------------------------------------
 # Timezone (Owner and Admins)
 # ---------------------------------------------------------------------------
+def can_change_timezone(viewer: Viewer) -> bool:
+    return viewer.actor.is_owner or viewer.actor.role_name == "admin"
+
+
 def settings_read(viewer: Viewer) -> AttendanceSettingsRead:
     return AttendanceSettingsRead(
         timezone=viewer.tz.key,
         source=viewer.tz_source,
         country=viewer.country,
+        approver=viewer.approver,
+        can_change_timezone=can_change_timezone(viewer),
     )
 
 
 async def update_settings(
     db: AsyncSession, viewer: Viewer, data: AttendanceSettingsUpdate
 ) -> AttendanceSettingsRead:
-    if not (viewer.actor.is_owner or viewer.actor.role_name == "admin"):
+    if not can_change_timezone(viewer):
         raise HTTPException(
             status.HTTP_403_FORBIDDEN, "Only the owner or an admin can change the timezone"
         )
@@ -74,6 +80,8 @@ async def update_settings(
         timezone=tz.key,
         source=timezone_source(explicit=tenant.timezone, country=tenant.country),
         country=tenant.country,
+        approver=viewer.approver,
+        can_change_timezone=True,
     )
 
 

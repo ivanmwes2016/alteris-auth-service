@@ -5852,6 +5852,16 @@
               }
             ],
             "title": "Country"
+          },
+          "approver": {
+            "type": "boolean",
+            "title": "Approver",
+            "default": false
+          },
+          "canChangeTimezone": {
+            "type": "boolean",
+            "title": "Canchangetimezone",
+            "default": false
           }
         },
         "type": "object",
