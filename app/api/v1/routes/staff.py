@@ -80,6 +80,8 @@ class StaffResponse(BaseModel):
         default=None, validation_alias="class_assigned"
     )
     subjects: list[str] = Field(default_factory=list)
+    # The app account an admin linked (PUT /attendance/staff/{id}/account).
+    userId: UUID | None = Field(default=None, validation_alias="user_id")  # noqa: N815
 
 
 class StaffCreate(BaseModel):

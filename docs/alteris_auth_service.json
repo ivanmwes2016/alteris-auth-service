@@ -11492,6 +11492,18 @@
             },
             "type": "array",
             "title": "Subjects"
+          },
+          "userId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Userid"
           }
         },
         "type": "object",
