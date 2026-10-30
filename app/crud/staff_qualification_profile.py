@@ -4,21 +4,23 @@ Service layer for staff qualification records.
 Uses one bulk-sync operation on the qualification profile instead of separate
 create/update/delete endpoints for each record.
 
-Every operation is scoped by tenant_id. Records are only updated when their
-IDs already belong to the current staff member's qualification profile.
+Every operation is scoped by tenant_id: a staff member of another school 404s,
+the same as one that doesn't exist. Records are only updated when their IDs
+already belong to the current staff member's qualification profile.
 """
 
 import uuid
 from collections.abc import Iterable, Sequence
 from typing import TypeVar
 
+from fastapi import HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy import Select, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.db.models.staff import StaffQualification, StaffQualificationProfile
+from app.db.models.staff import Staff, StaffQualification, StaffQualificationProfile
 from app.db.schemas.staff_qualification_profile import QualificationProfileBulkUpdate
 
 ModelT = TypeVar("ModelT", bound=StaffQualification)
@@ -63,6 +65,17 @@ async def get_profile(
     return result.scalar_one_or_none()
 
 
+async def ensure_staff_in_school(
+    db: AsyncSession, *, staff_id: uuid.UUID, tenant_id: uuid.UUID
+) -> None:
+    """404 for a staff member of another school, the same as one that doesn't exist."""
+    found = await db.scalar(
+        select(Staff.id).where(Staff.id == staff_id, Staff.tenant_id == tenant_id)
+    )
+    if found is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Staff member not found")
+
+
 async def get_or_create_profile(
     db: AsyncSession,
     *,
@@ -78,6 +91,7 @@ async def get_or_create_profile(
     The profile is re-selected after the insert so all relationships are
     eagerly loaded before it is returned.
     """
+    await ensure_staff_in_school(db, staff_id=staff_id, tenant_id=tenant_id)
     profile = await get_profile(db, staff_id=staff_id, tenant_id=tenant_id)
 
     if profile is not None:
