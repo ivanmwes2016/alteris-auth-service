@@ -100,6 +100,8 @@ class MeResponse(BaseModel):
     role: str | None = None
     is_owner: bool = False
     student_access: StudentAccessResponse | None = None
+    # Adding, changing and removing staff and their qualifications (app.crud.staff_access).
+    can_edit_staff: bool = False
     subscription_active: bool
 
 
@@ -245,6 +247,7 @@ async def me(
         role=user_context.get("role"),
         is_owner=bool(user_context.get("is_owner")),
         student_access=user_context.get("student_access"),
+        can_edit_staff=bool(user_context.get("can_edit_staff")),
         subscription_active=bool(user_context.get("subscription_active")),
     )
 
