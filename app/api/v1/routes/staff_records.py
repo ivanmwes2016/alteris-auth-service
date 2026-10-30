@@ -1,6 +1,7 @@
 """
 The Documents and Health tabs on a staff profile. Private records: only the
-owner, admins and head teachers read or change them (app.crud.staff_access).
+owner, admins and head teachers read or change them, and the nurse health too
+(app.crud.staff_access).
 """
 
 import uuid
@@ -11,7 +12,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.v1.routes.auth import get_current_user
 from app.core.db import get_db
 from app.crud import staff_records
-from app.crud.staff_access import ensure_staff_in_school, require_staff_editor
+from app.crud.staff_access import (
+    ensure_staff_in_school,
+    require_staff_editor,
+    require_staff_health,
+)
 from app.db.models.users import User
 from app.db.schemas.staff_records import (
     StaffDocumentsRead,
@@ -23,8 +28,11 @@ from app.db.schemas.staff_records import (
 router = APIRouter()
 
 
-async def _school_of(db: AsyncSession, user: User, staff_id: uuid.UUID) -> uuid.UUID:
-    tenant_id = await require_staff_editor(db, user)
+async def _school_of(
+    db: AsyncSession, user: User, staff_id: uuid.UUID, *, health: bool = False
+) -> uuid.UUID:
+    require = require_staff_health if health else require_staff_editor
+    tenant_id = await require(db, user)
     await ensure_staff_in_school(db, staff_id=staff_id, tenant_id=tenant_id)
     return tenant_id
 
@@ -57,7 +65,7 @@ async def get_staff_health(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> StaffHealthRead:
-    tenant_id = await _school_of(db, current_user, staff_id)
+    tenant_id = await _school_of(db, current_user, staff_id, health=True)
     return await staff_records.get_health(db, staff_id=staff_id, tenant_id=tenant_id)
 
 
@@ -69,5 +77,5 @@ async def save_staff_health(
     current_user: User = Depends(get_current_user),
 ) -> StaffHealthRead:
     """Fields left out stay as they are; a list sent replaces the saved one."""
-    tenant_id = await _school_of(db, current_user, staff_id)
+    tenant_id = await _school_of(db, current_user, staff_id, health=True)
     return await staff_records.save_health(db, staff_id=staff_id, tenant_id=tenant_id, data=data)

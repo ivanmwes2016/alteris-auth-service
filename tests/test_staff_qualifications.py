@@ -79,3 +79,32 @@ async def test_a_head_teacher_gets_their_school(monkeypatch: pytest.MonkeyPatch)
     )
     monkeypatch.setattr(team, "get_actor", AsyncMock(return_value=actor))
     assert await staff_access.require_staff_editor(Mock(), Mock()) == actor.tenant_id
+
+
+@pytest.mark.parametrize(
+    ("is_owner", "role", "allowed"),
+    [
+        (True, "teacher", True),
+        (False, "admin", True),
+        (False, "head_teacher", True),
+        (False, "nurse", True),
+        (False, "teacher", False),
+        (False, "bursar", False),
+    ],
+)
+def test_the_nurse_also_looks_after_staff_health(is_owner: bool, role: str, allowed: bool) -> None:
+    assert staff_access.can_manage_staff_health(is_owner=is_owner, role_name=role) is allowed
+
+
+@pytest.mark.asyncio
+async def test_a_nurse_gets_health_but_not_other_staff_changes(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    actor = team.Actor(
+        user_id=uuid.uuid4(), tenant_id=uuid.uuid4(), role_name="nurse", is_owner=False
+    )
+    monkeypatch.setattr(team, "get_actor", AsyncMock(return_value=actor))
+    assert await staff_access.require_staff_health(Mock(), Mock()) == actor.tenant_id
+    with pytest.raises(HTTPException) as error:
+        await staff_access.require_staff_editor(Mock(), Mock())
+    assert error.value.status_code == status.HTTP_403_FORBIDDEN
