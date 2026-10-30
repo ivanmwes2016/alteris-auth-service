@@ -180,3 +180,7 @@ def test_not_taught_needs_a_reason_and_nothing_else_has_one() -> None:
         RecordWrite(lesson=key, status="not_taught", recorded_at=NOW)
     with pytest.raises(ValidationError):
         RecordWrite(lesson=key, status="taught", reason="other", recorded_at=NOW)
+
+
+def test_attachments_are_capped_at_the_buckets_10_mb() -> None:
+    assert planning.MAX_ATTACHMENT_BYTES == 10 * 1024 * 1024

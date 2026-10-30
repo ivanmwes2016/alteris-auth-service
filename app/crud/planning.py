@@ -95,7 +95,7 @@ ATTACHMENT_TYPES = {
     "image/heic": "heic",
     "application/pdf": "pdf",
 }
-MAX_ATTACHMENT_BYTES = 15 * 1024 * 1024
+MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024  # matches the bucket's limit
 MAX_ATTACHMENTS = 10
 SIGNED_URL_SECONDS = 60 * 60
 
@@ -327,7 +327,7 @@ async def upload_url(supabase: Client, viewer: Viewer, payload: UploadUrlRequest
     if ext is None:
         raise invalid("Attach a photo (JPEG, PNG, WebP or HEIC) or a PDF")
     if payload.size > MAX_ATTACHMENT_BYTES:
-        raise invalid("Files can be up to 15 MB")
+        raise invalid("Files can be up to 10 MB")
     path = f"{viewer.tenant_id}/{uuid.uuid4()}.{ext}"
     try:
         signed = await run_in_threadpool(
@@ -391,7 +391,7 @@ async def add_attachment(
     if not payload.path.startswith(f"{viewer.tenant_id}/") or ".." in payload.path:
         raise invalid("That file wasn't uploaded for your school")
     if payload.content_type not in ATTACHMENT_TYPES or payload.size > MAX_ATTACHMENT_BYTES:
-        raise invalid("Attach a photo or a PDF of up to 15 MB")
+        raise invalid("Attach a photo or a PDF of up to 10 MB")
     existing = await _attachments_for(db, entry_ids=[entry_id] if entry_id else [], plan_id=plan_id)
     if len(existing) >= MAX_ATTACHMENTS:
         raise invalid(f"Up to {MAX_ATTACHMENTS} files each")
