@@ -4,8 +4,9 @@ Service layer for staff qualification records.
 Uses one bulk-sync operation on the qualification profile instead of separate
 create/update/delete endpoints for each record.
 
-Every operation is scoped by tenant_id. Records are only updated when their
-IDs already belong to the current staff member's qualification profile.
+Every operation is scoped by tenant_id: a staff member of another school 404s,
+the same as one that doesn't exist. Records are only updated when their IDs
+already belong to the current staff member's qualification profile.
 """
 
 import uuid
@@ -18,6 +19,7 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from app.crud.staff_access import ensure_staff_in_school
 from app.db.models.staff import StaffQualification, StaffQualificationProfile
 from app.db.schemas.staff_qualification_profile import QualificationProfileBulkUpdate
 
@@ -33,7 +35,9 @@ def _profile_query(
     Build the standard qualification-profile query.
 
     Relationships are eagerly loaded because AsyncSession does not support
-    implicit lazy-loading through normal attribute access.
+    implicit lazy-loading through normal attribute access. populate_existing
+    reloads a profile already in the session, so the re-read after a sync
+    returns the saved qualifications rather than the stale list.
     """
     return (
         select(StaffQualificationProfile)
@@ -42,6 +46,7 @@ def _profile_query(
             StaffQualificationProfile.tenant_id == tenant_id,
         )
         .options(selectinload(StaffQualificationProfile.qualifications))
+        .execution_options(populate_existing=True)
     )
 
 
@@ -78,6 +83,7 @@ async def get_or_create_profile(
     The profile is re-selected after the insert so all relationships are
     eagerly loaded before it is returned.
     """
+    await ensure_staff_in_school(db, staff_id=staff_id, tenant_id=tenant_id)
     profile = await get_profile(db, staff_id=staff_id, tenant_id=tenant_id)
 
     if profile is not None:

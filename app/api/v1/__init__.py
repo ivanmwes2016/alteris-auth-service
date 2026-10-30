@@ -15,9 +15,11 @@ from .routes import (
     medical,
     parents,
     performance,
+    planning,
     registers,
     staff,
     staff_qualifications,
+    staff_records,
     students,
     subjects,
     tenant_profile,
@@ -47,6 +49,7 @@ api_router.include_router(
     prefix="/staff/{staff_id}/qualifications",
     tags=["staff"],
 )
+api_router.include_router(staff_records.router, prefix="/staff/{staff_id}", tags=["staff"])
 api_router.include_router(academic_terms.router, prefix="/terms", tags=["terms"])
 api_router.include_router(timetables.router, prefix="/timetables", tags=["timetables"])
 api_router.include_router(performance.router, prefix="/performance", tags=["performance"])
@@ -61,6 +64,7 @@ api_router.include_router(
 )
 api_router.include_router(registers.router, prefix="/attendance", tags=["attendance"])
 api_router.include_router(registers.push_router, prefix="/push-tokens", tags=["notifications"])
+api_router.include_router(planning.router, prefix="/planning", tags=["planning"])
 
 
 # api_router.include_router(members.router, prefix="/members", tags=["members"])

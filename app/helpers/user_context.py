@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from supabase import Client
 
 from app.core.config import get_settings
+from app.crud.staff_access import can_edit_staff, can_manage_staff_health
 from app.crud.student_access import student_access
 from app.db.models.role import Role
 from app.db.models.tenant import Tenant
@@ -47,6 +48,8 @@ async def get_user_context(db: AsyncSession, user_id: str, supabase: Client) -> 
                 "role": None,
                 "is_owner": False,
                 "student_access": None,
+                "can_edit_staff": False,
+                "can_manage_staff_health": False,
                 "subscription_active": False,
             }
 
@@ -76,6 +79,10 @@ async def get_user_context(db: AsyncSession, user_id: str, supabase: Client) -> 
             "role": role.name,
             "is_owner": is_owner,
             "student_access": student_access(is_owner=is_owner, role_name=role.name).as_dict(),
+            "can_edit_staff": can_edit_staff(is_owner=is_owner, role_name=role.name),
+            "can_manage_staff_health": can_manage_staff_health(
+                is_owner=is_owner, role_name=role.name
+            ),
             "subscription_active": True,  # To Do ==> get from stripe subscription
         }
 

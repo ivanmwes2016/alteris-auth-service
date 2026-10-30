@@ -1,6 +1,7 @@
 """
 Two endpoints for the Staff Qualifications tab. tenant_id always comes from
-the authenticated user, never from the request body/query.
+the authenticated user, never from the request body/query. Every member reads;
+only staff editors (app.crud.staff_access) save.
 """
 
 import uuid
@@ -10,6 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.v1.routes.auth import get_current_tenant_id, get_current_user
 from app.core.db import get_db
+from app.crud.staff_access import require_staff_editor
 from app.crud.staff_qualification_profile import get_or_create_profile, sync_profile
 from app.db.models.staff import StaffQualificationProfile
 from app.db.models.users import User
@@ -44,5 +46,5 @@ async def sync_qualification_profile(
     Any existing record whose id is left out of the list gets deleted.
     Omit `qualifications` entirely to leave it untouched.
     """
-    tenant_id = await get_current_tenant_id(db, current_user)
+    tenant_id = await require_staff_editor(db, current_user)
     return await sync_profile(db, staff_id=staff_id, tenant_id=tenant_id, data=data)

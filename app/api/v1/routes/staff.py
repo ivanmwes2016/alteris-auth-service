@@ -11,6 +11,7 @@ from sqlalchemy.orm import selectinload
 
 from app.api.v1.routes.auth import get_current_tenant_id, get_current_user
 from app.core.db import get_db
+from app.crud.staff_access import require_staff_editor
 from app.db.models.staff import Staff, StaffSubject
 from app.db.models.users import User
 from app.helpers.pagination import (
@@ -212,7 +213,7 @@ async def create_staff_member(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> StaffResponse:
-    tenant_id = await get_current_tenant_id(db, current_user)
+    tenant_id = await require_staff_editor(db, current_user)
 
     staff = Staff(
         tenant_id=tenant_id,
@@ -257,7 +258,7 @@ async def update_staff_member(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> StaffResponse:
-    tenant_id = await get_current_tenant_id(db, current_user)
+    tenant_id = await require_staff_editor(db, current_user)
 
     result = await db.execute(
         select(Staff)
@@ -299,7 +300,7 @@ async def delete_staff_member(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> None:
-    tenant_id = await get_current_tenant_id(db, current_user)
+    tenant_id = await require_staff_editor(db, current_user)
 
     result = await db.execute(
         select(Staff).where(Staff.id == staff_id, Staff.tenant_id == tenant_id)

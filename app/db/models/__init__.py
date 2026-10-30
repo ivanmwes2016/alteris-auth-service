@@ -26,10 +26,28 @@ from .medical_note import (
 )
 from .parent import Parent
 from .performance import PerformanceRecord
+from .planning import (
+    LessonPlan,
+    LessonPlanVersion,
+    PlannedLesson,
+    PlanningAttachment,
+    PlanningComment,
+    SchemeEntry,
+    SchemeOfWork,
+)
 from .profile import Profile
 from .push_token import PushToken
 from .role import Role
-from .staff import Staff, StaffQualification, StaffQualificationProfile, StaffSubject
+from .staff import (
+    Staff,
+    StaffAllergy,
+    StaffDocument,
+    StaffHealthCondition,
+    StaffHealthProfile,
+    StaffQualification,
+    StaffQualificationProfile,
+    StaffSubject,
+)
 from .student import Student, StudentSubject, StudentSubjectChange
 from .student_parent import StudentParent
 from .tenant import Tenant
@@ -54,15 +72,26 @@ __all__ = [
     "Enquiry",
     "Invite",
     "Lesson",
+    "LessonPlan",
+    "LessonPlanVersion",
     "NoSchoolDay",
     "OptionsPeriod",
     "Parent",
     "PerformanceRecord",
+    "PlannedLesson",
+    "PlanningAttachment",
+    "PlanningComment",
     "Profile",
     "PushToken",
     "Role",
+    "SchemeEntry",
+    "SchemeOfWork",
     "SchoolClass",
     "Staff",
+    "StaffAllergy",
+    "StaffDocument",
+    "StaffHealthCondition",
+    "StaffHealthProfile",
     "StaffQualification",
     "StaffQualificationProfile",
     "StaffSubject",

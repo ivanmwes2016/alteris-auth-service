@@ -26,6 +26,8 @@ class Settings(BaseModel):
     ADMIN_NOTIFY_EMAILS: str | None = None
     # Only needed if "enhanced push security" is on for the Expo project.
     EXPO_ACCESS_TOKEN: str | None = None
+    # Private bucket for lesson plans' and scheme entries' photos and PDFs.
+    PLANNING_FILES_BUCKET: str = "lesson-plan-files"
 
     # Stripe
     STRIPE_SECRET_KEY: str
