@@ -1,4 +1,5 @@
 import uuid
+from datetime import date as date_
 
 from sqlalchemy import (
     Date,
@@ -139,3 +140,109 @@ class StaffQualification(Base):
     )
 
     profile = relationship("StaffQualificationProfile", back_populates="qualifications")
+
+
+class StaffDocument(Base):
+    """A document the school holds for a staff member: its details only, not the file."""
+
+    __tablename__ = "staff_documents"
+    __table_args__ = (Index("ix_staff_documents_staff_id", "staff_id"),)
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    staff_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("staff.id", ondelete="CASCADE"), nullable=False
+    )
+    tenant_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), index=True
+    )
+
+    name: Mapped[str] = mapped_column(Text, nullable=False)
+    category: Mapped[str] = mapped_column(Text, nullable=False)
+    date: Mapped[date_ | None] = mapped_column(Date, nullable=True)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    created_at: Mapped["DateTime"] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+
+
+class StaffHealthProfile(Base):
+    __tablename__ = "staff_health_profiles"
+    __table_args__ = (Index("ix_staff_health_profiles_tenant_id", "tenant_id"),)
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    staff_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("staff.id", ondelete="CASCADE"), unique=True, nullable=False
+    )
+    tenant_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False
+    )
+
+    emergency_contact: Mapped[str | None] = mapped_column(Text, nullable=True)
+    emergency_phone: Mapped[str | None] = mapped_column(Text, nullable=True)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    created_at: Mapped["DateTime"] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+    updated_at: Mapped["DateTime"] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
+
+    conditions: Mapped[list["StaffHealthCondition"]] = relationship(
+        back_populates="profile",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+        order_by="StaffHealthCondition.created_at",
+    )
+    allergies: Mapped[list["StaffAllergy"]] = relationship(
+        back_populates="profile",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+        order_by="StaffAllergy.created_at",
+    )
+
+
+class StaffHealthCondition(Base):
+    __tablename__ = "staff_health_conditions"
+    __table_args__ = (Index("ix_staff_health_conditions_profile_id", "profile_id"),)
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    profile_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("staff_health_profiles.id", ondelete="CASCADE")
+    )
+    tenant_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), index=True
+    )
+
+    name: Mapped[str] = mapped_column(Text, nullable=False)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    created_at: Mapped["DateTime"] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+
+    profile: Mapped["StaffHealthProfile"] = relationship(back_populates="conditions")
+
+
+class StaffAllergy(Base):
+    __tablename__ = "staff_allergies"
+    __table_args__ = (Index("ix_staff_allergies_profile_id", "profile_id"),)
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    profile_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("staff_health_profiles.id", ondelete="CASCADE")
+    )
+    tenant_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), index=True
+    )
+
+    name: Mapped[str] = mapped_column(Text, nullable=False)
+    severity: Mapped[str] = mapped_column(Text, nullable=False, default="Mild")
+    reaction: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    created_at: Mapped["DateTime"] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+
+    profile: Mapped["StaffHealthProfile"] = relationship(back_populates="allergies")

@@ -13,14 +13,14 @@ import uuid
 from collections.abc import Iterable, Sequence
 from typing import TypeVar
 
-from fastapi import HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy import Select, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.db.models.staff import Staff, StaffQualification, StaffQualificationProfile
+from app.crud.staff_access import ensure_staff_in_school
+from app.db.models.staff import StaffQualification, StaffQualificationProfile
 from app.db.schemas.staff_qualification_profile import QualificationProfileBulkUpdate
 
 ModelT = TypeVar("ModelT", bound=StaffQualification)
@@ -35,7 +35,9 @@ def _profile_query(
     Build the standard qualification-profile query.
 
     Relationships are eagerly loaded because AsyncSession does not support
-    implicit lazy-loading through normal attribute access.
+    implicit lazy-loading through normal attribute access. populate_existing
+    reloads a profile already in the session, so the re-read after a sync
+    returns the saved qualifications rather than the stale list.
     """
     return (
         select(StaffQualificationProfile)
@@ -44,6 +46,7 @@ def _profile_query(
             StaffQualificationProfile.tenant_id == tenant_id,
         )
         .options(selectinload(StaffQualificationProfile.qualifications))
+        .execution_options(populate_existing=True)
     )
 
 
@@ -63,17 +66,6 @@ async def get_profile(
     result = await db.execute(stmt)
 
     return result.scalar_one_or_none()
-
-
-async def ensure_staff_in_school(
-    db: AsyncSession, *, staff_id: uuid.UUID, tenant_id: uuid.UUID
-) -> None:
-    """404 for a staff member of another school, the same as one that doesn't exist."""
-    found = await db.scalar(
-        select(Staff.id).where(Staff.id == staff_id, Staff.tenant_id == tenant_id)
-    )
-    if found is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Staff member not found")
 
 
 async def get_or_create_profile(

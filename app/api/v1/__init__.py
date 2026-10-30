@@ -19,6 +19,7 @@ from .routes import (
     registers,
     staff,
     staff_qualifications,
+    staff_records,
     students,
     subjects,
     tenant_profile,
@@ -48,6 +49,7 @@ api_router.include_router(
     prefix="/staff/{staff_id}/qualifications",
     tags=["staff"],
 )
+api_router.include_router(staff_records.router, prefix="/staff/{staff_id}", tags=["staff"])
 api_router.include_router(academic_terms.router, prefix="/terms", tags=["terms"])
 api_router.include_router(timetables.router, prefix="/timetables", tags=["timetables"])
 api_router.include_router(performance.router, prefix="/performance", tags=["performance"])

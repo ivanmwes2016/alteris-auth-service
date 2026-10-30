@@ -38,7 +38,16 @@ from .planning import (
 from .profile import Profile
 from .push_token import PushToken
 from .role import Role
-from .staff import Staff, StaffQualification, StaffQualificationProfile, StaffSubject
+from .staff import (
+    Staff,
+    StaffAllergy,
+    StaffDocument,
+    StaffHealthCondition,
+    StaffHealthProfile,
+    StaffQualification,
+    StaffQualificationProfile,
+    StaffSubject,
+)
 from .student import Student, StudentSubject, StudentSubjectChange
 from .student_parent import StudentParent
 from .tenant import Tenant
@@ -79,6 +88,10 @@ __all__ = [
     "SchemeOfWork",
     "SchoolClass",
     "Staff",
+    "StaffAllergy",
+    "StaffDocument",
+    "StaffHealthCondition",
+    "StaffHealthProfile",
     "StaffQualification",
     "StaffQualificationProfile",
     "StaffSubject",
