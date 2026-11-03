@@ -109,3 +109,6 @@ deploy-prod: check sam-build migrate
 # ── Stripe CLI (local webhook testing) ───────────────────────────────────────
 stripe-listen:
 	stripe listen --forward-to localhost:8000/api/v1/billing/webhook
+
+run-mobile:
+	uvicorn app.main:app --reload --host 0.0.0.0 --port 8001

@@ -86,6 +86,7 @@ class StudentAccessResponse(BaseModel):
     """What the caller's role can do with students (app.crud.student_access)."""
 
     view_records: bool
+    view_medical: bool
     add_students: bool
     edit_details: bool
     edit_marks: bool
@@ -104,6 +105,9 @@ class MeResponse(BaseModel):
     can_edit_staff: bool = False
     # Reading and changing staff health records: the same roles plus the nurse.
     can_manage_staff_health: bool = False
+    # The class this account is class teacher of, as their staff record writes it:
+    # they read that class's medical records (app.crud.class_teacher).
+    class_teacher_of: str | None = None
     subscription_active: bool
 
 

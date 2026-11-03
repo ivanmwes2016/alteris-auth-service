@@ -34,6 +34,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud import team
 from app.crud.academic_term import get_settings as get_term_settings
+from app.crud.class_teacher import linked_staff_id
 from app.crud.student_access import student_access
 from app.db.models.academic_term import AcademicTermDates
 from app.db.models.academics import SchoolClass, Subject
@@ -241,28 +242,6 @@ def timezone_source(*, explicit: str | None, country: str | None) -> str:
     if explicit and is_valid_timezone(explicit):
         return "school"
     return "country" if country_timezone(country) else "default"
-
-
-async def linked_staff_id(
-    db: AsyncSession, *, tenant_id: uuid.UUID, user: User
-) -> uuid.UUID | None:
-    """The staff record an admin linked to this account, else the one with its email."""
-    linked = await db.scalar(
-        select(Staff.id).where(Staff.tenant_id == tenant_id, Staff.user_id == user.id)
-    )
-    if linked is not None:
-        return linked
-    matched: uuid.UUID | None = await db.scalar(
-        select(Staff.id)
-        .where(
-            Staff.tenant_id == tenant_id,
-            Staff.user_id.is_(None),
-            func.lower(Staff.email) == user.email.lower(),
-        )
-        .order_by(Staff.created_at)
-        .limit(1)
-    )
-    return matched
 
 
 async def load_terms(db: AsyncSession, tenant_id: uuid.UUID) -> list[TermSpan]:

@@ -25,8 +25,7 @@ async def get_medical_profile(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> StudentMedicalProfile:
-    caller = await student_access.require(db, current_user, "view_records")
-    await student_access.ensure_in_school(db, caller.tenant_id, student_id)
+    caller = await student_access.require_medical_reader(db, current_user, student_id)
     return await get_or_create_profile(db, student_id=student_id, tenant_id=caller.tenant_id)
 
 
