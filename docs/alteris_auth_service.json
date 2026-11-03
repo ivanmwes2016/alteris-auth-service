@@ -2499,6 +2499,196 @@
         }
       }
     },
+    "/staff/{staff_id}/documents": {
+      "get": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Get Staff Documents",
+        "operationId": "get_staff_documents_staff__staff_id__documents_get",
+        "parameters": [
+          {
+            "name": "staff_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Staff Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffDocumentsRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Save Staff Documents",
+        "description": "The whole list: matching ids are updated, others added, any left out deleted.",
+        "operationId": "save_staff_documents_staff__staff_id__documents_patch",
+        "parameters": [
+          {
+            "name": "staff_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Staff Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StaffDocumentsWrite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffDocumentsRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/staff/{staff_id}/health": {
+      "get": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Get Staff Health",
+        "operationId": "get_staff_health_staff__staff_id__health_get",
+        "parameters": [
+          {
+            "name": "staff_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Staff Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffHealthRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Save Staff Health",
+        "description": "Fields left out stay as they are; a list sent replaces the saved one.",
+        "operationId": "save_staff_health_staff__staff_id__health_patch",
+        "parameters": [
+          {
+            "name": "staff_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Staff Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StaffHealthWrite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffHealthRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/terms": {
       "get": {
         "tags": [
@@ -7008,6 +7198,216 @@
           }
         }
       }
+    },
+    "/sick-bay": {
+      "get": {
+        "tags": [
+          "sick bay"
+        ],
+        "summary": "Get Sick Bay",
+        "description": "The school day's visits (today by default), plus any still open from earlier days.",
+        "operationId": "get_sick_bay_sick_bay_get",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SickBayDay"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "sick bay"
+        ],
+        "summary": "Send To Sick Bay",
+        "operationId": "send_to_sick_bay_sick_bay_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VisitCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VisitRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sick-bay/alerts": {
+      "get": {
+        "tags": [
+          "sick bay"
+        ],
+        "summary": "Get Health Alerts",
+        "description": "Students with allergies, conditions, medicines or emergency notes, optionally one class.",
+        "operationId": "get_health_alerts_sick_bay_alerts_get",
+        "parameters": [
+          {
+            "name": "className",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Classname"
+            }
+          },
+          {
+            "name": "stream",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Stream"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthAlerts"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sick-bay/{visit_id}": {
+      "patch": {
+        "tags": [
+          "sick bay"
+        ],
+        "summary": "Update Visit",
+        "description": "The nurse's record: arrived, temperature, treatment, notes, and where the student went.",
+        "operationId": "update_visit_sick_bay__visit_id__patch",
+        "parameters": [
+          {
+            "name": "visit_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Visit Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VisitUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VisitRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -7084,91 +7484,97 @@
         ],
         "title": "AcceptedResponse"
       },
-      "AllergyIn": {
+      "AlertAllergy": {
         "properties": {
           "name": {
             "type": "string",
-            "maxLength": 200,
-            "minLength": 1,
             "title": "Name"
           },
           "severity": {
-            "$ref": "#/components/schemas/Severity",
-            "default": "Mild"
+            "type": "string",
+            "title": "Severity"
           },
           "reaction": {
             "anyOf": [
               {
-                "type": "string",
-                "maxLength": 500
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
             "title": "Reaction"
-          },
-          "id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Id"
-          }
-        },
-        "type": "object",
-        "required": [
-          "name"
-        ],
-        "title": "AllergyIn"
-      },
-      "AllergyRead": {
-        "properties": {
-          "name": {
-            "type": "string",
-            "maxLength": 200,
-            "minLength": 1,
-            "title": "Name"
-          },
-          "severity": {
-            "$ref": "#/components/schemas/Severity",
-            "default": "Mild"
-          },
-          "reaction": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Reaction"
-          },
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Id"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Created At"
           }
         },
         "type": "object",
         "required": [
           "name",
-          "id",
-          "created_at"
+          "severity",
+          "reaction"
         ],
-        "title": "AllergyRead"
+        "title": "AlertAllergy"
+      },
+      "AlertCondition": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "notes"
+        ],
+        "title": "AlertCondition"
+      },
+      "AlertMedication": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "dosage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dosage"
+          },
+          "time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Time"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "dosage",
+          "time"
+        ],
+        "title": "AlertMedication"
       },
       "AttachmentIn": {
         "properties": {
@@ -7907,84 +8313,6 @@
           "createdAt"
         ],
         "title": "CommentRead"
-      },
-      "ConditionIn": {
-        "properties": {
-          "name": {
-            "type": "string",
-            "maxLength": 200,
-            "minLength": 1,
-            "title": "Name"
-          },
-          "notes": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 1000
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Notes"
-          },
-          "id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Id"
-          }
-        },
-        "type": "object",
-        "required": [
-          "name"
-        ],
-        "title": "ConditionIn"
-      },
-      "ConditionRead": {
-        "properties": {
-          "name": {
-            "type": "string",
-            "maxLength": 200,
-            "minLength": 1,
-            "title": "Name"
-          },
-          "notes": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 1000
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Notes"
-          },
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Id"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Created At"
-          }
-        },
-        "type": "object",
-        "required": [
-          "name",
-          "id",
-          "created_at"
-        ],
-        "title": "ConditionRead"
       },
       "Contact": {
         "properties": {
@@ -9113,6 +9441,101 @@
         "type": "object",
         "title": "HTTPValidationError"
       },
+      "HealthAlert": {
+        "properties": {
+          "studentId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Studentid"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "className": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Classname"
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          },
+          "allergies": {
+            "items": {
+              "$ref": "#/components/schemas/AlertAllergy"
+            },
+            "type": "array",
+            "title": "Allergies"
+          },
+          "conditions": {
+            "items": {
+              "$ref": "#/components/schemas/AlertCondition"
+            },
+            "type": "array",
+            "title": "Conditions"
+          },
+          "medications": {
+            "items": {
+              "$ref": "#/components/schemas/AlertMedication"
+            },
+            "type": "array",
+            "title": "Medications"
+          },
+          "emergencyNotes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Emergencynotes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "studentId",
+          "name",
+          "className",
+          "stream",
+          "allergies",
+          "conditions",
+          "medications",
+          "emergencyNotes"
+        ],
+        "title": "HealthAlert"
+      },
+      "HealthAlerts": {
+        "properties": {
+          "alerts": {
+            "items": {
+              "$ref": "#/components/schemas/HealthAlert"
+            },
+            "type": "array",
+            "title": "Alerts"
+          }
+        },
+        "type": "object",
+        "required": [
+          "alerts"
+        ],
+        "title": "HealthAlerts"
+      },
       "ImageUploadUrlResponse": {
         "properties": {
           "path": {
@@ -9963,6 +10386,27 @@
               }
             ]
           },
+          "can_edit_staff": {
+            "type": "boolean",
+            "title": "Can Edit Staff",
+            "default": false
+          },
+          "can_manage_staff_health": {
+            "type": "boolean",
+            "title": "Can Manage Staff Health",
+            "default": false
+          },
+          "class_teacher_of": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Class Teacher Of"
+          },
           "subscription_active": {
             "type": "boolean",
             "title": "Subscription Active"
@@ -10041,7 +10485,7 @@
             "anyOf": [
               {
                 "items": {
-                  "$ref": "#/components/schemas/AllergyIn"
+                  "$ref": "#/components/schemas/app__db__schemas__medical_profile__AllergyIn"
                 },
                 "type": "array"
               },
@@ -10069,7 +10513,7 @@
             "anyOf": [
               {
                 "items": {
-                  "$ref": "#/components/schemas/ConditionIn"
+                  "$ref": "#/components/schemas/app__db__schemas__medical_profile__ConditionIn"
                 },
                 "type": "array"
               },
@@ -10167,7 +10611,7 @@
           },
           "allergies": {
             "items": {
-              "$ref": "#/components/schemas/AllergyRead"
+              "$ref": "#/components/schemas/app__db__schemas__medical_profile__AllergyRead"
             },
             "type": "array",
             "title": "Allergies",
@@ -10183,7 +10627,7 @@
           },
           "conditions": {
             "items": {
-              "$ref": "#/components/schemas/ConditionRead"
+              "$ref": "#/components/schemas/app__db__schemas__medical_profile__ConditionRead"
             },
             "type": "array",
             "title": "Conditions",
@@ -14486,6 +14930,29 @@
         ],
         "title": "Severity"
       },
+      "SickBayDay": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "visits": {
+            "items": {
+              "$ref": "#/components/schemas/VisitRead"
+            },
+            "type": "array",
+            "title": "Visits"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "visits"
+        ],
+        "title": "SickBayDay",
+        "description": "The day's visits, and any still open from earlier days."
+      },
       "SkippedMark": {
         "properties": {
           "studentId": {
@@ -14676,6 +15143,277 @@
           "role"
         ],
         "title": "StaffCreate"
+      },
+      "StaffDocumentIn": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Category"
+          },
+          "date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "category"
+        ],
+        "title": "StaffDocumentIn"
+      },
+      "StaffDocumentRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Category"
+          },
+          "date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "category"
+        ],
+        "title": "StaffDocumentRead"
+      },
+      "StaffDocumentsRead": {
+        "properties": {
+          "documents": {
+            "items": {
+              "$ref": "#/components/schemas/StaffDocumentRead"
+            },
+            "type": "array",
+            "title": "Documents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "documents"
+        ],
+        "title": "StaffDocumentsRead"
+      },
+      "StaffDocumentsWrite": {
+        "properties": {
+          "documents": {
+            "items": {
+              "$ref": "#/components/schemas/StaffDocumentIn"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "title": "Documents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "documents"
+        ],
+        "title": "StaffDocumentsWrite"
+      },
+      "StaffHealthRead": {
+        "properties": {
+          "emergencyContact": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Emergencycontact"
+          },
+          "emergencyPhone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Emergencyphone"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "conditions": {
+            "items": {
+              "$ref": "#/components/schemas/app__db__schemas__staff_records__ConditionRead"
+            },
+            "type": "array",
+            "title": "Conditions",
+            "default": []
+          },
+          "allergies": {
+            "items": {
+              "$ref": "#/components/schemas/app__db__schemas__staff_records__AllergyRead"
+            },
+            "type": "array",
+            "title": "Allergies",
+            "default": []
+          }
+        },
+        "type": "object",
+        "title": "StaffHealthRead"
+      },
+      "StaffHealthWrite": {
+        "properties": {
+          "emergencyContact": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Emergencycontact"
+          },
+          "emergencyPhone": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Emergencyphone"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "conditions": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/app__db__schemas__staff_records__ConditionIn"
+                },
+                "type": "array",
+                "maxItems": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conditions"
+          },
+          "allergies": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/app__db__schemas__staff_records__AllergyIn"
+                },
+                "type": "array",
+                "maxItems": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Allergies"
+          }
+        },
+        "type": "object",
+        "title": "StaffHealthWrite",
+        "description": "Fields left out are left as they are; a list sent replaces the one saved."
       },
       "StaffRank": {
         "type": "string",
@@ -15028,6 +15766,10 @@
             "type": "boolean",
             "title": "View Records"
           },
+          "view_medical": {
+            "type": "boolean",
+            "title": "View Medical"
+          },
           "add_students": {
             "type": "boolean",
             "title": "Add Students"
@@ -15056,6 +15798,7 @@
         "type": "object",
         "required": [
           "view_records",
+          "view_medical",
           "add_students",
           "edit_details",
           "edit_marks",
@@ -16773,6 +17516,297 @@
         ],
         "title": "ValidationError"
       },
+      "VisitCreate": {
+        "properties": {
+          "studentId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Studentid"
+          },
+          "complaint": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Complaint"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "studentId",
+          "complaint"
+        ],
+        "title": "VisitCreate"
+      },
+      "VisitRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "student": {
+            "$ref": "#/components/schemas/VisitStudent"
+          },
+          "day": {
+            "type": "string",
+            "format": "date",
+            "title": "Day"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "waiting",
+              "in",
+              "back",
+              "home",
+              "hospital"
+            ],
+            "title": "Status"
+          },
+          "complaint": {
+            "type": "string",
+            "title": "Complaint"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "sentByName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sentbyname"
+          },
+          "sentAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Sentat"
+          },
+          "temperature": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temperature"
+          },
+          "treatment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Treatment"
+          },
+          "nurseNotes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nursenotes"
+          },
+          "arrivedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrivedat"
+          },
+          "closedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Closedat"
+          },
+          "closedByName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Closedbyname"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "student",
+          "day",
+          "status",
+          "complaint",
+          "note",
+          "sentByName",
+          "sentAt",
+          "temperature",
+          "treatment",
+          "nurseNotes",
+          "arrivedAt",
+          "closedAt",
+          "closedByName"
+        ],
+        "title": "VisitRead"
+      },
+      "VisitStudent": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "className": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Classname"
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          },
+          "allergies": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Allergies"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "className",
+          "stream",
+          "allergies"
+        ],
+        "title": "VisitStudent"
+      },
+      "VisitUpdate": {
+        "properties": {
+          "status": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "waiting",
+                  "in",
+                  "back",
+                  "home",
+                  "hospital"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "temperature": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 45.0,
+                "minimum": 30.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temperature"
+          },
+          "treatment": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Treatment"
+          },
+          "nurseNotes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nursenotes"
+          }
+        },
+        "type": "object",
+        "title": "VisitUpdate",
+        "description": "Only the fields sent change; a blank one is cleared."
+      },
       "WeekDay": {
         "properties": {
           "date": {
@@ -17201,6 +18235,170 @@
         ],
         "title": "RecordRead"
       },
+      "app__db__schemas__medical_profile__AllergyIn": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "severity": {
+            "$ref": "#/components/schemas/Severity",
+            "default": "Mild"
+          },
+          "reaction": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reaction"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "AllergyIn"
+      },
+      "app__db__schemas__medical_profile__AllergyRead": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "severity": {
+            "$ref": "#/components/schemas/Severity",
+            "default": "Mild"
+          },
+          "reaction": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reaction"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "id",
+          "created_at"
+        ],
+        "title": "AllergyRead"
+      },
+      "app__db__schemas__medical_profile__ConditionIn": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "ConditionIn"
+      },
+      "app__db__schemas__medical_profile__ConditionRead": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "id",
+          "created_at"
+        ],
+        "title": "ConditionRead"
+      },
       "app__db__schemas__planning__RecordRead": {
         "properties": {
           "status": {
@@ -17277,6 +18475,170 @@
           "recordedAt"
         ],
         "title": "RecordRead"
+      },
+      "app__db__schemas__staff_records__AllergyIn": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "Mild",
+              "Moderate",
+              "Severe"
+            ],
+            "title": "Severity",
+            "default": "Mild"
+          },
+          "reaction": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reaction"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "AllergyIn"
+      },
+      "app__db__schemas__staff_records__AllergyRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "Mild",
+              "Moderate",
+              "Severe"
+            ],
+            "title": "Severity",
+            "default": "Mild"
+          },
+          "reaction": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reaction"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "AllergyRead"
+      },
+      "app__db__schemas__staff_records__ConditionIn": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "ConditionIn"
+      },
+      "app__db__schemas__staff_records__ConditionRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "ConditionRead"
       }
     },
     "securitySchemes": {

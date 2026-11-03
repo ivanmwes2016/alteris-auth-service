@@ -15,7 +15,6 @@ in a break, or running past a break or the end of the day.
 Every query is scoped to the caller's tenant; ids from other tenants 404.
 """
 
-import re
 import uuid
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
@@ -28,7 +27,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud import team
 from app.crud.academic_term import get_settings
-from app.crud.attendance import linked_staff_id
+from app.crud.class_teacher import CLASS_TEACHER_RANK, is_class_teacher_of, linked_staff_id
 from app.db.models.academics import SchoolClass, Subject
 from app.db.models.staff import Staff
 from app.db.models.timetable import Lesson, OptionsPeriod, Timetable, TimetablePeriod
@@ -49,7 +48,6 @@ from app.db.schemas.timetable import (
 
 ALL_DAYS = [0, 1, 2, 3, 4, 5, 6]
 MANAGE_TIMETABLE_ROLES = {"head_teacher", "admin"}
-CLASS_TEACHER_RANK = "Class Teacher"
 
 
 # ---------------------------------------------------------------------------
@@ -80,18 +78,6 @@ class Placement:
 def can_manage_timetable(*, is_owner: bool, role_name: str) -> bool:
     """Matches the Users & Roles matrix: Owner, Head Teacher and Admin manage timetables."""
     return is_owner or role_name in MANAGE_TIMETABLE_ROLES
-
-
-def _squash(text: str) -> str:
-    return re.sub(r"[^0-9a-z]", "", text.lower())
-
-
-def is_class_teacher_of(class_assigned: str | None, *, name: str, stream: str | None) -> bool:
-    """Staff records name their class as free text ("Grade 9A", "grade 9 a"), so compare
-    ignoring case, spaces and punctuation against the class's name plus its stream."""
-    if not class_assigned or not _squash(class_assigned):
-        return False
-    return _squash(class_assigned) == _squash(name + (stream or ""))
 
 
 def is_past_term(

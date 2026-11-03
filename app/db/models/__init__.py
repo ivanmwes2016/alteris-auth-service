@@ -38,6 +38,7 @@ from .planning import (
 from .profile import Profile
 from .push_token import PushToken
 from .role import Role
+from .sick_bay import SickBayVisit
 from .staff import (
     Staff,
     StaffAllergy,
@@ -87,6 +88,7 @@ __all__ = [
     "SchemeEntry",
     "SchemeOfWork",
     "SchoolClass",
+    "SickBayVisit",
     "Staff",
     "StaffAllergy",
     "StaffDocument",

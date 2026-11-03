@@ -6,7 +6,7 @@ import pytest
 from fastapi import HTTPException
 from pydantic import ValidationError
 
-from app.crud import timetable
+from app.crud import class_teacher, timetable
 from app.crud.team import Actor
 from app.db.schemas.timetable import BellScheduleWrite, LessonUpdate, PeriodWrite
 
@@ -271,7 +271,7 @@ def test_a_lesson_must_fit_before_the_next_break() -> None:
 def test_a_class_teacher_is_matched_to_their_class_by_name_and_stream(
     class_assigned: str | None, name: str, stream: str | None, matches: bool
 ) -> None:
-    assert timetable.is_class_teacher_of(class_assigned, name=name, stream=stream) is matches
+    assert class_teacher.is_class_teacher_of(class_assigned, name=name, stream=stream) is matches
 
 
 OWN_CLASS, OTHER_CLASS = uuid.uuid4(), uuid.uuid4()
