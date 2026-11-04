@@ -11,7 +11,8 @@ logger = logging.getLogger(__name__)
 FALLBACK_BETA = "server-side-fallback-2026-07-01"
 # A draft is a few hundred words; adaptive thinking needs room on top of that.
 MAX_TOKENS = 16000
-# The phone gives up after 75 seconds, so don't keep going past that.
+# The phone waits 80 seconds for a draft. No retries: a retried timeout would
+# outlast the phone, and the teacher can just tap again.
 TIMEOUT_SECONDS = 70.0
 
 _client: anthropic.AsyncAnthropic | None = None
@@ -20,7 +21,7 @@ _client: anthropic.AsyncAnthropic | None = None
 def _anthropic() -> anthropic.AsyncAnthropic:
     global _client
     if _client is None:
-        _client = anthropic.AsyncAnthropic(timeout=TIMEOUT_SECONDS, max_retries=1)
+        _client = anthropic.AsyncAnthropic(timeout=TIMEOUT_SECONDS, max_retries=0)
     return _client
 
 
