@@ -1091,6 +1091,7 @@ async def _plan_summary(
         topic=plan.topic,
         subtopic=plan.subtopic,
         late=plan.late,
+        ai_assisted=plan.ai_assisted,
         written_at=plan.written_at,
         written_by=_person(plan.created_by, names),
         lessons=[
@@ -1231,6 +1232,8 @@ async def save_plan(
     plan.scheme_entry_id = entry_id
     plan.saved_at = saved_at
     plan.updated_by = viewer.user_id
+    # Once a plan has taken an AI draft it stays labelled, however it's edited.
+    plan.ai_assisted = bool(plan.ai_assisted) or payload.ai_assisted
     plan.late = is_late(plan.written_at, _starts(first, viewer))
 
     rows: list[PlannedLesson] = []

@@ -16,13 +16,17 @@ from supabase import Client
 from app.api.v1.routes.auth import get_current_user
 from app.core.db import get_db
 from app.core.supabase import get_supabase
-from app.crud import attendance, planning, planning_reports
+from app.crud import attendance, lesson_drafts, planning, planning_reports
 from app.db.models.users import User
 from app.db.schemas.planning import (
+    AiSettingsRead,
+    AiSettingsWrite,
     AttachmentIn,
     AttachmentRead,
     CommentIn,
     CommentRead,
+    DraftRead,
+    DraftRequest,
     EntriesWrite,
     EntryIn,
     PlanningGapsRead,
@@ -282,6 +286,33 @@ async def attach_to_plan(
     plan_id: uuid.UUID, payload: AttachmentIn, db: Db, viewer: Viewer, supabase: Storage
 ) -> AttachmentRead:
     return await planning.attach_to_plan(db, supabase, viewer, plan_id, payload)
+
+
+# ---------------------------------------------------------------------------
+# AI drafts
+# ---------------------------------------------------------------------------
+@router.get("/ai-settings", response_model=AiSettingsRead)
+async def get_ai_settings(db: Db, viewer: Viewer) -> AiSettingsRead:
+    """Whether AI drafting is on, the context drafts use, and the cost (owner and admins only)."""
+    return await lesson_drafts.ai_settings_read(db, viewer)
+
+
+@router.put("/ai-settings", response_model=AiSettingsRead)
+async def put_ai_settings(payload: AiSettingsWrite, db: Db, viewer: Viewer) -> AiSettingsRead:
+    """
+    Only the fields sent change. Turning drafting on or off needs the owner or an
+    admin; the curriculum and classroom setting need an approver.
+    """
+    return await lesson_drafts.update_ai_settings(db, viewer, payload)
+
+
+@router.post("/drafts", response_model=DraftRead)
+async def draft_plan(payload: DraftRequest, db: Db, viewer: Viewer) -> DraftRead:
+    """
+    Drafts the empty parts of a lesson plan with AI. Nothing is saved: the
+    teacher edits the draft and saves the plan with `aiAssisted`.
+    """
+    return await lesson_drafts.draft_plan(db, viewer, payload)
 
 
 @router.put("/records", response_model=RecordRead)

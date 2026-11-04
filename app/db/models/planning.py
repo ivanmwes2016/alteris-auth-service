@@ -186,6 +186,8 @@ class LessonPlan(Base):
     late: Mapped[bool] = mapped_column(nullable=False, default=False)
     # The latest save's phone time: an older offline copy never overwrites a newer one.
     saved_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    # Has ever taken an AI draft. It stays set however the plan is edited later.
+    ai_assisted: Mapped[bool] = mapped_column(nullable=False, default=False, server_default="false")
 
     created_by: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
@@ -375,4 +377,56 @@ class PlanningAttachment(Base):
     uploaded_by: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class PlanningAiSettings(Base):
+    """
+    A school's AI drafting: whether it's on, and the context drafts are written
+    for. No row means off, with the curriculum guessed and a basic classroom.
+    """
+
+    __tablename__ = "planning_ai_settings"
+
+    tenant_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), primary_key=True
+    )
+    # Only the owner or an admin switches it: it costs money.
+    enabled: Mapped[bool] = mapped_column(nullable=False, default=False)
+    # E.g. "Uganda, NCDC competency-based lower secondary". Null: guessed from the school.
+    curriculum: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # The classroom setting. Null fields: assume a large class and basic materials.
+    class_size: Mapped[int | None] = mapped_column(SmallInteger, nullable=True)
+    has_power: Mapped[bool | None] = mapped_column(nullable=True)
+    has_projector: Mapped[bool | None] = mapped_column(nullable=True)
+    # "none", "shared" or "one_each".
+    textbooks: Mapped[str | None] = mapped_column(String, nullable=True)
+    updated_by: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
+
+
+class LessonDraft(Base):
+    """One AI draft request: for the daily limit and for what drafting costs each school."""
+
+    __tablename__ = "lesson_drafts"
+    __table_args__ = (Index("ix_lesson_drafts_tenant_created", "tenant_id", "created_at"),)
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False
+    )
+    user_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
+    )
+    # The school day it counts against.
+    day: Mapped[date_] = mapped_column(Date, nullable=False)
+    model: Mapped[str] = mapped_column(String, nullable=False)
+    # "drafted", "refused" or "failed". Failed drafts don't count against the limit.
+    outcome: Mapped[str] = mapped_column(String, nullable=False)
+    input_tokens: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    output_tokens: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

@@ -209,6 +209,8 @@ class PlanWrite(_Camel):
     assessment: str | None = Field(None, max_length=LONG)
     conclusion: str | None = Field(None, max_length=LONG)
     saved_at: datetime
+    # The teacher used an AI draft in this plan. Once set it stays set.
+    ai_assisted: bool = False
 
 
 class RecordWrite(_Camel):
@@ -261,6 +263,7 @@ class PlanSummary(_Camel):
     topic: str
     subtopic: str | None
     late: bool
+    ai_assisted: bool = False
     written_at: datetime
     written_by: PersonRead | None
     lessons: list[PlannedLessonRead]
@@ -387,3 +390,77 @@ class RecordOfWorkRead(_Camel):
     term: str
     year: int
     rows: list[RecordOfWorkRow]
+
+
+# ---------------------------------------------------------------------------
+# AI drafts
+# ---------------------------------------------------------------------------
+Textbooks = Literal["none", "shared", "one_each"]
+
+
+class AiUsageRead(_Camel):
+    """What drafting has cost the school this month. Shown to the owner and admins only."""
+
+    drafts: int
+    input_tokens: int
+    output_tokens: int
+    estimated_cost_usd: float
+
+
+class AiSettingsRead(_Camel):
+    enabled: bool
+    curriculum: str | None
+    # The curriculum drafts use when none is set, worked out from the school.
+    suggested_curriculum: str
+    class_size: int | None
+    has_power: bool | None
+    has_projector: bool | None
+    textbooks: Textbooks | None
+    can_switch: bool
+    can_edit_context: bool
+    drafts_left_today: int
+    usage: AiUsageRead | None
+
+
+class AiSettingsWrite(_Camel):
+    """Only the fields sent change. `enabled` needs the owner or an admin; the rest an approver."""
+
+    enabled: bool | None = None
+    curriculum: str | None = Field(None, max_length=SHORT)
+    class_size: int | None = Field(None, ge=1, le=500)
+    has_power: bool | None = None
+    has_projector: bool | None = None
+    textbooks: Textbooks | None = None
+
+
+class DraftRequest(_Camel):
+    """
+    The plan as the teacher has it now. Parts left empty are drafted; parts
+    with text are kept as they are and given to the AI as context.
+    """
+
+    lessons: list[LessonKey] = Field(..., min_length=1, max_length=10)
+    scheme_entry_id: uuid.UUID | None = None
+    topic: str | None = Field(None, max_length=SHORT)
+    subtopic: str | None = Field(None, max_length=SHORT)
+    objectives: str | None = Field(None, max_length=LONG)
+    materials: str | None = Field(None, max_length=LONG)
+    introduction: str | None = Field(None, max_length=LONG)
+    development: str | None = Field(None, max_length=LONG)
+    assessment: str | None = Field(None, max_length=LONG)
+    conclusion: str | None = Field(None, max_length=LONG)
+    # E.g. "group work, 80 students, no textbooks".
+    note: str | None = Field(None, max_length=SHORT)
+
+
+class DraftRead(_Camel):
+    """Drafted text for the parts that were empty; the rest come back null."""
+
+    subtopic: str | None = None
+    objectives: str | None = None
+    materials: str | None = None
+    introduction: str | None = None
+    development: str | None = None
+    assessment: str | None = None
+    conclusion: str | None = None
+    drafts_left_today: int
