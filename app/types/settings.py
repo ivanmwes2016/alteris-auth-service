@@ -28,6 +28,10 @@ class Settings(BaseModel):
     EXPO_ACCESS_TOKEN: str | None = None
     # Private bucket for lesson plans' and scheme entries' photos and PDFs.
     PLANNING_FILES_BUCKET: str = "lesson-plan-files"
+    # AI drafts of lesson plans. The Anthropic SDK reads ANTHROPIC_API_KEY itself.
+    PLANNING_AI_MODEL: str = "claude-sonnet-5-5"
+    # Drafts each teacher may request per school day.
+    PLANNING_AI_DAILY_LIMIT: int = 20
 
     # Stripe
     STRIPE_SECRET_KEY: str

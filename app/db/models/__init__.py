@@ -27,9 +27,11 @@ from .medical_note import (
 from .parent import Parent
 from .performance import PerformanceRecord
 from .planning import (
+    LessonDraft,
     LessonPlan,
     LessonPlanVersion,
     PlannedLesson,
+    PlanningAiSettings,
     PlanningAttachment,
     PlanningComment,
     SchemeEntry,
@@ -73,6 +75,7 @@ __all__ = [
     "Enquiry",
     "Invite",
     "Lesson",
+    "LessonDraft",
     "LessonPlan",
     "LessonPlanVersion",
     "NoSchoolDay",
@@ -80,6 +83,7 @@ __all__ = [
     "Parent",
     "PerformanceRecord",
     "PlannedLesson",
+    "PlanningAiSettings",
     "PlanningAttachment",
     "PlanningComment",
     "Profile",

@@ -23,6 +23,8 @@ def get_settings() -> Settings:
         ADMIN_NOTIFY_EMAILS=os.getenv("ADMIN_NOTIFY_EMAILS"),
         EXPO_ACCESS_TOKEN=os.getenv("EXPO_ACCESS_TOKEN"),
         PLANNING_FILES_BUCKET=os.getenv("PLANNING_FILES_BUCKET") or "lesson-plan-files",
+        PLANNING_AI_MODEL=os.getenv("PLANNING_AI_MODEL") or "claude-sonnet-5-5",
+        PLANNING_AI_DAILY_LIMIT=int(os.getenv("PLANNING_AI_DAILY_LIMIT") or "20"),
         STRIPE_SECRET_KEY=os.getenv("STRIPE_SECRET_KEY"),
         STRIPE_WEBHOOK_SECRET=os.getenv("STRIPE_WEBHOOK_SECRET"),
         REDIS_URL=os.getenv("UPSTASH_REDIS_REST_URL"),
