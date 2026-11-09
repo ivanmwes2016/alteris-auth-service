@@ -21,6 +21,7 @@ from .routes import (
     staff,
     staff_qualifications,
     staff_records,
+    student_cards,
     students,
     subjects,
     tenant_profile,
@@ -62,6 +63,9 @@ api_router.include_router(
 )
 api_router.include_router(
     attendance.router, prefix="/students/{student_id}/attendance", tags=["attendance"]
+)
+api_router.include_router(
+    student_cards.router, prefix="/students/{student_id}/card", tags=["students"]
 )
 api_router.include_router(registers.router, prefix="/attendance", tags=["attendance"])
 api_router.include_router(registers.push_router, prefix="/push-tokens", tags=["notifications"])

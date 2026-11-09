@@ -32,7 +32,7 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.crud import team
+from app.crud import student_cards, team
 from app.crud.academic_term import get_settings as get_term_settings
 from app.crud.class_teacher import linked_staff_id
 from app.crud.student_access import student_access
@@ -627,6 +627,12 @@ async def read_register(
                 )
             )
     names = await user_names(db, (m.marked_by for m in marks.values()))
+    state = register_state(spec.date, viewer.today)
+    cards = (
+        await student_cards.card_uids(db, viewer.tenant_id, (s.id for s in students))
+        if state == "open"
+        else {}
+    )
 
     counts = RegisterCounts()
     rows: list[RegisterStudent] = []
@@ -652,6 +658,7 @@ async def read_register(
                 admission_number=student.school_id,
                 stream=student.faculty,
                 photo=student.photo,
+                card_uid=cards.get(student.id),
                 mark=MarkRead(
                     status=mark.status,
                     note=mark.note,
@@ -664,7 +671,6 @@ async def read_register(
             )
         )
 
-    state = register_state(spec.date, viewer.today)
     return RegisterRead(
         register_id=register.id if register else None,
         key=spec.key(),
@@ -713,6 +719,7 @@ def _apply_mark(
     status_: str,
     note: str | None,
     tapped_at: datetime,
+    source: str = "manual",
     reason: str | None = None,
     request_id: uuid.UUID | None = None,
 ) -> AttendanceMark:
@@ -747,6 +754,7 @@ def _apply_mark(
             to_note=note,
             changed_by=viewer.user_id,
             tapped_at=tapped_at,
+            source=source,
             reason=reason,
             correction_request_id=request_id,
         )
@@ -812,6 +820,7 @@ async def save_marks(db: AsyncSession, viewer: Viewer, payload: RegisterSave) ->
             status_=mark_in.status,
             note=mark_in.note,
             tapped_at=tapped,
+            source=mark_in.source,
         )
     try:
         await db.commit()
@@ -1120,6 +1129,7 @@ async def mark_history(
             ),
             changed_at=c.changed_at,
             tapped_at=c.tapped_at,
+            source=c.source,
             reason=c.reason,
             correction_request_id=c.correction_request_id,
         )

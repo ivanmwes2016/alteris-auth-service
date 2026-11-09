@@ -4464,6 +4464,142 @@
         }
       }
     },
+    "/students/{student_id}/card": {
+      "get": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Get Student Card",
+        "operationId": "get_student_card_students__student_id__card_get",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Student Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/CardRead"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Get Student Card Students  Student Id  Card Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Link Student Card",
+        "operationId": "link_student_card_students__student_id__card_put",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Student Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CardLink"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CardRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Unlink Student Card",
+        "operationId": "unlink_student_card_students__student_id__card_delete",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Student Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/attendance/today": {
       "get": {
         "tags": [
@@ -6969,6 +7105,120 @@
         }
       }
     },
+    "/planning/ai-settings": {
+      "get": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Get Ai Settings",
+        "description": "Whether AI drafting is on, the context drafts use, and the cost (owner and admins only).",
+        "operationId": "get_ai_settings_planning_ai_settings_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AiSettingsRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Put Ai Settings",
+        "description": "Only the fields sent change. Turning drafting on or off needs the owner or an\nadmin; the curriculum and classroom setting need an approver.",
+        "operationId": "put_ai_settings_planning_ai_settings_put",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AiSettingsWrite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AiSettingsRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/planning/drafts": {
+      "post": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Draft Plan",
+        "description": "Drafts the empty parts of a lesson plan with AI. Nothing is saved: the\nteacher edits the draft and saves the plan with `aiAssisted`.",
+        "operationId": "draft_plan_planning_drafts_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DraftRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DraftRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/planning/records": {
       "put": {
         "tags": [
@@ -7483,6 +7733,225 @@
           "message"
         ],
         "title": "AcceptedResponse"
+      },
+      "AiSettingsRead": {
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          },
+          "curriculum": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Curriculum"
+          },
+          "suggestedCurriculum": {
+            "type": "string",
+            "title": "Suggestedcurriculum"
+          },
+          "classSize": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Classsize"
+          },
+          "hasPower": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Haspower"
+          },
+          "hasProjector": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hasprojector"
+          },
+          "textbooks": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "shared",
+                  "one_each"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Textbooks"
+          },
+          "canSwitch": {
+            "type": "boolean",
+            "title": "Canswitch"
+          },
+          "canEditContext": {
+            "type": "boolean",
+            "title": "Caneditcontext"
+          },
+          "draftsLeftToday": {
+            "type": "integer",
+            "title": "Draftslefttoday"
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AiUsageRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "enabled",
+          "curriculum",
+          "suggestedCurriculum",
+          "classSize",
+          "hasPower",
+          "hasProjector",
+          "textbooks",
+          "canSwitch",
+          "canEditContext",
+          "draftsLeftToday",
+          "usage"
+        ],
+        "title": "AiSettingsRead"
+      },
+      "AiSettingsWrite": {
+        "properties": {
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enabled"
+          },
+          "curriculum": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Curriculum"
+          },
+          "classSize": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 500.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Classsize"
+          },
+          "hasPower": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Haspower"
+          },
+          "hasProjector": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hasprojector"
+          },
+          "textbooks": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "shared",
+                  "one_each"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Textbooks"
+          }
+        },
+        "type": "object",
+        "title": "AiSettingsWrite",
+        "description": "Only the fields sent change. `enabled` needs the owner or an admin; the rest an approver."
+      },
+      "AiUsageRead": {
+        "properties": {
+          "drafts": {
+            "type": "integer",
+            "title": "Drafts"
+          },
+          "inputTokens": {
+            "type": "integer",
+            "title": "Inputtokens"
+          },
+          "outputTokens": {
+            "type": "integer",
+            "title": "Outputtokens"
+          },
+          "estimatedCostUsd": {
+            "type": "number",
+            "title": "Estimatedcostusd"
+          }
+        },
+        "type": "object",
+        "required": [
+          "drafts",
+          "inputTokens",
+          "outputTokens",
+          "estimatedCostUsd"
+        ],
+        "title": "AiUsageRead",
+        "description": "What drafting has cost the school this month. Shown to the owner and admins only."
       },
       "AlertAllergy": {
         "properties": {
@@ -8066,6 +8535,38 @@
           "logo"
         ],
         "title": "Body_upload_workspace_logo_workspaces__workspace_id__logo_post"
+      },
+      "CardLink": {
+        "properties": {
+          "uid": {
+            "type": "string",
+            "title": "Uid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "uid"
+        ],
+        "title": "CardLink"
+      },
+      "CardRead": {
+        "properties": {
+          "uid": {
+            "type": "string",
+            "title": "Uid"
+          },
+          "linkedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Linkedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "uid",
+          "linkedAt"
+        ],
+        "title": "CardRead"
       },
       "CheckoutPayload": {
         "properties": {
@@ -8704,6 +9205,236 @@
           "email"
         ],
         "title": "CurrentUserResponse"
+      },
+      "DraftRead": {
+        "properties": {
+          "subtopic": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subtopic"
+          },
+          "objectives": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Objectives"
+          },
+          "materials": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Materials"
+          },
+          "introduction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Introduction"
+          },
+          "development": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Development"
+          },
+          "assessment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assessment"
+          },
+          "conclusion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conclusion"
+          },
+          "draftsLeftToday": {
+            "type": "integer",
+            "title": "Draftslefttoday"
+          }
+        },
+        "type": "object",
+        "required": [
+          "draftsLeftToday"
+        ],
+        "title": "DraftRead",
+        "description": "Drafted text for the parts that were empty; the rest come back null."
+      },
+      "DraftRequest": {
+        "properties": {
+          "lessons": {
+            "items": {
+              "$ref": "#/components/schemas/LessonKey"
+            },
+            "type": "array",
+            "maxItems": 10,
+            "minItems": 1,
+            "title": "Lessons"
+          },
+          "schemeEntryId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Schemeentryid"
+          },
+          "topic": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Topic"
+          },
+          "subtopic": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subtopic"
+          },
+          "objectives": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Objectives"
+          },
+          "materials": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Materials"
+          },
+          "introduction": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Introduction"
+          },
+          "development": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Development"
+          },
+          "assessment": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assessment"
+          },
+          "conclusion": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conclusion"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lessons"
+        ],
+        "title": "DraftRequest",
+        "description": "The plan as the teacher has it now. Parts left empty are drafted; parts\nwith text are kept as they are and given to the AI as context."
       },
       "EmailRequest": {
         "properties": {
@@ -10216,6 +10947,11 @@
             "format": "date-time",
             "title": "Tappedat"
           },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": "manual"
+          },
           "reason": {
             "anyOf": [
               {
@@ -10289,6 +11025,15 @@
               }
             ],
             "title": "Tappedat"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "card"
+            ],
+            "title": "Source",
+            "default": "manual"
           }
         },
         "type": "object",
@@ -11861,6 +12606,11 @@
             "type": "boolean",
             "title": "Late"
           },
+          "aiAssisted": {
+            "type": "boolean",
+            "title": "Aiassisted",
+            "default": false
+          },
           "writtenAt": {
             "type": "string",
             "format": "date-time",
@@ -12105,6 +12855,11 @@
           "late": {
             "type": "boolean",
             "title": "Late"
+          },
+          "aiAssisted": {
+            "type": "boolean",
+            "title": "Aiassisted",
+            "default": false
           },
           "writtenAt": {
             "type": "string",
@@ -12365,6 +13120,11 @@
             "type": "string",
             "format": "date-time",
             "title": "Savedat"
+          },
+          "aiAssisted": {
+            "type": "boolean",
+            "title": "Aiassisted",
+            "default": false
           }
         },
         "type": "object",
@@ -14284,6 +15044,17 @@
               }
             ],
             "title": "Photo"
+          },
+          "cardUid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Carduid"
           },
           "mark": {
             "anyOf": [

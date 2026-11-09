@@ -217,6 +217,8 @@ class AttendanceMarkChange(Base):
     )
     changed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     tapped_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    # "card" when a student tapped their NFC card, otherwise "manual".
+    source: Mapped[str] = mapped_column(String, nullable=False, server_default="manual")
     # Set for corrections (and accepted correction requests), empty for same-day edits.
     reason: Mapped[str | None] = mapped_column(Text, nullable=True)
     correction_request_id: Mapped[uuid.UUID | None] = mapped_column(
