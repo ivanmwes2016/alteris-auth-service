@@ -73,6 +73,8 @@ class RegisterStudent(_Camel):
     admission_number: str | None = None
     stream: str | None = None
     photo: str | None = None
+    # Only on a register still being taken, so a phone can match taps with no signal.
+    card_uid: str | None = None
     mark: MarkRead | None = None
     pending_correction: bool = False
 
@@ -115,6 +117,7 @@ class MarkIn(_Camel):
     note: str | None = Field(None, max_length=1000)
     # When it was tapped on the phone; the server's clock if left out.
     tapped_at: datetime | None = None
+    source: Literal["manual", "card"] = "manual"
 
 
 class RegisterSave(_Camel):
@@ -241,6 +244,7 @@ class MarkChangeRead(_Camel):
     changed_by: PersonRead
     changed_at: datetime
     tapped_at: datetime
+    source: str = "manual"
     reason: str | None = None
     correction_request_id: uuid.UUID | None = None
 

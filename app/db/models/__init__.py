@@ -52,6 +52,7 @@ from .staff import (
     StaffSubject,
 )
 from .student import Student, StudentSubject, StudentSubjectChange
+from .student_card import StudentCard
 from .student_parent import StudentParent
 from .tenant import Tenant
 from .tenant_gallery_image import TenantGalleryImage
@@ -106,6 +107,7 @@ __all__ = [
     "StudentAttendanceProfile",
     "StudentAttendanceRecord",
     "StudentBehaviourProfile",
+    "StudentCard",
     "StudentMedicalCondition",
     "StudentMedicalProfile",
     "StudentMedication",
