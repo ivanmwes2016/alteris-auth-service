@@ -126,6 +126,16 @@ async def get_actor(db: AsyncSession, user: User) -> Actor:
     )
 
 
+async def is_member(db: AsyncSession, user: User) -> bool:
+    """On the staff of any school (active), approved or not."""
+    found = await db.scalar(
+        select(TenantMember.id)
+        .where(TenantMember.user_id == user.id, TenantMember.status == "active")
+        .limit(1)
+    )
+    return found is not None
+
+
 async def get_manager(db: AsyncSession, user: User) -> Actor:
     actor = await get_actor(db, user)
     if not can_manage_users(is_owner=actor.is_owner, role_name=actor.role_name):

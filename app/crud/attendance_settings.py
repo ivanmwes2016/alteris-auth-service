@@ -14,7 +14,6 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.crud import team
 from app.crud.attendance import (
     Viewer,
     require_approver,
@@ -323,21 +322,23 @@ async def set_staff_account(
 # ---------------------------------------------------------------------------
 # Push tokens (any member)
 # ---------------------------------------------------------------------------
-async def register_push_token(db: AsyncSession, actor: team.Actor, token: str) -> None:
+async def register_push_token(
+    db: AsyncSession, *, user_id: uuid.UUID, tenant_id: uuid.UUID, token: str
+) -> None:
     """A phone that signs in to another account moves to it."""
     await db.execute(
         pg_insert(PushToken)
-        .values(id=uuid.uuid4(), token=token, user_id=actor.user_id, tenant_id=actor.tenant_id)
+        .values(id=uuid.uuid4(), token=token, user_id=user_id, tenant_id=tenant_id)
         .on_conflict_do_update(
             index_elements=["token"],
-            set_={"user_id": actor.user_id, "tenant_id": actor.tenant_id, "updated_at": func.now()},
+            set_={"user_id": user_id, "tenant_id": tenant_id, "updated_at": func.now()},
         )
     )
     await db.commit()
 
 
-async def unregister_push_token(db: AsyncSession, actor: team.Actor, token: str) -> None:
+async def unregister_push_token(db: AsyncSession, *, user_id: uuid.UUID, token: str) -> None:
     await db.execute(
-        delete(PushToken).where(PushToken.token == token, PushToken.user_id == actor.user_id)
+        delete(PushToken).where(PushToken.token == token, PushToken.user_id == user_id)
     )
     await db.commit()

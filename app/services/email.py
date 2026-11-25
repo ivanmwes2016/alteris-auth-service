@@ -95,6 +95,36 @@ def invite_email(
     )
 
 
+# The mobile app parents use (alteris-marking-ui-app's app.json name).
+APP_NAME = "Skool Desk"
+
+
+def parent_invite_email(
+    *, invite_url: str, school_name: str, children: list[str], first_name: str | None
+) -> Email:
+    """A school inviting a parent to follow their children in the app."""
+    if not children:
+        who = "your child"
+    elif len(children) == 1:
+        who = children[0]
+    else:
+        who = f"{', '.join(children[:-1])} and {children[-1]}"
+    return _render(
+        subject=f"{school_name} has invited you to the {APP_NAME} app",
+        first_name=first_name,
+        lines=[
+            f"{school_name} has invited you to follow {who} in the {APP_NAME} app: "
+            "attendance, results, timetable, health and behaviour, with notifications "
+            "when something happens.",
+            f"Open the link to set your password, then download {APP_NAME} from the App Store "
+            "or Google Play and sign in with this email.",
+        ],
+        action="Accept the invitation",
+        url=invite_url,
+        note="The link expires in 7 days. If you weren't expecting this, you can ignore it.",
+    )
+
+
 def confirm_email(*, confirm_url: str, first_name: str | None) -> Email:
     return _render(
         subject="Confirm your email",

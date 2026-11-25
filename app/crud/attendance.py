@@ -74,6 +74,7 @@ from app.db.schemas.attendance import (
     TodayRead,
 )
 from app.helpers.timezones import country_timezone, is_valid_timezone, school_timezone
+from app.services import parent_push
 from app.services.push import send_push, tokens_for
 
 TAKE_REGISTER_ROLES = {"teacher", "head_teacher", "admin"}
@@ -370,15 +371,21 @@ async def _require_class(
 
 
 async def timetable_on(db: AsyncSession, viewer: Viewer, day: date) -> Timetable | None:
+    return await school_timetable_on(db, viewer.tenant_id, viewer.terms, day)
+
+
+async def school_timetable_on(
+    db: AsyncSession, tenant_id: uuid.UUID, terms: Sequence[TermSpan], day: date
+) -> Timetable | None:
     """
     The timetable that applies on `day`: its term's, by the school's term dates.
     A school without term dates uses its current term's timetable every day.
     """
-    term = term_on(day, viewer.terms)
+    term = term_on(day, terms)
     if term is not None:
         label, year = term.label, term.year
-    elif not viewer.terms:
-        settings = await get_term_settings(db, tenant_id=viewer.tenant_id)
+    elif not terms:
+        settings = await get_term_settings(db, tenant_id=tenant_id)
         if settings is None or settings.current_label is None or settings.current_year is None:
             return None
         label, year = settings.current_label, settings.current_year
@@ -386,7 +393,7 @@ async def timetable_on(db: AsyncSession, viewer: Viewer, day: date) -> Timetable
         return None  # between terms
     timetable: Timetable | None = await db.scalar(
         select(Timetable).where(
-            Timetable.tenant_id == viewer.tenant_id, Timetable.term == label, Timetable.year == year
+            Timetable.tenant_id == tenant_id, Timetable.term == label, Timetable.year == year
         )
     )
     return timetable
@@ -776,10 +783,16 @@ async def _markable_students(
     return students
 
 
-async def save_marks(db: AsyncSession, viewer: Viewer, payload: RegisterSave) -> RegisterSaveResult:
+async def save_marks(
+    db: AsyncSession,
+    viewer: Viewer,
+    payload: RegisterSave,
+    background: BackgroundTasks | None = None,
+) -> RegisterSaveResult:
     """
     Same-day marks, or a register taken offline on its day that syncs within the
     grace window. All or nothing on timing: a locked register needs a correction.
+    Parents hear about late and absent marks on the daily register (app.services.parent_push).
     """
     spec = await resolve(db, viewer, payload.register_)
     taps = [_aware(m.tapped_at) if m.tapped_at else viewer.now for m in payload.marks]
@@ -800,6 +813,7 @@ async def save_marks(db: AsyncSession, viewer: Viewer, payload: RegisterSave) ->
     students = await _markable_students(db, viewer, spec, register)
     existing = {m.student_id: m for m in register.marks}
     skipped: list[SkippedMark] = []
+    notices: list[parent_push.ParentNotice] = []
     for mark_in, tapped in zip(payload.marks, taps, strict=True):
         student = students.get(mark_in.student_id)
         if student is None:
@@ -811,6 +825,17 @@ async def save_marks(db: AsyncSession, viewer: Viewer, payload: RegisterSave) ->
             continue
         if current is not None and (current.status, current.note) == (mark_in.status, mark_in.note):
             continue
+        if register.kind == "daily":
+            notice = parent_push.attendance_notice(
+                student_id=student.id,
+                student_name=student.name,
+                status=mark_in.status,
+                previous=current.status if current is not None else None,
+                day=spec.date,
+                today=viewer.today,
+            )
+            if notice is not None:
+                notices.append(notice)
         existing[student.id] = _apply_mark(
             db,
             viewer,
@@ -827,6 +852,8 @@ async def save_marks(db: AsyncSession, viewer: Viewer, payload: RegisterSave) ->
     except IntegrityError as exc:
         await db.rollback()
         raise _conflict("Someone saved this register at the same moment. Try again.") from exc
+    if background is not None and notices:
+        background.add_task(parent_push.notify_parents, notices)
     return RegisterSaveResult(
         register_=await read_register(db, viewer, spec, register), skipped=skipped
     )

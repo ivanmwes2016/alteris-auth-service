@@ -1723,6 +1723,92 @@
         }
       }
     },
+    "/parents/{parent_id}/invite": {
+      "post": {
+        "tags": [
+          "parents"
+        ],
+        "summary": "Invite Parent",
+        "description": "Email the parent a link to set up the app. Sending again replaces the link.",
+        "operationId": "invite_parent_parents__parent_id__invite_post",
+        "parameters": [
+          {
+            "name": "parent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Parent Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParentAppAccess"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "parents"
+        ],
+        "summary": "Remove Parent Access",
+        "description": "End the parent's app access, or cancel their invite. Their record stays.",
+        "operationId": "remove_parent_access_parents__parent_id__invite_delete",
+        "parameters": [
+          {
+            "name": "parent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Parent Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParentAppAccess"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/classes": {
       "get": {
         "tags": [
@@ -3468,6 +3554,203 @@
         }
       }
     },
+    "/performance/release": {
+      "get": {
+        "tags": [
+          "performance"
+        ],
+        "summary": "Get Release",
+        "description": "Whether parents can see this class's marks for the term.",
+        "operationId": "get_release_performance_release_get",
+        "parameters": [
+          {
+            "name": "class",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200,
+              "title": "Class"
+            }
+          },
+          {
+            "name": "term",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100,
+              "title": "Term"
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "maximum": 2100,
+              "minimum": 2000,
+              "title": "Year"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReleaseRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "performance"
+        ],
+        "summary": "Publish To Parents",
+        "description": "Show this class's marks for the term to parents, and tell them by push the first\ntime. Publishing again changes nothing. Owner, Admins and the Head Teacher.",
+        "operationId": "publish_to_parents_performance_release_put",
+        "parameters": [
+          {
+            "name": "class",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200,
+              "title": "Class"
+            }
+          },
+          {
+            "name": "term",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100,
+              "title": "Term"
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "maximum": 2100,
+              "minimum": 2000,
+              "title": "Year"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReleaseRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "performance"
+        ],
+        "summary": "Unpublish From Parents",
+        "description": "Hide this class's marks for the term from parents again.",
+        "operationId": "unpublish_from_parents_performance_release_delete",
+        "parameters": [
+          {
+            "name": "class",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200,
+              "title": "Class"
+            }
+          },
+          {
+            "name": "term",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100,
+              "title": "Term"
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "maximum": 2100,
+              "minimum": 2000,
+              "title": "Year"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReleaseRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users": {
       "get": {
         "tags": [
@@ -3556,7 +3839,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/InviteToken"
+                "$ref": "#/components/schemas/app__db__schemas__team__InviteToken"
               }
             }
           },
@@ -5807,7 +6090,7 @@
           "notifications"
         ],
         "summary": "Register Push Token",
-        "description": "Notify this phone about attendance corrections. Calling it again is harmless.",
+        "description": "Notify this phone: staff about attendance corrections, parents about their\nchildren (app.services.parent_push). Calling it again is harmless.",
         "operationId": "register_push_token_push_tokens_put",
         "requestBody": {
           "required": true,
@@ -7658,6 +7941,513 @@
           }
         }
       }
+    },
+    "/parent/children": {
+      "get": {
+        "tags": [
+          "parents"
+        ],
+        "summary": "List Children",
+        "description": "Every child linked to the caller, across schools. Empty for anyone else.",
+        "operationId": "list_children_parent_children_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChildRead"
+                  },
+                  "title": "Response List Children Parent Children Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/parent/children/{student_id}/attendance": {
+      "get": {
+        "tags": [
+          "parents"
+        ],
+        "summary": "Child Attendance",
+        "description": "Rates and marks between `start` and `end` (the last 90 days by default).",
+        "operationId": "child_attendance_parent_children__student_id__attendance_get",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Student Id"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Start"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "End"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentReportRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/parent/children/{student_id}/results": {
+      "get": {
+        "tags": [
+          "parents"
+        ],
+        "summary": "Child Results",
+        "description": "The child's term marks the school has published, newest first.",
+        "operationId": "child_results_parent_children__student_id__results_get",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Student Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChildTermResults"
+                  },
+                  "title": "Response Child Results Parent Children  Student Id  Results Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/parent/children/{student_id}/timetable": {
+      "get": {
+        "tags": [
+          "parents"
+        ],
+        "summary": "Child Timetable",
+        "operationId": "child_timetable_parent_children__student_id__timetable_get",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Student Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChildTimetableRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/parent/children/{student_id}/medical": {
+      "get": {
+        "tags": [
+          "parents"
+        ],
+        "summary": "Child Medical",
+        "operationId": "child_medical_parent_children__student_id__medical_get",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Student Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MedicalProfileRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/parent/children/{student_id}/sick-bay": {
+      "get": {
+        "tags": [
+          "parents"
+        ],
+        "summary": "Child Sick Bay",
+        "description": "The child's sick bay visits, newest first.",
+        "operationId": "child_sick_bay_parent_children__student_id__sick_bay_get",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Student Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VisitRead"
+                  },
+                  "title": "Response Child Sick Bay Parent Children  Student Id  Sick Bay Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/parent/children/{student_id}/behaviour": {
+      "get": {
+        "tags": [
+          "parents"
+        ],
+        "summary": "Child Behaviour",
+        "operationId": "child_behaviour_parent_children__student_id__behaviour_get",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Student Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BehaviourProfileRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/parent/push-settings": {
+      "get": {
+        "tags": [
+          "parents"
+        ],
+        "summary": "Get Push Settings",
+        "operationId": "get_push_settings_parent_push_settings_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushSettingsRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "parents"
+        ],
+        "summary": "Update Push Settings",
+        "description": "Turn kinds of push on or off; kinds left out stay as they are.",
+        "operationId": "update_push_settings_parent_push_settings_patch",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PushSettingsUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushSettingsRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/parent-invites/preview": {
+      "post": {
+        "tags": [
+          "parents"
+        ],
+        "summary": "Preview Invite",
+        "operationId": "preview_invite_parent_invites_preview_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/app__db__schemas__parent_access__InviteToken"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParentInvitePreview"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/parent-invites/accept": {
+      "post": {
+        "tags": [
+          "parents"
+        ],
+        "summary": "Accept Invite",
+        "description": "Set a password (unless the email already has a login) and link it to the parent.",
+        "operationId": "accept_invite_parent_invites_accept_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParentInviteAccept"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParentInviteAccepted"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
     }
   },
   "components": {
@@ -8595,6 +9385,347 @@
           "plan"
         ],
         "title": "CheckoutPayload"
+      },
+      "ChildLessonRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "day": {
+            "type": "integer",
+            "title": "Day"
+          },
+          "periodId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Periodid"
+          },
+          "length": {
+            "type": "integer",
+            "title": "Length"
+          },
+          "subjectName": {
+            "type": "string",
+            "title": "Subjectname"
+          },
+          "teacherName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Teachername"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "day",
+          "periodId",
+          "length",
+          "subjectName"
+        ],
+        "title": "ChildLessonRead"
+      },
+      "ChildOptionsPeriodRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "day": {
+            "type": "integer",
+            "title": "Day"
+          },
+          "periodId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Periodid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "day",
+          "periodId"
+        ],
+        "title": "ChildOptionsPeriodRead"
+      },
+      "ChildPeriodRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "time",
+            "title": "Startsat"
+          },
+          "endsAt": {
+            "type": "string",
+            "format": "time",
+            "title": "Endsat"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "lesson",
+              "break"
+            ],
+            "title": "Kind"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "startsAt",
+          "endsAt",
+          "kind"
+        ],
+        "title": "ChildPeriodRead"
+      },
+      "ChildRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "admissionNumber": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Admissionnumber"
+          },
+          "className": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Classname"
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          },
+          "relationshipType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Relationshiptype"
+          },
+          "school": {
+            "$ref": "#/components/schemas/ChildSchool"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "school"
+        ],
+        "title": "ChildRead"
+      },
+      "ChildSchool": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "ChildSchool"
+      },
+      "ChildSubjectScore": {
+        "properties": {
+          "subject": {
+            "type": "string",
+            "title": "Subject"
+          },
+          "score": {
+            "type": "string",
+            "title": "Score"
+          },
+          "classAverage": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Classaverage"
+          }
+        },
+        "type": "object",
+        "required": [
+          "subject",
+          "score"
+        ],
+        "title": "ChildSubjectScore"
+      },
+      "ChildTermResults": {
+        "properties": {
+          "term": {
+            "type": "string",
+            "title": "Term"
+          },
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "className": {
+            "type": "string",
+            "title": "Classname"
+          },
+          "releasedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Releasedat"
+          },
+          "average": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Average"
+          },
+          "scores": {
+            "items": {
+              "$ref": "#/components/schemas/ChildSubjectScore"
+            },
+            "type": "array",
+            "title": "Scores"
+          }
+        },
+        "type": "object",
+        "required": [
+          "term",
+          "year",
+          "className",
+          "releasedAt",
+          "scores"
+        ],
+        "title": "ChildTermResults"
+      },
+      "ChildTimetableRead": {
+        "properties": {
+          "term": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Term"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "days": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Days",
+            "default": []
+          },
+          "periods": {
+            "items": {
+              "$ref": "#/components/schemas/ChildPeriodRead"
+            },
+            "type": "array",
+            "title": "Periods",
+            "default": []
+          },
+          "lessons": {
+            "items": {
+              "$ref": "#/components/schemas/ChildLessonRead"
+            },
+            "type": "array",
+            "title": "Lessons",
+            "default": []
+          },
+          "optionsPeriods": {
+            "items": {
+              "$ref": "#/components/schemas/ChildOptionsPeriodRead"
+            },
+            "type": "array",
+            "title": "Optionsperiods",
+            "default": []
+          }
+        },
+        "type": "object",
+        "title": "ChildTimetableRead",
+        "description": "The child's class's lessons this term. `term` is none when no timetable applies."
       },
       "ClassCreate": {
         "properties": {
@@ -10508,23 +11639,6 @@
         ],
         "title": "InvitePreview"
       },
-      "InviteToken": {
-        "properties": {
-          "token": {
-            "type": "string",
-            "maxLength": 256,
-            "minLength": 1,
-            "title": "Token"
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "required": [
-          "token"
-        ],
-        "title": "InviteToken",
-        "description": "The token travels in a body, not the URL path, so it stays out of access logs."
-      },
       "LessonCreate": {
         "properties": {
           "classId": {
@@ -11151,6 +12265,11 @@
               }
             ],
             "title": "Class Teacher Of"
+          },
+          "is_parent": {
+            "type": "boolean",
+            "title": "Is Parent",
+            "default": false
           },
           "subscription_active": {
             "type": "boolean",
@@ -11885,6 +13004,78 @@
         ],
         "title": "Page[StudentResponse]"
       },
+      "ParentAppAccess": {
+        "properties": {
+          "parentId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Parentid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "not_invited",
+              "invited",
+              "expired",
+              "active"
+            ],
+            "title": "Status"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "invitedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Invitedat"
+          },
+          "inviteExpiresAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inviteexpiresat"
+          },
+          "joinedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Joinedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "parentId",
+          "status"
+        ],
+        "title": "ParentAppAccess"
+      },
       "ParentCreate": {
         "properties": {
           "parent_id": {
@@ -12000,6 +13191,92 @@
           "tenant_id"
         ],
         "title": "ParentCreatePayload"
+      },
+      "ParentInviteAccept": {
+        "properties": {
+          "token": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 10,
+            "title": "Token"
+          },
+          "password": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "token"
+        ],
+        "title": "ParentInviteAccept"
+      },
+      "ParentInviteAccepted": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "schoolName": {
+            "type": "string",
+            "title": "Schoolname"
+          },
+          "accountCreated": {
+            "type": "boolean",
+            "title": "Accountcreated"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "schoolName",
+          "accountCreated"
+        ],
+        "title": "ParentInviteAccepted"
+      },
+      "ParentInvitePreview": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "parentName": {
+            "type": "string",
+            "title": "Parentname"
+          },
+          "schoolName": {
+            "type": "string",
+            "title": "Schoolname"
+          },
+          "children": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Children"
+          },
+          "hasAccount": {
+            "type": "boolean",
+            "title": "Hasaccount"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "parentName",
+          "schoolName",
+          "children",
+          "hasAccount"
+        ],
+        "title": "ParentInvitePreview"
       },
       "ParentPatch": {
         "properties": {
@@ -13837,6 +15114,82 @@
         "type": "object",
         "title": "ProfilePatch"
       },
+      "PushSettingsRead": {
+        "properties": {
+          "attendance": {
+            "type": "boolean",
+            "title": "Attendance",
+            "default": true
+          },
+          "results": {
+            "type": "boolean",
+            "title": "Results",
+            "default": true
+          },
+          "health": {
+            "type": "boolean",
+            "title": "Health",
+            "default": true
+          },
+          "behaviour": {
+            "type": "boolean",
+            "title": "Behaviour",
+            "default": true
+          }
+        },
+        "type": "object",
+        "title": "PushSettingsRead"
+      },
+      "PushSettingsUpdate": {
+        "properties": {
+          "attendance": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Attendance"
+          },
+          "results": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Results"
+          },
+          "health": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Health"
+          },
+          "behaviour": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Behaviour"
+          }
+        },
+        "type": "object",
+        "title": "PushSettingsUpdate"
+      },
       "PushTokenRegistration": {
         "properties": {
           "token": {
@@ -15146,6 +16499,74 @@
           "className"
         ],
         "title": "RegisterSummary"
+      },
+      "ReleaseRead": {
+        "properties": {
+          "className": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Classname"
+          },
+          "term": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Term"
+          },
+          "year": {
+            "type": "integer",
+            "maximum": 2100.0,
+            "minimum": 2000.0,
+            "title": "Year"
+          },
+          "released": {
+            "type": "boolean",
+            "title": "Released"
+          },
+          "releasedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Releasedat"
+          },
+          "releasedByName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Releasedbyname"
+          },
+          "parentsNotified": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parentsnotified"
+          }
+        },
+        "type": "object",
+        "required": [
+          "className",
+          "term",
+          "year",
+          "released"
+        ],
+        "title": "ReleaseRead"
       },
       "ReviewDecision": {
         "properties": {
@@ -18867,13 +20288,73 @@
             },
             "type": "array",
             "title": "Students"
+          },
+          "user_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Id"
+          },
+          "invited_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Invited At"
+          },
+          "invite_expires_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Invite Expires At"
+          },
+          "joined_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Joined At"
+          },
+          "app_status": {
+            "type": "string",
+            "enum": [
+              "not_invited",
+              "invited",
+              "expired",
+              "active"
+            ],
+            "title": "App Status",
+            "readOnly": true
           }
         },
         "type": "object",
         "required": [
           "id",
           "tenant_id",
-          "name"
+          "name",
+          "app_status"
         ],
         "title": "ParentResponse"
       },
@@ -19170,6 +20651,21 @@
         ],
         "title": "ConditionRead"
       },
+      "app__db__schemas__parent_access__InviteToken": {
+        "properties": {
+          "token": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 10,
+            "title": "Token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "token"
+        ],
+        "title": "InviteToken"
+      },
       "app__db__schemas__planning__RecordRead": {
         "properties": {
           "status": {
@@ -19410,6 +20906,23 @@
           "name"
         ],
         "title": "ConditionRead"
+      },
+      "app__db__schemas__team__InviteToken": {
+        "properties": {
+          "token": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Token"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "token"
+        ],
+        "title": "InviteToken",
+        "description": "The token travels in a body, not the URL path, so it stays out of access logs."
       }
     },
     "securitySchemes": {

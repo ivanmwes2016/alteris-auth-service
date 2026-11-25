@@ -9,6 +9,7 @@ from starlette.concurrency import run_in_threadpool
 from supabase import Client
 
 from app.db.models.invite import Invite
+from app.db.models.parent import Parent
 from app.db.models.profile import Profile
 from app.db.models.tenant import Tenant
 from app.db.models.tenant_member import TenantMember
@@ -25,6 +26,7 @@ async def _has_attachments(db: AsyncSession, user_id: uuid.UUID) -> bool:
                     exists().where(TenantMember.user_id == user_id),
                     exists().where(Tenant.owner_id == user_id),
                     exists().where(Invite.invited_by == user_id),
+                    exists().where(Parent.user_id == user_id),
                 )
             )
         )
@@ -47,7 +49,8 @@ async def remove_if_stale(db: AsyncSession, supabase: Client, user_id: uuid.UUID
     Delete a users row left behind by a deleted Supabase account. Returns True if it did.
 
     Only when Supabase confirms the login is gone AND nothing hangs off the row — no
-    memberships, owned school or sent invites — so no one's access is ever broken.
+    memberships, owned school, sent invites or children followed as a parent — so no
+    one's access is ever broken.
     Anything uncertain (Supabase error, a reference we didn't expect) keeps the row.
     """
     if await _has_attachments(db, user_id) or not await _login_is_gone(supabase, user_id):

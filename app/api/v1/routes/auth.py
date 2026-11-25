@@ -108,6 +108,9 @@ class MeResponse(BaseModel):
     # The class this account is class teacher of, as their staff record writes it:
     # they read that class's medical records (app.crud.class_teacher).
     class_teacher_of: str | None = None
+    # Role "parent" for a parent who isn't on any school's staff. True also for staff
+    # who are a parent at a school using the app (app.crud.parent_access).
+    is_parent: bool = False
     subscription_active: bool
 
 
@@ -255,6 +258,7 @@ async def me(
         student_access=user_context.get("student_access"),
         can_edit_staff=bool(user_context.get("can_edit_staff")),
         can_manage_staff_health=bool(user_context.get("can_manage_staff_health")),
+        is_parent=bool(user_context.get("is_parent")),
         subscription_active=bool(user_context.get("subscription_active")),
     )
 

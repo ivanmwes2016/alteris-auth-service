@@ -11,7 +11,7 @@ from sqlalchemy.orm import selectinload
 
 from app.api.v1.routes.auth import get_current_member, get_current_tenant_id, get_current_user
 from app.core.db import get_db
-from app.crud import student_access
+from app.crud import parent_access, student_access
 from app.crud.attendance import DayRecord, daily_records
 from app.db.models.parent import Parent
 from app.db.models.student import Student
@@ -458,6 +458,9 @@ async def update_student_parents(
 
                 parent = link.parent
 
+                if not parent_access.same_email(parent.email, parent_data.email):
+                    # The app login and any invite belong to the old address.
+                    parent_access.clear_access(parent)
                 parent.name = parent_data.name
                 parent.email = parent_data.email
                 parent.phone = parent_data.phone

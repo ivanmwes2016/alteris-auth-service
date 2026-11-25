@@ -156,9 +156,16 @@ async def overview(
 async def student_report(
     db: AsyncSession, viewer: Viewer, student_id: uuid.UUID, *, start: date, end: date
 ) -> StudentReportRead:
+    return await school_student_report(db, viewer.tenant_id, student_id, start=start, end=end)
+
+
+async def school_student_report(
+    db: AsyncSession, tenant_id: uuid.UUID, student_id: uuid.UUID, *, start: date, end: date
+) -> StudentReportRead:
+    """One student's marks and rates; also what a parent sees (app.crud.parent_access)."""
     check_range(start, end)
     student = await db.scalar(
-        select(Student).where(Student.id == student_id, Student.tenant_id == viewer.tenant_id)
+        select(Student).where(Student.id == student_id, Student.tenant_id == tenant_id)
     )
     if student is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Student not found")
@@ -168,7 +175,7 @@ async def student_report(
         .join(AttendanceMark, AttendanceMark.register_id == AttendanceRegister.id)
         .where(
             AttendanceMark.student_id == student.id,
-            AttendanceMark.tenant_id == viewer.tenant_id,
+            AttendanceMark.tenant_id == tenant_id,
             AttendanceRegister.date.between(start, end),
         )
         .order_by(AttendanceRegister.date.desc(), AttendanceRegister.starts_at.desc())

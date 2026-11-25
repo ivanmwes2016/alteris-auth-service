@@ -14,7 +14,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.v1.routes.auth import get_current_user
 from app.core.db import get_db
-from app.crud import attendance, attendance_reports, attendance_settings, team
+from app.crud import attendance, attendance_reports, attendance_settings, parent_access, team
 from app.db.models.users import User
 from app.db.schemas.attendance import (
     AttendanceSettingsRead,
@@ -114,13 +114,15 @@ async def get_register(
 
 
 @router.put("/register/marks", response_model=RegisterSaveResult)
-async def save_marks(db: Db, viewer: Viewer, payload: RegisterSave) -> RegisterSaveResult:
+async def save_marks(
+    db: Db, viewer: Viewer, payload: RegisterSave, background: BackgroundTasks
+) -> RegisterSaveResult:
     """
     Saves marks taken today, or offline on the register's day within 72 hours.
     The latest tap wins: older marks come back in `skipped`. 409 once a register
     has closed: send a correction instead.
     """
-    return await attendance.save_marks(db, viewer, payload)
+    return await attendance.save_marks(db, viewer, payload, background)
 
 
 @router.get(
@@ -292,9 +294,18 @@ async def set_staff_account(
 async def register_push_token(
     payload: PushTokenRegistration, db: Db, current_user: User = Depends(get_current_user)
 ) -> Response:
-    """Notify this phone about attendance corrections. Calling it again is harmless."""
-    actor = await team.get_actor(db, current_user)
-    await attendance_settings.register_push_token(db, actor, payload.token)
+    """
+    Notify this phone: staff about attendance corrections, parents about their
+    children (app.services.parent_push). Calling it again is harmless.
+    """
+    parent_school = None
+    if not await team.is_member(db, current_user):
+        parent_school = await parent_access.parent_school_id(db, current_user.id)
+    # Staff, or anyone who is neither (get_actor refuses them).
+    tenant_id = parent_school or (await team.get_actor(db, current_user)).tenant_id
+    await attendance_settings.register_push_token(
+        db, user_id=current_user.id, tenant_id=tenant_id, token=payload.token
+    )
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
@@ -303,6 +314,5 @@ async def unregister_push_token(
     token: str, db: Db, current_user: User = Depends(get_current_user)
 ) -> Response:
     """Stop notifying this phone (signing out). Unknown tokens are ignored."""
-    actor = await team.get_actor(db, current_user)
-    await attendance_settings.unregister_push_token(db, actor, token)
+    await attendance_settings.unregister_push_token(db, user_id=current_user.id, token=token)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

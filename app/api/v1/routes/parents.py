@@ -1,7 +1,8 @@
+from datetime import UTC, datetime
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, computed_field
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -9,9 +10,12 @@ from sqlalchemy.orm import selectinload
 
 from app.api.v1.routes.auth import get_current_tenant_id, get_current_user
 from app.core.db import get_db
+from app.crud import parent_access, student_access
 from app.db.models.parent import Parent
 from app.db.models.student_parent import StudentParent
 from app.db.models.users import User
+from app.db.schemas.parent_access import AppStatus, ParentAppAccess
+from app.helpers import rate_limit
 from app.helpers.pagination import (
     Page,
     PageParams,
@@ -53,6 +57,19 @@ class ParentResponse(BaseModel):
     address: str | None = None
     occupation: str | None = None
     students: list[ParentStudentResponse] = Field(default_factory=list)
+
+    # App access (app.crud.parent_access)
+    user_id: UUID | None = None
+    invited_at: datetime | None = None
+    invite_expires_at: datetime | None = None
+    joined_at: datetime | None = None
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def app_status(self) -> AppStatus:
+        return parent_access.app_status(
+            user_id=self.user_id, invite_expires_at=self.invite_expires_at, now=datetime.now(UTC)
+        )
 
 
 class ParentPatch(BaseModel):
@@ -163,6 +180,12 @@ async def update_parent(
         )
 
     update_data = payload.model_dump(exclude_unset=True)
+    if "email" in update_data:
+        new_email = (update_data["email"] or "").strip().lower() or None
+        update_data["email"] = new_email
+        if not parent_access.same_email(parent.email, new_email):
+            # The login and any invite belong to the old address.
+            parent_access.clear_access(parent)
 
     for field, value in update_data.items():
         setattr(parent, field, value)
@@ -293,3 +316,30 @@ async def remove_student_from_parent(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to remove parent from student",
         ) from exc
+
+
+# ---------------------------------------------------------------------------
+# App access: inviting a parent to follow their children in the app
+# ---------------------------------------------------------------------------
+@router.post("/{parent_id}/invite", response_model=ParentAppAccess)
+async def invite_parent(
+    parent_id: UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> ParentAppAccess:
+    """Email the parent a link to set up the app. Sending again replaces the link."""
+    caller = await student_access.require(db, current_user, "edit_details")
+    await rate_limit.enforce("invite_user", str(current_user.id))
+    await rate_limit.enforce("invite_tenant", str(caller.tenant_id))
+    return await parent_access.invite(db, caller, parent_id)
+
+
+@router.delete("/{parent_id}/invite", response_model=ParentAppAccess)
+async def remove_parent_access(
+    parent_id: UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> ParentAppAccess:
+    """End the parent's app access, or cancel their invite. Their record stays."""
+    caller = await student_access.require(db, current_user, "edit_details")
+    return await parent_access.revoke(db, caller, parent_id)
