@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from datetime import date, datetime
 from typing import Any
 
-from fastapi import HTTPException, status
+from fastapi import BackgroundTasks, HTTPException, status
 from sqlalchemy import ColumnElement, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -39,6 +39,7 @@ from app.db.schemas.sick_bay import (
     VisitUpdate,
 )
 from app.helpers.timezones import school_timezone
+from app.services import parent_push
 
 OPEN_STATUSES = frozenset({"waiting", "in"})
 CLOSED_STATUSES = frozenset({"back", "home", "hospital"})
@@ -172,6 +173,18 @@ async def day_visits(db: AsyncSession, caller: Caller, day: date | None) -> Sick
     return SickBayDay(date=on, visits=[_read(v, s, allergies.get(s.id, [])) for v, s in rows])
 
 
+async def student_visits(db: AsyncSession, student: Student, *, limit: int = 50) -> list[VisitRead]:
+    """One student's visits, newest first: what their parents see (app.crud.parent_access)."""
+    visits = await db.scalars(
+        select(SickBayVisit)
+        .where(SickBayVisit.tenant_id == student.tenant_id, SickBayVisit.student_id == student.id)
+        .order_by(SickBayVisit.sent_at.desc())
+        .limit(limit)
+    )
+    allergies = await _allergy_names(db, student.tenant_id, {student.id})
+    return [_read(v, student, allergies.get(student.id, [])) for v in visits]
+
+
 async def _student(db: AsyncSession, tenant_id: uuid.UUID, student_id: uuid.UUID) -> Student:
     await student_access.ensure_in_school(db, tenant_id, student_id)
     student = await db.get(Student, student_id)
@@ -179,7 +192,9 @@ async def _student(db: AsyncSession, tenant_id: uuid.UUID, student_id: uuid.UUID
     return student
 
 
-async def send(db: AsyncSession, caller: Caller, data: VisitCreate) -> VisitRead:
+async def send(
+    db: AsyncSession, caller: Caller, data: VisitCreate, background: BackgroundTasks | None = None
+) -> VisitRead:
     student = await _student(db, caller.tenant_id, data.student_id)
     visit = SickBayVisit(
         tenant_id=caller.tenant_id,
@@ -194,12 +209,21 @@ async def send(db: AsyncSession, caller: Caller, data: VisitCreate) -> VisitRead
     db.add(visit)
     await db.commit()
     await db.refresh(visit)
+    if background is not None:
+        notice = parent_push.sick_bay_sent_notice(
+            student_id=student.id, student_name=student.name, complaint=visit.complaint
+        )
+        background.add_task(parent_push.notify_parents, [notice])
     allergies = await _allergy_names(db, caller.tenant_id, {student.id})
     return _read(visit, student, allergies.get(student.id, []))
 
 
 async def update(
-    db: AsyncSession, caller: Caller, visit_id: uuid.UUID, data: VisitUpdate
+    db: AsyncSession,
+    caller: Caller,
+    visit_id: uuid.UUID,
+    data: VisitUpdate,
+    background: BackgroundTasks | None = None,
 ) -> VisitRead:
     visit = await db.scalar(
         select(SickBayVisit).where(
@@ -208,10 +232,20 @@ async def update(
     )
     if visit is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Visit not found")
+    before = visit.status
     apply_update(visit, data.model_dump(exclude_unset=True), now=caller.now, by=caller.name)
     await db.commit()
     await db.refresh(visit)
     student = await _student(db, caller.tenant_id, visit.student_id)
+    if background is not None and visit.status != before:
+        notice = parent_push.sick_bay_closed_notice(
+            student_id=student.id,
+            student_name=student.name,
+            outcome=visit.status,
+            complaint=visit.complaint,
+        )
+        if notice is not None:
+            background.add_task(parent_push.notify_parents, [notice])
     allergies = await _allergy_names(db, caller.tenant_id, {student.id})
     return _read(visit, student, allergies.get(student.id, []))
 

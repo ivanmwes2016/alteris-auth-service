@@ -6,7 +6,7 @@ tenant_id always comes from the authenticated user.
 import uuid
 from datetime import date
 
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, BackgroundTasks, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.v1.routes.auth import get_current_user
@@ -32,11 +32,12 @@ async def get_sick_bay(
 @router.post("", response_model=VisitRead, status_code=status.HTTP_201_CREATED)
 async def send_to_sick_bay(
     data: VisitCreate,
+    background: BackgroundTasks,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> VisitRead:
     caller = await sick_bay.get_caller(db, current_user)
-    return await sick_bay.send(db, caller, data)
+    return await sick_bay.send(db, caller, data, background)
 
 
 @router.get("/alerts", response_model=HealthAlerts)
@@ -55,9 +56,10 @@ async def get_health_alerts(
 async def update_visit(
     visit_id: uuid.UUID,
     data: VisitUpdate,
+    background: BackgroundTasks,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> VisitRead:
     """The nurse's record: arrived, temperature, treatment, notes, and where the student went."""
     caller = await sick_bay.get_caller(db, current_user)
-    return await sick_bay.update(db, caller, visit_id, data)
+    return await sick_bay.update(db, caller, visit_id, data, background)

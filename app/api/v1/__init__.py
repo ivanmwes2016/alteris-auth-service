@@ -13,6 +13,7 @@ from .routes import (
     enquiries,
     health,
     medical,
+    parent_portal,
     parents,
     performance,
     planning,
@@ -71,6 +72,8 @@ api_router.include_router(registers.router, prefix="/attendance", tags=["attenda
 api_router.include_router(registers.push_router, prefix="/push-tokens", tags=["notifications"])
 api_router.include_router(planning.router, prefix="/planning", tags=["planning"])
 api_router.include_router(sick_bay.router, prefix="/sick-bay", tags=["sick bay"])
+api_router.include_router(parent_portal.router, prefix="/parent", tags=["parents"])
+api_router.include_router(parent_portal.invite_router, prefix="/parent-invites", tags=["parents"])
 
 
 # api_router.include_router(members.router, prefix="/members", tags=["members"])

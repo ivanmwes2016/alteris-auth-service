@@ -3,12 +3,12 @@ Two endpoints for the Academic Performance page. tenant_id always comes
 from the authenticated user, never from the request body/query.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.v1.routes.auth import get_current_user
 from app.core.db import get_db
-from app.crud import student_access
+from app.crud import performance_release, student_access
 from app.crud.performance import (
     UnknownStudentError,
     get_performance,
@@ -16,6 +16,7 @@ from app.crud.performance import (
     sync_marks,
 )
 from app.db.models.users import User
+from app.db.schemas.parent_access import ReleaseKey, ReleaseRead
 from app.db.schemas.performance import PerformancePage, PerformanceRead, PerformanceUpdate
 from app.helpers.pagination import PageParams, page_params
 
@@ -69,3 +70,51 @@ async def update_class_performance(
         return await sync_marks(db, tenant_id=tenant_id, data=data)
     except UnknownStudentError as exc:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, str(exc)) from exc
+
+
+# ---------------------------------------------------------------------------
+# Publishing a class's term marks to parents (app.crud.performance_release)
+# ---------------------------------------------------------------------------
+def _release_key(
+    class_name: str = Query(..., alias="class", min_length=1, max_length=200),
+    term: str = Query(..., min_length=1, max_length=100),
+    year: int = Query(..., ge=2000, le=2100),
+) -> ReleaseKey:
+    return ReleaseKey(class_name=class_name, term=term, year=year)
+
+
+@router.get("/release", response_model=ReleaseRead)
+async def get_release(
+    key: ReleaseKey = Depends(_release_key),
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> ReleaseRead:
+    """Whether parents can see this class's marks for the term."""
+    tenant_id = (await student_access.require(db, current_user, "view_records")).tenant_id
+    return await performance_release.get_release(db, tenant_id, key)
+
+
+@router.put("/release", response_model=ReleaseRead)
+async def publish_to_parents(
+    background: BackgroundTasks,
+    key: ReleaseKey = Depends(_release_key),
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> ReleaseRead:
+    """
+    Show this class's marks for the term to parents, and tell them by push the first
+    time. Publishing again changes nothing. Owner, Admins and the Head Teacher.
+    """
+    caller = await student_access.require(db, current_user, "edit_details")
+    return await performance_release.publish(db, caller, current_user, key, background)
+
+
+@router.delete("/release", response_model=ReleaseRead)
+async def unpublish_from_parents(
+    key: ReleaseKey = Depends(_release_key),
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> ReleaseRead:
+    """Hide this class's marks for the term from parents again."""
+    caller = await student_access.require(db, current_user, "edit_details")
+    return await performance_release.unpublish(db, caller, key)

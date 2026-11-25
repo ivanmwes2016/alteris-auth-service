@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 
 from sqlalchemy import DateTime, ForeignKey, Index, Integer, Text, UniqueConstraint, func, text
 from sqlalchemy.dialects.postgresql import UUID
@@ -78,3 +79,32 @@ class PerformanceRecord(Base):
     )
 
     tenant = relationship("Tenant")
+
+
+class PerformanceRelease(Base):
+    """
+    A class's term marks published to parents (app.crud.performance_release). Until
+    this row exists, parents see none of that class/term/year's marks; once it does,
+    they see them as they stand, including later corrections.
+    """
+
+    __tablename__ = "performance_releases"
+    __table_args__ = (
+        UniqueConstraint(
+            "tenant_id", "class_name", "term_label", "year", name="uq_performance_release"
+        ),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False
+    )
+    class_name: Mapped[str] = mapped_column(Text, nullable=False)
+    term_label: Mapped[str] = mapped_column(Text, nullable=False)
+    year: Mapped[int] = mapped_column(Integer, nullable=False)
+    released_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    released_by: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
+    )

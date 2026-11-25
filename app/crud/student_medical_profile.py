@@ -64,6 +64,7 @@ async def get_profile(
     *,
     student_id: uuid.UUID,
     tenant_id: uuid.UUID,
+    fresh: bool = False,
 ) -> StudentMedicalProfile | None:
     """
     Return a student's medical profile, including all child collections.
@@ -74,6 +75,10 @@ async def get_profile(
         student_id=student_id,
         tenant_id=tenant_id,
     )
+    if fresh:
+        # Overwrite collections already loaded in this session (rows were added or
+        # deleted since), which a plain re-select would leave as they were.
+        stmt = stmt.execution_options(populate_existing=True)
 
     result = await db.execute(stmt)
 
@@ -263,6 +268,7 @@ async def sync_profile(
         db,
         student_id=student_id,
         tenant_id=tenant_id,
+        fresh=True,
     )
 
     if refreshed_profile is None:

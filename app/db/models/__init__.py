@@ -24,8 +24,8 @@ from .medical_note import (
     StudentMedicalProfile,
     StudentMedication,
 )
-from .parent import Parent
-from .performance import PerformanceRecord
+from .parent import Parent, ParentPushSettings
+from .performance import PerformanceRecord, PerformanceRelease
 from .planning import (
     LessonDraft,
     LessonPlan,
@@ -82,7 +82,9 @@ __all__ = [
     "NoSchoolDay",
     "OptionsPeriod",
     "Parent",
+    "ParentPushSettings",
     "PerformanceRecord",
+    "PerformanceRelease",
     "PlannedLesson",
     "PlanningAiSettings",
     "PlanningAttachment",
